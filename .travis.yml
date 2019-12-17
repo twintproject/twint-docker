@@ -1,0 +1,18 @@
+after_script:
+  - docker images
+
+before_script:
+  - cd "$VERSION"
+  - IMAGE="x0rzkov/twint:${VERSION/\//-}"
+
+env:
+  - VERSION=2.1.10
+  - VERSION=2.1.10/alpine
+
+language: bash
+
+script:
+  - docker build -t "$IMAGE" .
+  - docker push "$IMAGE"
+
+services: docker

@@ -12,7 +12,7 @@ git \
 python3-pip
 
 RUN \
-pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/v2.1.10#egg=twint
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.10#egg=twint
 
 RUN \
 apt-get clean autoclean && \
