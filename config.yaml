@@ -1,0 +1,33 @@
+---
+vcs:
+  url: https://github.com/twintproject/twint
+
+docker:
+  owner: twintproject
+  images:
+    - image: "{{.Owner}}/twint:{{.Version}}-{{.BaseImage}}{{.BaseVersion}}"
+      arguments:
+        base: alpine
+        tag: 3.10
+        maintainer: x0rzkov@protonmail.com
+        user-gid: 997
+        user-uid: 997
+      data:
+        stages:
+        - from:
+          image: "{{.BaseImage}}/{{.BaseTag}}"
+        - run:
+          runForm: shell
+          params:
+            - apt-get update &&
+            - apt-get install -y
+            - php5
+            - libapache2-mod-php5 &&
+            - apt-get clean &&
+            - rm -rf /var/lib/apt/lists/*
+        - cmd:
+          params:
+            - /usr/sbin/apache2
+            - -D
+            - FOREGROUND
+  

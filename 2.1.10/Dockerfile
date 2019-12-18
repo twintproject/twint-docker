@@ -7,7 +7,7 @@ RUN chmod +x /entrypoint.sh
 
 RUN \
 apt-get update && \
-apt-get install -y \
+apt-get install -y --no-install-recommends \
 git \
 python3-pip
 

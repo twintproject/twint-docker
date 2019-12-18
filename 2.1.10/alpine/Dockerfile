@@ -1,18 +1,10 @@
 FROM alpine:3.10
 
-ARG VERSION_GITCOMMIT=unknown
-ARG TWINT_GIT_VERSION=unknown
-
 ARG TWINT_GID=977
 ARG TWINT_UID=977
 
-# RUN addgroup -g ${TWINT_GID} twint && \
-#    adduser -u ${TWINT_UID} -D -h /usr/local/twint -s /bin/sh -G twint twint
-
-ARG TIMESTAMP_SETTINGS=0
-ARG TIMESTAMP_UWSGI=0
-ARG LABEL_VCS_REF=
-ARG LABEL_VCS_URL=
+RUN addgroup -g ${TWINT_GID} twint && \
+    adduser -u ${TWINT_UID} -D -h /opt/twint -s /bin/sh -G twint twint
 
 # This hack is widely applied to avoid python printing issues in docker containers.
 # See: https://github.com/Docker-Hub-frolvlad/docker-alpine-python3/pull/13
