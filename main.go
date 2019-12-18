@@ -56,7 +56,7 @@ func main() {
 	log.Printf("Detected version: %v", lastVersion)
 
 	loadConfig("config.yaml", "config.yml", "docker.yml")
-	// createDirectories(cleanTags)
+	createDirectories(vcsTags)
 
 }
 
@@ -106,7 +106,7 @@ func readEnvFile(path string) (error, map[string]string) {
 func createDirectories(tags []string) {
 	for _, tag := range tags {
 		os.MkdirAll(tag, 0755)
-		os.MkdirAll(path.Join(tag, "alpine"), 0755)
+		os.MkdirAll(path.Join("dockerfiles", tag, "alpine"), 0755)
 	}
 }
 
