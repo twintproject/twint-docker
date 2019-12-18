@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
 
-ARG TWINT_VERSION=2.1.10
+ARG TWINT_VERSION=v2.1.10
 
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -14,7 +14,7 @@ git \
 python3-pip
 
 RUN \
-pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@2.1.10#egg=twint
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.10#egg=twint
 
 RUN \
 apt-get clean autoclean && \

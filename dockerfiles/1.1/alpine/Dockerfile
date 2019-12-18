@@ -1,37 +1,43 @@
-FROM alpine:3.10
+FROM alpine:3.10 AS build
 
+WORKDIR /opt/app
+
+# Install Python and external dependencies, including headers and GCC
+RUN apk add --no-cache python3 python3-dev py3-pip libffi libffi-dev musl-dev gcc git ca-certificates openblas-dev musl-dev g++
+
+# Install Pipenv
+RUN pip3 install pipenv
+
+# Create a virtual environment and activate it
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH" \
+	VIRTUAL_ENV="/opt/venv"
+
+# Install dependencies into the virtual environment with Pipenv
+RUN git clone --depth=1 -b 1.1 https://github.com/twintproject/twint /opt/app \
+	&& cd /opt/app \
+	&& pip3 install --upgrade pip \
+	&& pip3 install cython \
+	&& pip3 install numpy \
+	&& pip3 install .
+
+FROM alpine:3.10
 MAINTAINER x0rxkov@protonmail.com
 
-ARG TWINT_GID=997
-ARG TWINT_UID=997
-ARG TWINT_VERSION=1.1
+WORKDIR /opt/app
 
-RUN addgroup -g 997 twint && \
-    adduser -u 997 -D -h /opt/twint -s /bin/sh -G twint twint
+# Install Python and external runtime dependencies only
+RUN apk add --no-cache python3 libffi openblas libstdc++
 
-# This hack is widely applied to avoid python printing issues in docker containers.
-# See: https://github.com/Docker-Hub-frolvlad/docker-alpine-python3/pull/13
-ENV PYTHONUNBUFFERED=1
+# Copy the virtual environment from the previous image
+COPY --from=build /opt/venv /opt/venv
 
-RUN echo "**** install Python ****" && \
-    apk add --no-cache python3 sqlite sqlite-dev git ca-certificates cython openblas-dev musl-dev python3-dev libffi-dev gcc g++ && \
-    if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi && \
-    \
-    echo "**** install pip ****" && \
-    python3 -m ensurepip && \
-    rm -r /usr/lib/python*/ensurepip && \
-    pip3 install --no-cache --upgrade pip setuptools wheel && \
-    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
+# Activate the virtual environment
+ENV PATH="/opt/venv/bin:$PATH" \
+	VIRTUAL_ENV="/opt/venv"
 
-WORKDIR /opt/twint
-
-RUN git clone --depth=1 -b 1.1 https://github.com/twintproject/twint /opt/twint \
-	&& cd /opt/twint \
-	&& pip install -e .
-
-WORKDIR /opt/twint
-
-COPY docker-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Copy your application
+# COPY . /opt/app/
+WORKDIR /opt/app
 
 ENTRYPOINT ["twint"]
