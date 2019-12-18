@@ -10,4 +10,5 @@ require (
 	github.com/ozankasikci/dockerfile-generator v0.1.0 // indirect
 	github.com/wolfeidau/envfile v0.0.0-20131216113444-49eaf6f8c4a3 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20190709130402-674ba3eaed22
 )

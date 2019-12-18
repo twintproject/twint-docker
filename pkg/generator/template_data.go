@@ -34,7 +34,8 @@ type Instruction interface {
 // DockerfileData struct can hold multiple stages for a multi-staged Dockerfile
 // Check https://docs.docker.com/develop/develop-images/multistage-build/ for more information
 type DockerfileData struct {
-	Stages []Stage `yaml:"stages,omitempty"`
+	Disable bool    `default:"false" json:"disable" yaml:"disable"`
+	Stages  []Stage `json:"stages,omitempty" yaml:"stages,omitempty"`
 }
 
 // Stage is a set of instructions, the purpose is to keep the order of the given instructions

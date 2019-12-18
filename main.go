@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/jinzhu/configor"
 	"github.com/k0kubun/pp"
-	dfg "github.com/ozankasikci/dockerfile-generator"
 	"github.com/wolfeidau/envfile"
+	dfg "github.com/x0rzkov/twint-docker/pkg/generator"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/config"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
@@ -105,7 +105,6 @@ func readEnvFile(path string) (error, map[string]string) {
 
 func createDirectories(tags []string) {
 	for _, tag := range tags {
-		os.MkdirAll(tag, 0755)
 		os.MkdirAll(path.Join("dockerfiles", tag, "alpine"), 0755)
 	}
 }
@@ -137,11 +136,11 @@ type Docker struct {
 }
 
 type Image struct {
-	Disable        bool                 `default:"false" json:"disable" yaml:"disable"`
-	Owner          string               `required:"true" default:"x0rzkov" json:"owner" yaml:"owner" env:"DOCKER_OWNER"`
-	Image          string               `required:"true" default:"alpine" json:"image" yaml:"image" env:"DOCKER_BASE_IMAGE"`
-	BuildArgs      BuildArgs            `required:"true" json:"arguments" yaml:"arguments"`
-	DockerfileData []dfg.DockerfileData `required:"true" json:"data" yaml:"data"`
+	Disable    bool                   `default:"false" json:"disable" yaml:"disable"`
+	Owner      string                 `required:"true" default:"x0rzkov" json:"owner" yaml:"owner" env:"DOCKER_OWNER"`
+	Image      string                 `required:"true" default:"alpine" json:"image" yaml:"image" env:"DOCKER_BASE_IMAGE"`
+	BuildArgs  BuildArgs              `required:"true" json:"arguments" yaml:"arguments"`
+	Dockerfile dfg.DockerfileTemplate `required:"true" json:"dockerfile" yaml:"dockerfile"`
 }
 
 type BuildArgs struct {
@@ -198,6 +197,11 @@ func generateDockerAlpine(img *Image) error {
 }
 
 const (
+	entrypointTemplate = `#!/bin/bash
+$@`
+)
+
+const (
 	alpineTemplate = `FROM alpine:{{.BaseVersion}}
 
 MAINTAINER {{.Maintainer}}
@@ -235,5 +239,28 @@ ENTRYPOINT ["twint"]
 )
 
 const (
-	ubuntuTemplate = ``
+	ubuntuTemplate = `FROM ubuntu:18.04
+
+MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+RUN \
+apt-get update && \
+apt-get install -y --no-install-recommends \
+git \
+python3-pip
+
+RUN \
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.10#egg=twint
+
+RUN \
+apt-get clean autoclean && \
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENTRYPOINT ["/entrypoint.sh"]
+VOLUME /twint
+WORKDIR /srv/twint
+`
 )

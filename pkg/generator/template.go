@@ -13,7 +13,7 @@ import (
 
 // DockerfileTemplate defines the template struct that generates Dockerfile output
 type DockerfileTemplate struct {
-	Data *DockerfileData
+	Data *DockerfileData `json:"data" yaml:"data"`
 }
 
 // NewDockerfileTemplate return a new NewDockerfileTemplate instance

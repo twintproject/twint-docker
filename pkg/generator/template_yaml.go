@@ -10,7 +10,7 @@ import (
 
 // DockerfileDataYaml is used to decode yaml data. It has a Stages map instead of a slice for that purpose.
 type DockerfileDataYaml struct {
-	Stages map[string]Stage `yaml:"stages"`
+	Stages map[string]Stage `json:"stages" yaml:"stages"`
 }
 
 type yamlMapStringInterface map[string]interface{}
