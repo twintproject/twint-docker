@@ -63,7 +63,7 @@ docker_build() {
 
     # build Docker image
     echo "Building image ${TWINT_IMAGE_NAME}:${TWINT_GIT_VERSION}"
-    sudo docker build \
+    docker build \
         --build-arg TWINT_GIT_VERSION="${TWINT_GIT_VERSION}" \
         --build-arg VERSION_GITCOMMIT="${VERSION_GITCOMMIT}" \
         --build-arg LABEL_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
@@ -74,8 +74,8 @@ docker_build() {
         -t ${TWINT_IMAGE_NAME}:latest -t ${TWINT_IMAGE_NAME}:${TWINT_GIT_VERSION} .
 
     if [ "$1" = "push" ]; then
-	   sudo docker push ${TWINT_IMAGE_NAME}:latest
-	   sudo docker push ${TWINT_IMAGE_NAME}:${TWINT_GIT_VERSION}
+	   docker push ${TWINT_IMAGE_NAME}:latest
+	   docker push ${TWINT_IMAGE_NAME}:${TWINT_GIT_VERSION}
     fi
 }
 
