@@ -1,10 +1,23 @@
-build:
-	@docker build -t x0rzkov/twint:v2.1.10-alpine3.10 -f Dockerfile.alpine --no-cache .
+IMAGE := x0rzkov/twint-docker
+VERSION:= $(shell grep IBM_CLOUD_CLI Dockerfile | awk '{print $2}' | cut -d '=' -f 2)
 
-run:
-	@docker run -ti --rm x0rzkov/twint:v2.1.10-alpine3.10 -h
+## test		:	test.
+test:
+	true
 
-## help			:	Print commands help.
+## image		:	build image and tag them.
+.PHONY: image
+image:
+	@docker build -t ${IMAGE}:${VERSION} .
+	@docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest
+
+## push-image	:	push docker image.
+.PHONY: push-image
+push-image:
+	@docker push ${IMAGE}:${VERSION}
+	@docker push ${IMAGE}:latest
+
+## help		:	Print commands help.
 .PHONY: help
 help : Makefile
 	@sed -n 's/^##//p' $<
