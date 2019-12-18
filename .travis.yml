@@ -35,9 +35,10 @@ env:
   - VERSION=latest
   - VERSION=latest/alpine
 
-language: bash
+language: go
 
 script:
+  - go run main.go
   - docker build -t "$IMAGE" .
   - docker push "$IMAGE"
 
