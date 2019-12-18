@@ -29,17 +29,27 @@ import (
 */
 
 var (
-	debugMode    = true
-	verboseMode  = false
-	silentMode   = true
-	lastVersion  string
-	vcsTags      []*vcsTag
-	dockerImages = []string{"alpine", "ubuntu"}
+	debugMode      = true
+	verboseMode    = false
+	silentMode     = true
+	lastVersion    string
+	vcsTags        []*vcsTag
+	dockerImages   = []string{"alpine", "ubuntu"}
+	excludeVersion = []string{"v1.0", "1.1"}
 )
 
 type vcsTag struct {
 	Name string
 	Dir  string
+}
+
+func isValidVersion(input string) bool {
+	for _, version := range excludeVersion {
+		if version == input {
+			return false
+		}
+	}
+	return true
 }
 
 // Retrieve remote tags without cloning repository
@@ -62,7 +72,9 @@ func main() {
 		if strings.HasPrefix(tag, "v") {
 			dir = strings.Replace(tag, "v", "", -1)
 		}
-		vcsTags = append(vcsTags, &vcsTag{Name: tag, Dir: dir})
+		if isValidVersion(tag) {
+			vcsTags = append(vcsTags, &vcsTag{Name: tag, Dir: dir})
+		}
 	}
 
 	lastVersion = getLastVersion(tags)

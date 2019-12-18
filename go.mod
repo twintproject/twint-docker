@@ -9,6 +9,7 @@ require (
 	github.com/k0kubun/pp v3.0.1+incompatible
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/ozankasikci/dockerfile-generator v0.1.0 // indirect
+	github.com/shuheiktgw/go-travis v0.2.4 // indirect
 	github.com/wolfeidau/envfile v0.0.0-20131216113444-49eaf6f8c4a3 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
 	gopkg.in/yaml.v2 v2.2.2
