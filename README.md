@@ -1,4 +1,4 @@
-# travis-badge [![Build Status](https://travis-ci.org/x0rzkov/twint-docker.svg?branch=master)](https://travis-ci.org/x0rzkov/twint-docker)
+# twint-docker [![Build Status](https://travis-ci.org/x0rzkov/twint-docker.svg?branch=master)](https://travis-ci.org/x0rzkov/twint-docker)
 
 ## How to use
 
