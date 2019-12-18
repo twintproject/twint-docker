@@ -319,14 +319,13 @@ ENV PATH="/opt/venv/bin:$PATH" \
 	VIRTUAL_ENV="/opt/venv"
 
 # Copy your application
-# COPY . /opt/app/
 WORKDIR /opt/app
 
 ENTRYPOINT ["twint"]`
 )
 
 const (
-	ubuntuTemplate = `FROM ubuntu:18.04
+	ubuntuTemplate = `FROM ubuntu:19.10
 
 MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
 
