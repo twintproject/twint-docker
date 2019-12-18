@@ -393,6 +393,16 @@ const (
 	travisTemplate = `after_script:
   - docker images
 
+before_install:
+  - sudo rm -f /usr/local/bin/docker-slim
+  - sudo rm -f /usr/local/bin/docker-slim-sensor
+  - curl -L https://github.com/docker-slim/docker-slim/releases/download/1.26.1/dist_linux.tar.gz --output docker-slim.tar.gz
+  - tar xvf docker-slim.tar.gz
+  - chmod +x dist_linux/docker-slim
+  - chmod +x dist_linux/docker-slim-sensor
+  - sudo mv dist_linux/docker-slim /usr/local/bin
+  - sudo mv dist_linux/docker-slim-sensor /usr/local/bin
+
 before_script:
   - cd dockerfiles/"$VERSION"
   - IMAGE="x0rzkov/twint:${VERSION/\//-}"
