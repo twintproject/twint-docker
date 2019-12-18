@@ -68,8 +68,10 @@ func main() {
 			switch dockerImage {
 			case "alpine":
 				generateDockerfile("alpine", dockerImage+"Template", alpineTemplate, vcsTag)
+				generateEntrypoint("alpine", "entrypointTemplate", entrypointTemplate, vcsTag)
 			case "ubuntu":
 				generateDockerfile("", dockerImage+"Template", ubuntuTemplate, vcsTag)
+				generateEntrypoint("", "entrypointTemplate", entrypointTemplate, vcsTag)
 			}
 		}
 	}
@@ -119,6 +121,31 @@ func generateTravis(vcsTag []*vcsTag) error {
 	err = tTravisfile.Execute(travisfile, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type entrypointData struct {
+}
+
+func generateEntrypoint(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
+	tEntrypoint := template.Must(template.New("tmplEntrypoint").Parse(entrypointTemplate))
+	outputPathEntrypoint := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "docker-entrypoint.sh")
+	pp.Println("outputPathEntrypoint: ", outputPathEntrypoint)
+	entrypoint, err := os.Create(outputPathEntrypoint)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &entrypointData{}
+	err = tEntrypoint.Execute(entrypoint, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	err = os.Chmod(outputPathEntrypoint, 0755)
+	if err != nil {
 		return err
 	}
 	return nil
@@ -218,6 +245,9 @@ RUN git clone --depth=1 -b {{.Version}} https://github.com/twintproject/twint /o
 
 WORKDIR /opt/twint
 
+COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 ENTRYPOINT ["twint"]
 `
 )
@@ -227,7 +257,7 @@ const (
 
 MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
 
-COPY entrypoint.sh /entrypoint.sh
+COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 RUN \

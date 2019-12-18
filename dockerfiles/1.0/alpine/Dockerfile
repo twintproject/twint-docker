@@ -30,4 +30,7 @@ RUN git clone --depth=1 -b v1.0 https://github.com/twintproject/twint /opt/twint
 
 WORKDIR /opt/twint
 
+COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 ENTRYPOINT ["twint"]

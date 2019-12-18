@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
 
-COPY entrypoint.sh /entrypoint.sh
+COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 RUN \
