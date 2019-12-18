@@ -97,10 +97,10 @@ func main() {
 				generateMakefile("alpine", "makefileTemplate", makefileTemplate, vcsTag)
 				generateDockerignore("alpine", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			case "ubuntu":
-				generateDockerfile("ubuntu", dockerImage+"Template", ubuntuTemplate, vcsTag)
-				generateEntrypoint("ubuntu", "entrypointTemplate", entrypointTemplate, vcsTag)
-				generateMakefile("ubuntu", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerignore("ubuntu", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
+				generateDockerfile("", dockerImage+"Template", ubuntuTemplate, vcsTag)
+				generateEntrypoint("", "entrypointTemplate", entrypointTemplate, vcsTag)
+				generateMakefile("", "makefileTemplate", makefileTemplate, vcsTag)
+				generateDockerignore("", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			}
 		}
 	}
@@ -254,7 +254,9 @@ func commitLocal(version string) {
 func createDirectories(tags []*vcsTag) {
 	for _, tag := range tags {
 		for _, image := range dockerImages {
-			os.MkdirAll(path.Join("dockerfiles", tag.Dir, image), 0755)
+			if image != "ubuntu" {
+				os.MkdirAll(path.Join("dockerfiles", tag.Dir, image), 0755)
+			}
 		}
 	}
 }
@@ -402,6 +404,7 @@ env:{{range $val := .Versions}}
 language: bash
 
 script:
+  - docker-slim version
   - docker build -t "$IMAGE" .
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push "$IMAGE"
@@ -410,7 +413,9 @@ services: docker`
 )
 
 const (
-	dockerignoreTemplate = `Makefile
+	dockerignoreTemplate = `slim
+alpine
+Makefile
 docker-compose.yml
 docker-compose.*.yml
 .git

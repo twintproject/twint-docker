@@ -1,6 +1,8 @@
-# How to use
+# travis-badge [![Build Status](https://travis-ci.org/x0rzkov/twint-docker.svg?branch=master)](https://travis-ci.org/x0rzkov/twint-docker)
 
-## First use
+## How to use
+
+### First use
 
 For fisrt usage, you need to build image docker.
 
@@ -8,7 +10,7 @@ For fisrt usage, you need to build image docker.
 docker-compose build
 ```
 
-## Elasticsearch and Kibana
+### Elasticsearch and Kibana
 
 Start to up elaticsearch and kibana
 
@@ -16,13 +18,13 @@ Start to up elaticsearch and kibana
 docker-compose up -d elasticsearch kibana
 ```
 
-## Execute Twint command
+### Execute Twint command
 
 ``` bash
 docker-compose run -v $PWD/twint:/srv/twint twint {{CMD TWINT}}
 ```
 
-## Examples of command
+### Examples of command
 
 A few simple examples to help you understand the basics:
 
@@ -49,7 +51,7 @@ docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --retweets -
 docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --resume 10940389583058 - Resume a search starting from the specified Tweet ID.
 ```
 
-## Datas
+### Datas
 
 For datas generate by twint, you can found result on folder twint
 
