@@ -399,7 +399,8 @@ before_script:
 
 env:{{range $val := .Versions}}
   - VERSION={{ $val.Dir }}
-  - VERSION={{ $val.Dir }}/alpine{{end}}
+  - VERSION={{ $val.Dir }}/alpine
+  - VERSION={{ $val.Dir }}/slim{{end}}
 
 language: bash
 
