@@ -327,7 +327,8 @@ RUN \
 apt-get update && \
 apt-get install -y --no-install-recommends \
 git \
-python3-pip
+python3-pip \
+python3-setuptools
 
 RUN \
 pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@{{.Version}}#egg=twint
