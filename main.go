@@ -30,8 +30,8 @@ var (
 )
 
 type vcsTag struct {
-	name string
-	dir  string
+	Name string
+	Dir  string
 }
 
 // Retrieve remote tags without cloning repository
@@ -54,15 +54,14 @@ func main() {
 		if strings.HasPrefix(tag, "v") {
 			dir = strings.Replace(tag, "v", "", -1)
 		}
-		vcsTags = append(vcsTags, &vcsTag{name: tag, dir: dir})
+		vcsTags = append(vcsTags, &vcsTag{Name: tag, Dir: dir})
 	}
 
 	lastVersion = getLastVersion(tags)
 	log.Printf("Detected version: %v", lastVersion)
-	vcsTags = append(vcsTags, &vcsTag{name: lastVersion, dir: "latest"})
+	vcsTags = append(vcsTags, &vcsTag{Name: lastVersion, Dir: "latest"})
 
 	pp.Println("vcsTags: ", vcsTags)
-
 	createDirectories(vcsTags)
 	for _, dockerImage := range dockerImages {
 		for _, vcsTag := range vcsTags {
@@ -74,6 +73,7 @@ func main() {
 			}
 		}
 	}
+	generateTravis(vcsTags)
 }
 
 type dockerfileData struct {
@@ -82,7 +82,7 @@ type dockerfileData struct {
 
 // generateDockerfile("twint", "alpineTemplate", "alpineTemplate")
 func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
-	outputPath := filepath.Join("dockerfiles", vcsTag.dir, prefixPath, "Dockerfile")
+	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Dockerfile")
 	pp.Println("outputPath: ", outputPath)
 	tDockerfile := template.Must(template.New(tmplName).Parse(tmplID))
 	dockerfile, err := os.Create(outputPath)
@@ -91,9 +91,32 @@ func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) err
 		return err
 	}
 	cfg := &dockerfileData{
-		Version: vcsTag.name,
+		Version: vcsTag.Name,
 	}
 	err = tDockerfile.Execute(dockerfile, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type travisData struct {
+	Versions []*vcsTag
+}
+
+// generateDockerfile("twint", "alpineTemplate", "alpineTemplate")
+func generateTravis(vcsTag []*vcsTag) error {
+	tTravisfile := template.Must(template.New("tmplTravis").Parse(travisTemplate))
+	travisfile, err := os.Create(".travis.yml")
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &travisData{
+		Versions: vcsTag,
+	}
+	err = tTravisfile.Execute(travisfile, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err
@@ -131,7 +154,7 @@ func commitLocal(version string) {
 
 func createDirectories(tags []*vcsTag) {
 	for _, tag := range tags {
-		os.MkdirAll(path.Join("dockerfiles", tag.dir, "alpine"), 0755)
+		os.MkdirAll(path.Join("dockerfiles", tag.Dir, "alpine"), 0755)
 	}
 }
 
@@ -224,4 +247,25 @@ ENTRYPOINT ["/entrypoint.sh"]
 VOLUME /twint
 WORKDIR /srv/twint
 `
+)
+
+const (
+	travisTemplate = `after_script:
+  - docker images
+
+before_script:
+  - cd dockerfiles/"$VERSION"
+  - IMAGE="x0rzkov/twint:${VERSION/\//-}"
+
+env:{{range $val := .Versions}}
+  - VERSION={{ $val.Dir }}
+  - VERSION={{ $val.Dir }}/alpine{{end}}
+
+language: bash
+
+script:
+  - docker build -t "$IMAGE" .
+  - docker push "$IMAGE"
+
+services: docker`
 )
