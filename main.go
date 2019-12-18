@@ -1,63 +1,104 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"sort"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/hashicorp/go-version"
-	"github.com/jinzhu/configor"
 	"github.com/k0kubun/pp"
-	"github.com/wolfeidau/envfile"
-	dfg "github.com/x0rzkov/twint-docker/pkg/generator"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/config"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"gopkg.in/src-d/go-git.v4/storage/memory"
 )
 
-/*
-	Refs:
-	- https://github.com/dahernan/godockerize/blob/master/godockerize.go
-	- https://github.com/ozankasikci/dockerfile-generator
-*/
-
 var (
-	debugMode   = true
-	lastVersion string
-	vcsTags     []string
+	debugMode    = true
+	verboseMode  = false
+	silentMode   = true
+	lastVersion  string
+	vcsTags      []*vcsTag
+	dockerImages = []string{"alpine", "ubuntu"}
 )
+
+type vcsTag struct {
+	name string
+	dir  string
+}
 
 // Retrieve remote tags without cloning repository
 func main() {
+
+	flag.Parse()
+	projectName := flag.Arg(0)
+	pp.Println("projectName", projectName)
+
 	err, tags := getRemoteTags()
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	pp.Println("tags: ", tags)
+
+	var vcsTags []*vcsTag
 	for _, tag := range tags {
+		dir := tag
 		if strings.HasPrefix(tag, "v") {
-			tag = strings.Replace(tag, "v", "", -1)
+			dir = strings.Replace(tag, "v", "", -1)
 		}
-		vcsTags = append(vcsTags, tag)
-	}
-	log.Printf("Tags found: %v", vcsTags)
-	err, envMap := readEnvFile(".env")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	if debugMode {
-		pp.Println(envMap)
+		vcsTags = append(vcsTags, &vcsTag{name: tag, dir: dir})
 	}
 
 	lastVersion = getLastVersion(tags)
 	log.Printf("Detected version: %v", lastVersion)
+	vcsTags = append(vcsTags, &vcsTag{name: lastVersion, dir: "latest"})
 
-	loadConfig("config.yaml", "config.yml", "docker.yml")
+	pp.Println("vcsTags: ", vcsTags)
+
 	createDirectories(vcsTags)
+	for _, dockerImage := range dockerImages {
+		for _, vcsTag := range vcsTags {
+			switch dockerImage {
+			case "alpine":
+				generateDockerfile("alpine", dockerImage+"Template", alpineTemplate, vcsTag)
+			case "ubuntu":
+				generateDockerfile("", dockerImage+"Template", ubuntuTemplate, vcsTag)
+			}
+		}
+	}
+}
 
+type dockerfileData struct {
+	Version string
+}
+
+// generateDockerfile("twint", "alpineTemplate", "alpineTemplate")
+func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
+	outputPath := filepath.Join("dockerfiles", vcsTag.dir, prefixPath, "Dockerfile")
+	pp.Println("outputPath: ", outputPath)
+	tDockerfile := template.Must(template.New(tmplName).Parse(tmplID))
+	dockerfile, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &dockerfileData{
+		Version: vcsTag.name,
+	}
+	err = tDockerfile.Execute(dockerfile, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
 }
 
 func getLastVersion(tags []string) string {
@@ -84,28 +125,13 @@ func commitLocal(version string) {
 				When:  time.Now(),
 			},
 		})
-
 		_ = r.Push(&git.PushOptions{})
 	}
 }
 
-func loadConfig(files ...string) {
-	var cfg Config
-	configor.Load(&cfg, files...)
-	cfg.Vcs.Version = lastVersion
-	cfg.Vcs.Tags = vcsTags
-	pp.Println("config:", cfg)
-}
-
-func readEnvFile(path string) (error, map[string]string) {
-	envMap := make(map[string]string)
-	err := envfile.ReadEnvFile(path, envMap)
-	return err, envMap
-}
-
-func createDirectories(tags []string) {
+func createDirectories(tags []*vcsTag) {
 	for _, tag := range tags {
-		os.MkdirAll(path.Join("dockerfiles", tag, "alpine"), 0755)
+		os.MkdirAll(path.Join("dockerfiles", tag.dir, "alpine"), 0755)
 	}
 }
 
@@ -131,86 +157,21 @@ func getRemoteTags() (error, []string) {
 	return nil, tags
 }
 
-type Docker struct {
-	Images []Image `required:"true" json:"images" yaml:"images"`
-}
-
-type Image struct {
-	Disable    bool                   `default:"false" json:"disable" yaml:"disable"`
-	Owner      string                 `required:"true" default:"x0rzkov" json:"owner" yaml:"owner" env:"DOCKER_OWNER"`
-	Image      string                 `required:"true" default:"alpine" json:"image" yaml:"image" env:"DOCKER_BASE_IMAGE"`
-	BuildArgs  BuildArgs              `required:"true" json:"arguments" yaml:"arguments"`
-	Dockerfile dfg.DockerfileTemplate `required:"true" json:"dockerfile" yaml:"dockerfile"`
-}
-
-type BuildArgs struct {
-	BaseImage  string `required:"true" default:"alpine" json:"base" yaml:"base" env:"DOCKER_BASE_IMAGE"`
-	BaseTag    string `required:"true" default:"latest" json:"tag" yaml:"tag" env:"DOCKER_BASE_VERSION"`
-	Maintainer string `default:"x0rzkov@protonmail.com" json:"maintainer" yaml:"maintainer" env:"DOCKER_MAINTAINER"`
-	UserGID    string `default:"1000" json:"user-gid" yaml:"user-gid" env:"DOCKER_USER_GID"`
-	UserUID    string `default:"1000" json:"user-uid" yaml:"user-uid" env:"DOCKER_USER_UID"`
-}
-
-type VCS struct {
-	RemoteURL string   `required:"true" json:"url" yaml:"url" env:"VCS_REMOTE_URL"`
-	Version   string   `default:"master" json:"version" yaml:"version" env:"VCS_VERSION"`
-	Tags      []string `json:"tags" yaml:"tags" env:"VCS_TAGS"`
-}
-
-type Config struct {
-	Docker Docker `json:"docker" yaml:"docker"`
-	Vcs    VCS    `json:"vcs" yaml:"vcs"`
-}
-
-func generateDockerAlpine(img *Image) error {
-	data := &dfg.DockerfileData{
-		Stages: []dfg.Stage{
-			// An instruction is just an interface, so you can pass custom structs as well
-			[]dfg.Instruction{
-				dfg.From{
-					Image: "alpine:3.10",
-				},
-				dfg.User{
-					User: "x0rzkov",
-				},
-				dfg.Workdir{
-					Dir: "/opt/twint",
-				},
-				dfg.RunCommand{
-					Params: []string{"go", "get", "-d", "-v", "golang.org/x/net/html"},
-				},
-				dfg.RunCommand{
-					Params: []string{"CGO_ENABLED=0", "GOOS=linux", "go", "build", "-a", "-installsuffix", "cgo", "-o", "app", "."},
-				},
-			},
-		},
-	}
-	tmpl := dfg.NewDockerfileTemplate(data)
-
-	// write to a file
-	// file, err := os.Create("Dockerfile")
-	// err = tmpl.Render(file)
-
-	// or write to stdout
-	err := tmpl.Render(os.Stdout)
-	return err
-}
-
 const (
 	entrypointTemplate = `#!/bin/bash
 $@`
 )
 
 const (
-	alpineTemplate = `FROM alpine:{{.BaseVersion}}
+	alpineTemplate = `FROM alpine:3.10
 
-MAINTAINER {{.Maintainer}}
+MAINTAINER x0rxkov@protonmail.com
 
-ARG TWINT_GID={{.TwintGID}}
-ARG TWINT_UID={{.TwintUID}}
+ARG TWINT_GID=997
+ARG TWINT_UID=997
 
-RUN addgroup -g ${TWINT_GID} twint && \
-    adduser -u ${TWINT_UID} -D -h /opt/twint -s /bin/sh -G twint twint
+RUN addgroup -g 997 twint && \
+    adduser -u 997 -D -h /opt/twint -s /bin/sh -G twint twint
 
 # This hack is widely applied to avoid python printing issues in docker containers.
 # See: https://github.com/Docker-Hub-frolvlad/docker-alpine-python3/pull/13
@@ -228,7 +189,7 @@ RUN echo "**** install Python ****" && \
 
 WORKDIR /opt/twint
 
-RUN git clone --depth=1 -b {{.TwintVersion}} https://github.com/twintproject/twint /opt/twint \
+RUN git clone --depth=1 -b {{.Version}} https://github.com/twintproject/twint /opt/twint \
 	&& cd /opt/twint \
 	&& pip install -e .
 
@@ -253,7 +214,7 @@ git \
 python3-pip
 
 RUN \
-pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.10#egg=twint
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@{{.Version}}#egg=twint
 
 RUN \
 apt-get clean autoclean && \
