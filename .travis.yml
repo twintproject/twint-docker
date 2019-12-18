@@ -5,6 +5,9 @@ before_script:
   - cd dockerfiles/"$VERSION"
   - IMAGE="x0rzkov/twint:${VERSION/\//-}"
 
+go: 
+ - 1.13.5
+
 env:
   - VERSION=1.1.2
   - VERSION=1.1.2/alpine
