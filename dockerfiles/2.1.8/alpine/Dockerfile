@@ -4,6 +4,7 @@ MAINTAINER x0rxkov@protonmail.com
 
 ARG TWINT_GID=997
 ARG TWINT_UID=997
+ARG TWINT_VERSION=v2.1.8
 
 RUN addgroup -g 997 twint && \
     adduser -u 997 -D -h /opt/twint -s /bin/sh -G twint twint

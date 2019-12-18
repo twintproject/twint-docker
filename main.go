@@ -69,9 +69,13 @@ func main() {
 			case "alpine":
 				generateDockerfile("alpine", dockerImage+"Template", alpineTemplate, vcsTag)
 				generateEntrypoint("alpine", "entrypointTemplate", entrypointTemplate, vcsTag)
+				generateMakefile("alpine", "makefileTemplate", makefileTemplate, vcsTag)
+				generateDockerignore("alpine", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			case "ubuntu":
 				generateDockerfile("", dockerImage+"Template", ubuntuTemplate, vcsTag)
 				generateEntrypoint("", "entrypointTemplate", entrypointTemplate, vcsTag)
+				generateMakefile("", "makefileTemplate", makefileTemplate, vcsTag)
+				generateDockerignore("", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			}
 		}
 	}
@@ -151,6 +155,48 @@ func generateEntrypoint(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) err
 	return nil
 }
 
+type makefileData struct {
+}
+
+func generateMakefile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
+	tMakefile := template.Must(template.New("tmplMakefile").Parse(makefileTemplate))
+	outputPathMakefile := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Makefile")
+	pp.Println("outputPathMakefile: ", outputPathMakefile)
+	makefile, err := os.Create(outputPathMakefile)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &makefileData{}
+	err = tMakefile.Execute(makefile, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type dockerignoreData struct {
+}
+
+func generateDockerignore(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
+	tDockerIgnore := template.Must(template.New("tmplDockerIgnore").Parse(dockerignoreTemplate))
+	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, ".dockerignore")
+	pp.Println("outputPath: ", outputPath)
+	makefile, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &dockerignoreData{}
+	err = tDockerIgnore.Execute(makefile, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
 func getLastVersion(tags []string) string {
 	versions := make([]*version.Version, len(tags))
 	for i, raw := range tags {
@@ -219,6 +265,7 @@ MAINTAINER x0rxkov@protonmail.com
 
 ARG TWINT_GID=997
 ARG TWINT_UID=997
+ARG TWINT_VERSION={{.Version}}
 
 RUN addgroup -g 997 twint && \
     adduser -u 997 -D -h /opt/twint -s /bin/sh -G twint twint
@@ -256,6 +303,8 @@ const (
 	ubuntuTemplate = `FROM ubuntu:18.04
 
 MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
+
+ARG TWINT_VERSION={{.Version}}
 
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -295,7 +344,55 @@ language: bash
 
 script:
   - docker build -t "$IMAGE" .
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push "$IMAGE"
 
 services: docker`
+)
+
+const (
+	dockerignoreTemplate = `alpine
+Makefile
+docker-compose.yml
+docker-compose.*.yml
+.git
+.git/
+.git/*
+.git/**
+`
+)
+
+const (
+	makefileTemplate = `IMAGE := x0rzkov/twint-docker
+VERSION:= $(shell grep TWINT_VERSION Dockerfile | awk '{print $2}' | cut -d '=' -f 2)
+
+## test		:	test.
+test:
+	true
+
+## version	:	display version.
+version:
+	@echo $(VERSION)
+
+## image		:	build image and tag them.
+.PHONY: image
+image:
+	@docker build -t ${IMAGE}:${VERSION} .
+	@docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest
+
+## push-image	:	push docker image.
+.PHONY: push-image
+push-image:
+	@docker push ${IMAGE}:${VERSION}
+	@docker push ${IMAGE}:latest
+
+## help		:	Print commands help.
+.PHONY: help
+help : Makefile
+	@sed -n 's/^##//p' $<
+
+# https://stackoverflow.com/a/6273809/1826109
+%:
+	@:
+`
 )

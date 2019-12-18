@@ -1,13 +1,3 @@
-# refs.
-# - https://jjasghar.github.io/blog/2018/11/14/using-travis-ci-deploying-docker-container-to-the-public-docker-registry/
-# - https://docs.travis-ci.com/user/docker/
-# - https://docs.travis-ci.com/user/environment-variables/#encrypting-environment-variables
-
-travis encrypt --pro DOCKER_USERNAME="x0rzkov"
-travis encrypt --pro DOCKER_USERNAME="ada33ve79T!"
-travis env --pro set DOCKER_USERNAME x0rzkov
-travis env --pro set DOCKER_PASSWORD ada33ve79T!
-
 after_script:
   - docker images
 

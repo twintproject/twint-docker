@@ -2,6 +2,8 @@ FROM ubuntu:18.04
 
 MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
 
+ARG TWINT_VERSION=2.1.10
+
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
