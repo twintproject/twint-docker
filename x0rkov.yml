@@ -1,0 +1,10 @@
+---
+vcs:
+  url: https://github.com/twintproject/twint
+  exclude_version:
+  - v1.0
+  - 1.1
+
+docker:
+  images:
+  - name: 

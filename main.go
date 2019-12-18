@@ -34,7 +34,7 @@ var (
 	silentMode     = true
 	lastVersion    string
 	vcsTags        []*vcsTag
-	dockerImages   = []string{"alpine", "ubuntu"}
+	dockerImages   = []string{"alpine", "ubuntu", "slim"}
 	excludeVersion = []string{"v1.0", "1.1"}
 )
 
@@ -86,16 +86,21 @@ func main() {
 	for _, dockerImage := range dockerImages {
 		for _, vcsTag := range vcsTags {
 			switch dockerImage {
+			case "slim":
+				generateDockerfile("slim", dockerImage+"Template", debianSlimTemplate, vcsTag)
+				generateEntrypoint("slim", "entrypointTemplate", entrypointTemplate, vcsTag)
+				generateMakefile("slim", "makefileTemplate", makefileTemplate, vcsTag)
+				generateDockerignore("slim", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			case "alpine":
 				generateDockerfile("alpine", dockerImage+"Template", alpineTemplate, vcsTag)
 				generateEntrypoint("alpine", "entrypointTemplate", entrypointTemplate, vcsTag)
 				generateMakefile("alpine", "makefileTemplate", makefileTemplate, vcsTag)
 				generateDockerignore("alpine", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			case "ubuntu":
-				generateDockerfile("", dockerImage+"Template", ubuntuTemplate, vcsTag)
-				generateEntrypoint("", "entrypointTemplate", entrypointTemplate, vcsTag)
-				generateMakefile("", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerignore("", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
+				generateDockerfile("ubuntu", dockerImage+"Template", ubuntuTemplate, vcsTag)
+				generateEntrypoint("ubuntu", "entrypointTemplate", entrypointTemplate, vcsTag)
+				generateMakefile("ubuntu", "makefileTemplate", makefileTemplate, vcsTag)
+				generateDockerignore("ubuntu", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			}
 		}
 	}
@@ -248,7 +253,9 @@ func commitLocal(version string) {
 
 func createDirectories(tags []*vcsTag) {
 	for _, tag := range tags {
-		os.MkdirAll(path.Join("dockerfiles", tag.Dir, "alpine"), 0755)
+		for _, image := range dockerImages {
+			os.MkdirAll(path.Join("dockerfiles", tag.Dir, image), 0755)
+		}
 	}
 }
 
@@ -304,7 +311,7 @@ RUN git clone --depth=1 -b {{.Version}} https://github.com/twintproject/twint /o
 	&& pip3 install .
 
 FROM alpine:3.10
-MAINTAINER x0rxkov@protonmail.com
+MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
 WORKDIR /opt/app
 
@@ -322,6 +329,34 @@ ENV PATH="/opt/venv/bin:$PATH" \
 WORKDIR /opt/app
 
 ENTRYPOINT ["twint"]`
+)
+
+const (
+	debianSlimTemplate = `FROM debian:stretch-slim
+
+MAINTAINER x0rxkov <x0rxkov@protonmail.com>
+
+ARG TWINT_VERSION={{.Version}}
+
+COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+RUN \
+apt-get update && \
+apt-get install -y \
+git \
+python3-pip
+
+RUN \
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@{{.Version}}#egg=twint
+
+RUN \
+apt-get clean autoclean && \
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENTRYPOINT ["/entrypoint.sh"]
+VOLUME /twint
+WORKDIR /srv/twint`
 )
 
 const (
@@ -349,8 +384,7 @@ rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENTRYPOINT ["/entrypoint.sh"]
 VOLUME /twint
-WORKDIR /srv/twint
-`
+WORKDIR /srv/twint`
 )
 
 const (
@@ -376,8 +410,7 @@ services: docker`
 )
 
 const (
-	dockerignoreTemplate = `alpine
-Makefile
+	dockerignoreTemplate = `Makefile
 docker-compose.yml
 docker-compose.*.yml
 .git

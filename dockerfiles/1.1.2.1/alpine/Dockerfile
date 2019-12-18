@@ -22,7 +22,7 @@ RUN git clone --depth=1 -b 1.1.2.1 https://github.com/twintproject/twint /opt/ap
 	&& pip3 install .
 
 FROM alpine:3.10
-MAINTAINER x0rxkov@protonmail.com
+MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
 WORKDIR /opt/app
 
@@ -37,7 +37,6 @@ ENV PATH="/opt/venv/bin:$PATH" \
 	VIRTUAL_ENV="/opt/venv"
 
 # Copy your application
-# COPY . /opt/app/
 WORKDIR /opt/app
 
 ENTRYPOINT ["twint"]
