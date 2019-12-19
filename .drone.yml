@@ -1,3 +1,5 @@
+kind: pipeline
+
 build:
   image: golang:$$GO_VERSION
   commands:
