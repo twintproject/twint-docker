@@ -344,8 +344,8 @@ func removeContents(dir string) error {
 func getRemoteTags() (error, []string) {
 	// Create the remote with repository URL
 	rem := git.NewRemote(memory.NewStorage(), &config.RemoteConfig{
-		Name: "origin",
-		URLs: []string{"https://github.com/twintproject/twint"},
+		Name: cfg.VCS.Name,
+		URLs: cfg.VCS.URLs,
 	})
 	log.Print("Fetching tags...")
 	// We can then use every Remote functions to retrieve wanted information
@@ -395,6 +395,13 @@ RUN git clone --depth=1 -b {{.Version}} https://github.com/twintproject/twint /o
 FROM alpine:3.10
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
+# Create runtime user
+RUN mkdir -p /opt \
+	&& adduser -D twint -h /opt/app -s /bin/sh \
+ 	&& su twint -c 'cd /opt/app; mkdir -p data'
+
+# Switch to user context
+USER twint
 WORKDIR /opt/app
 
 # Install Python and external runtime dependencies only
@@ -406,9 +413,6 @@ COPY --from=build /opt/venv /opt/venv
 # Activate the virtual environment
 ENV PATH="/opt/venv/bin:$PATH" \
 	VIRTUAL_ENV="/opt/venv"
-
-# Copy your application
-WORKDIR /opt/app
 
 ENTRYPOINT ["twint"]`
 )
