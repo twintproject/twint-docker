@@ -480,7 +480,7 @@ language: bash
 
 script:
   - docker-slim version
-  - docker build --squash -t "$IMAGE" .
+  - docker build -t "$IMAGE" .
   - sudo docker-slim build "$IMAGE"
   - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
