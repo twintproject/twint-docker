@@ -416,6 +416,8 @@ language: bash
 script:
   - docker-slim version
   - docker build -t "$IMAGE" .
+  - docker-slim build "$IMAGE"
+  - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push "$IMAGE"
 

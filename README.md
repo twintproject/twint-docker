@@ -10,6 +10,11 @@ For fisrt usage, you need to build image docker.
 docker-compose build
 ```
 
+#### Create an alias
+``` bash
+alias twint="docker run -ti --rm -v $(pwd)/data:/opt/app/data x0rzkov/twint:latest-alpine"
+```               
+
 ### Elasticsearch and Kibana
 
 Start to up elaticsearch and kibana
