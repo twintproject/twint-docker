@@ -334,7 +334,7 @@ ENTRYPOINT ["twint"]`
 )
 
 const (
-	debianSlimTemplate = `FROM debian:stretch-slim
+	debianSlimTemplate = `FROM python:3.7-slim-stretch
 
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
