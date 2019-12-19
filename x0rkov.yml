@@ -1,13 +1,15 @@
 ---
 vcs:
-  url: https://github.com/twintproject/twint
+  name: origin
+  urls: 
+  - https://github.com/twintproject/twint
   skip_version:
-  - v1.0
-  - 1.1
-  - 1.1.2.1
-  - 1.1.3.1
-  - 1.1.3
-  - 1.1.2
+  - "v1.0"
+  - "1.1"
+  - "1.1.2.1"
+  - "1.1.3.1"
+  - "1.1.3"
+  - "1.1.2"
 
 ci:
   travis:
@@ -16,17 +18,14 @@ ci:
 
 docker:
   images:
-
     alpine:
       dockerfile: .docker/alpine.tmpl
       dockerignore: .docker/dockerignore.tmpl
       makefile: .docker/makefile.tmpl
-
     slim:
       dockerfile: .docker/debian-slim.tmpl
       dockerignore: .docker/dockerignore.tmpl
       makefile: .docker/makefile.tmpl
-
     ubuntu:
       dockerfile: .docker/ubuntu.tmpl
       dockerignore: .docker/dockerignore.tmpl
