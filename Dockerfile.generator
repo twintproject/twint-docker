@@ -23,7 +23,7 @@ RUN apk --no-cache --no-progress add ca-certificates \
 
 # Switch to user context
 USER x0rzkov
-WORKDIR /opt/twint-docker
+WORKDIR /opt/twint-docker/data
 
 # Copy twint-docker binary to /opt/twint-docker/bin
 COPY --from=builder /go/src/github.com/x0rzkov/twint-docker/twint-docker /opt/twint-docker/bin/twint-docker-gen

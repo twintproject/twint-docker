@@ -65,7 +65,7 @@ func isValidVersion(input string) bool {
 
 func main() {
 	cfg := &Config{}
-	config := flag.String("file", "x0rzkov.yml", "configuration file")
+	config := flag.String("config", "x0rzkov.yml", "configuration file")
 	// debugMode = flag.Bool("debug", false, "debug mode")
 	flag.StringVar(&cfg.APPName, "name", "", "app name")
 	flag.Parse()
@@ -99,10 +99,7 @@ func main() {
 	if debugMode {
 		pp.Println("vcsTags: ", vcsTags)
 	}
-	if err := removeContents("./dockerfiles"); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	removeContents("./dockerfiles")
 	createDirectories(vcsTags)
 	for _, dockerImage := range dockerImages {
 		for _, vcsTag := range vcsTags {
