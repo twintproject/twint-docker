@@ -1,5 +1,7 @@
 FROM golang:1.13-alpine AS builder
 
+ARG TWINT_GENERATOR=0.0.1
+
 RUN apk add --no-cache make
 
 COPY .  /go/src/github.com/x0rzkov/twint-docker
@@ -14,7 +16,7 @@ FROM alpine:3.10 AS runtime
 ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini-muslc-amd64 /usr/local/sbin/tini
 
 # Install runtime dependencies & create runtime user
-RUN apk --no-cache --no-progress add ca-certificates git libssh2 openssl \
+RUN apk --no-cache --no-progress add ca-certificates \
  && chmod +x /usr/local/sbin/tini && mkdir -p /opt \
  && adduser -D x0rzkov -h /opt/twint-docker -s /bin/sh \
  && su x0rzkov -c 'cd /opt/twint-docker; mkdir -p bin config data'
@@ -25,10 +27,10 @@ WORKDIR /opt/twint-docker
 
 # Copy twint-docker binary to /opt/twint-docker/bin
 COPY --from=builder /go/src/github.com/x0rzkov/twint-docker/twint-docker /opt/twint-docker/bin/twint-docker-gen
-COPY x0rzkov.yaml /opt/twint-docker/config/x0rzkov.yaml
+COPY x0rzkov.yml /opt/twint-docker/config/x0rzkov.yml
 ENV PATH $PATH:/opt/twint-docker/bin
 
 # Container configuration
 VOLUME ["/opt/twint-docker/data"]
 ENTRYPOINT ["tini", "-g", "--"]
-CMD ["/opt/twint-docker/bin/twint-docker-gen", "-config=/opt/twint-docker/config/x0rzkov.yaml"]
+CMD ["/opt/twint-docker/bin/twint-docker-gen", "-config=/opt/twint-docker/config/x0rzkov.yml"]

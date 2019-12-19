@@ -8,14 +8,14 @@ test:
 ## image		:	build image and tag them.
 .PHONY: image
 image:
-	@docker build -t ${IMAGE}:${VERSION} -d Dockerfile.generator .
-	@docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest
+	@docker build -t "$(IMAGE):$(VERSION)" -f Dockerfile.generator .
+	@docker tag $(IMAGE):$(VERSION) $(IMAGE):latest
 
 ## push-image	:	push docker image.
 .PHONY: push-image
 push-image:
-	@docker push ${IMAGE}:${VERSION}
-	@docker push ${IMAGE}:latest
+	@docker push $(IMAGE):$(VERSION)
+	@docker push $(IMAGE):latest
 
 ## help		:	Print commands help.
 .PHONY: help
