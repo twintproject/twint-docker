@@ -17,7 +17,6 @@ import (
 	"github.com/k0kubun/pp"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/config"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"gopkg.in/src-d/go-git.v4/storage/memory"
 )
 
@@ -30,23 +29,47 @@ import (
 */
 
 var (
-	debugMode      = false
-	verboseMode    = false
-	silentMode     = true
-	dockerImages   = []string{"alpine", "ubuntu", "slim"}
-	excludeVersion = []string{"v1.0", "1.1", "1.1.2.1", "1.1.3.1", "1.1.3", "1.1.2"}
-	vcsTags        []*vcsTag
-	lastVersion    string
-	cfg            *Config
+	debugMode   = false
+	verboseMode = false
+	silentMode  = true
+	vcsTags     []*vcsTag
+	lastVersion string
+	cfg         *Config
 )
 
 type Config struct {
-	APPName string           `json:"app-name" yaml:"app-name"`
-	Images  map[string]Image `json:"images" yaml:"images"`
+	APPName string `json:"app-name" yaml:"app-name"`
+	Docker  Docker `json:"docker" yaml:"docker"`
+	VCS     VCS    `json:"vcs" yaml:"vcs"`
+	CI      CI     `json:"ci" yaml:"ci"`
+}
+
+type CI struct {
+	Travis Travis `json:"travis" yaml:"travis"`
+}
+
+type Travis struct {
+	Enabled  bool   `json:"enabled" yaml:"enabled"`
+	Template string `json:"template" yaml:"template"`
+}
+
+type Docker struct {
+	OutputPath string           `default:"./dockerfiles" json:"output-path" yaml:"output-path"`
+	Images     map[string]Image `json:"images" yaml:"images"`
+}
+
+type VCS struct {
+	Name        string   `json:"name" yaml:"name"`
+	URLs        []string `json:"urls" yaml:"urls"`
+	SkipVersion []string `json:"skip-version" yaml:"skip-version"`
 }
 
 type Image struct {
-	Name string `json:"name" yaml:"name"`
+	Name            string `json:"name" yaml:"name"`
+	DockerFileTpl   string `json:"dockerfile" yaml:"dockerfile"`
+	DockerIgnoreTpl string `json:"dockerignore" yaml:"dockerignore"`
+	MakefileTpl     string `json:"makefile" yaml:"makefile"`
+	ReadmeTpl       string `json:"readme" yaml:"readme"`
 }
 
 type vcsTag struct {
@@ -55,7 +78,7 @@ type vcsTag struct {
 }
 
 func isValidVersion(input string) bool {
-	for _, version := range excludeVersion {
+	for _, version := range cfg.VCS.SkipVersion {
 		if version == input {
 			return false
 		}
@@ -64,14 +87,19 @@ func isValidVersion(input string) bool {
 }
 
 func main() {
-	cfg := &Config{}
+	cfg = &Config{}
 	config := flag.String("config", "x0rzkov.yml", "configuration file")
 	// debugMode = flag.Bool("debug", false, "debug mode")
-	flag.StringVar(&cfg.APPName, "name", "", "app name")
+	// flag.StringVar(&cfg.APPName, "name", "", "app name")
 	flag.Parse()
 
 	// os.Setenv("CONFIGOR_ENV_PREFIX", "-")
-	loadConfig(*config)
+	cfg, err := loadConfig(*config)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	pp.Println(cfg)
+	// os.Exit(1)
 
 	err, tags := getRemoteTags()
 	if err != nil {
@@ -99,9 +127,12 @@ func main() {
 	if debugMode {
 		pp.Println("vcsTags: ", vcsTags)
 	}
-	removeContents("./dockerfiles")
+
+	removeContents(cfg.Docker.OutputPath)
 	createDirectories(vcsTags)
-	for _, dockerImage := range dockerImages {
+	for dockerImage, dockerData := range cfg.Docker.Images {
+		pp.Println("dockerImage: ", dockerImage)
+		pp.Println(dockerData)
 		for _, vcsTag := range vcsTags {
 			switch dockerImage {
 			case "slim":
@@ -125,7 +156,7 @@ func main() {
 	generateTravis(vcsTags)
 }
 
-func loadConfig(path ...string) (error, *Config) {
+func loadConfig(path ...string) (*Config, error) {
 	err := configor.New(&configor.Config{
 		Debug:                true,
 		Verbose:              true,
@@ -136,7 +167,7 @@ func loadConfig(path ...string) (error, *Config) {
 			fmt.Printf("%v changed", config)
 		},
 	}).Load(cfg, path...)
-	return err, cfg
+	return cfg, err
 }
 
 type dockerfileData struct {
@@ -277,29 +308,11 @@ func getLastVersion(tags []string) string {
 	return versions[len(versions)-1].String()
 }
 
-// https://github.com/chilic/docker-hugo/blob/master/cmd/build.go
-func commitLocal(version string) {
-	r, _ := git.PlainOpen("./")
-	w, _ := r.Worktree()
-	status, _ := w.Status()
-	if status.File("Dockerfile").Worktree == git.Modified {
-		_, _ = w.Add("Dockerfile")
-		_, _ = w.Commit(version, &git.CommitOptions{
-			Author: &object.Signature{
-				Name:  "x0rzkov",
-				Email: "x0rzkov@protonmail.com",
-				When:  time.Now(),
-			},
-		})
-		_ = r.Push(&git.PushOptions{})
-	}
-}
-
 func createDirectories(tags []*vcsTag) {
 	for _, tag := range tags {
-		for _, image := range dockerImages {
+		for image, _ := range cfg.Docker.Images {
 			if image != "ubuntu" {
-				os.MkdirAll(path.Join("dockerfiles", tag.Dir, image), 0755)
+				os.MkdirAll(path.Join(cfg.Docker.OutputPath, tag.Dir, image), 0755)
 			}
 		}
 	}

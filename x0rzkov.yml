@@ -1,9 +1,10 @@
 ---
+app-name: test
 vcs:
   name: origin
   urls: 
   - https://github.com/twintproject/twint
-  skip_version:
+  skip-version:
   - "v1.0"
   - "1.1"
   - "1.1.2.1"
@@ -17,19 +18,23 @@ ci:
     template: .travis/travis.tmpl
 
 docker:
+  output-path: ./dockerfiles
   images:
     alpine:
       dockerfile: .docker/alpine.tmpl
       dockerignore: .docker/dockerignore.tmpl
       makefile: .docker/makefile.tmpl
+      readme: .docker/readme.tmpl
     slim:
       dockerfile: .docker/debian-slim.tmpl
       dockerignore: .docker/dockerignore.tmpl
       makefile: .docker/makefile.tmpl
+      readme: .docker/readme.tmpl
     ubuntu:
       dockerfile: .docker/ubuntu.tmpl
       dockerignore: .docker/dockerignore.tmpl
       makefile: .docker/makefile.tmpl
+      readme: .docker/readme.tmpl
 
 contacts:
 - name: x0rzkov
