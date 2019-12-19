@@ -400,12 +400,12 @@ RUN mkdir -p /opt \
 	&& adduser -D twint -h /opt/app -s /bin/sh \
  	&& su twint -c 'cd /opt/app; mkdir -p data'
 
+# Install Python and external runtime dependencies only
+RUN apk add --no-cache python3 libffi openblas libstdc++
+
 # Switch to user context
 USER twint
 WORKDIR /opt/app
-
-# Install Python and external runtime dependencies only
-RUN apk add --no-cache python3 libffi openblas libstdc++
 
 # Copy the virtual environment from the previous image
 COPY --from=build /opt/venv /opt/venv
