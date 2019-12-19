@@ -99,7 +99,10 @@ func main() {
 	if debugMode {
 		pp.Println("vcsTags: ", vcsTags)
 	}
-	removeContents("./dockerfiles")
+	if err := removeContents("./dockerfiles"); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	createDirectories(vcsTags)
 	for _, dockerImage := range dockerImages {
 		for _, vcsTag := range vcsTags {
