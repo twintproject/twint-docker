@@ -14,7 +14,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
 	VIRTUAL_ENV="/opt/venv"
 
 # Install dependencies into the virtual environment with Pipenv
-RUN git clone --depth=1 -b v2.1.10 https://github.com/twintproject/twint /opt/app \
+RUN git clone --depth=1 -b v2.1.11 https://github.com/twintproject/twint /opt/app \
 	&& cd /opt/app \
 	&& pip3 install --upgrade pip \
 	&& pip3 install cython \

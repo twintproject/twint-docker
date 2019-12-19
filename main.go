@@ -30,7 +30,7 @@ import (
 */
 
 var (
-	debugMode      = true
+	debugMode      = false
 	verboseMode    = false
 	silentMode     = true
 	dockerImages   = []string{"alpine", "ubuntu", "slim"}
@@ -63,10 +63,10 @@ func isValidVersion(input string) bool {
 	return true
 }
 
-// Retrieve remote tags without cloning repository
 func main() {
 	cfg := &Config{}
 	config := flag.String("file", "x0rzkov.yml", "configuration file")
+	// debugMode = flag.Bool("debug", false, "debug mode")
 	flag.StringVar(&cfg.APPName, "name", "", "app name")
 	flag.Parse()
 
@@ -78,8 +78,9 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	pp.Println("tags: ", tags)
-
+	if debugMode {
+		pp.Println("tags: ", tags)
+	}
 	var vcsTags []*vcsTag
 	for _, tag := range tags {
 		dir := tag
@@ -92,10 +93,13 @@ func main() {
 	}
 
 	lastVersion = getLastVersion(tags)
-	log.Printf("Detected version: %v", lastVersion)
+	log.Printf("Latest version: %v", lastVersion)
 	vcsTags = append(vcsTags, &vcsTag{Name: "v" + lastVersion, Dir: "latest"})
 
-	pp.Println("vcsTags: ", vcsTags)
+	if debugMode {
+		pp.Println("vcsTags: ", vcsTags)
+	}
+	removeContents("./dockerfiles")
 	createDirectories(vcsTags)
 	for _, dockerImage := range dockerImages {
 		for _, vcsTag := range vcsTags {
@@ -142,7 +146,9 @@ type dockerfileData struct {
 
 func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
 	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Dockerfile")
-	pp.Println("outputPath: ", outputPath)
+	if debugMode {
+		pp.Println("outputPath: ", outputPath)
+	}
 	tDockerfile := template.Must(template.New(tmplName).Parse(tmplID))
 	dockerfile, err := os.Create(outputPath)
 	if err != nil {
@@ -169,7 +175,9 @@ func generateTravis(vcsTag []*vcsTag) error {
 	tTravisfile := template.Must(template.New("tmplTravis").Parse(travisTemplate))
 	travisfile, err := os.Create(".travis.yml")
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if debugMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	cfg := &travisData{
@@ -177,7 +185,9 @@ func generateTravis(vcsTag []*vcsTag) error {
 	}
 	err = tTravisfile.Execute(travisfile, cfg)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if debugMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
@@ -189,7 +199,9 @@ type entrypointData struct {
 func generateEntrypoint(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
 	tEntrypoint := template.Must(template.New("tmplEntrypoint").Parse(entrypointTemplate))
 	outputPathEntrypoint := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "docker-entrypoint.sh")
-	pp.Println("outputPathEntrypoint: ", outputPathEntrypoint)
+	if debugMode {
+		pp.Println("outputPathEntrypoint: ", outputPathEntrypoint)
+	}
 	entrypoint, err := os.Create(outputPathEntrypoint)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
@@ -214,7 +226,9 @@ type makefileData struct {
 func generateMakefile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
 	tMakefile := template.Must(template.New("tmplMakefile").Parse(makefileTemplate))
 	outputPathMakefile := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Makefile")
-	pp.Println("outputPathMakefile: ", outputPathMakefile)
+	if debugMode {
+		pp.Println("outputPathMakefile: ", outputPathMakefile)
+	}
 	makefile, err := os.Create(outputPathMakefile)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
@@ -235,7 +249,9 @@ type dockerignoreData struct {
 func generateDockerignore(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
 	tDockerIgnore := template.Must(template.New("tmplDockerIgnore").Parse(dockerignoreTemplate))
 	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, ".dockerignore")
-	pp.Println("outputPath: ", outputPath)
+	if debugMode {
+		pp.Println("outputPath: ", outputPath)
+	}
 	makefile, err := os.Create(outputPath)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
@@ -287,6 +303,25 @@ func createDirectories(tags []*vcsTag) {
 			}
 		}
 	}
+}
+
+func removeContents(dir string) error {
+	d, err := os.Open(dir)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	names, err := d.Readdirnames(-1)
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		err = os.RemoveAll(filepath.Join(dir, name))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func getRemoteTags() (error, []string) {
@@ -452,6 +487,51 @@ script:
   - docker push "$IMAGE"
 
 services: docker`
+)
+
+const (
+	dockerComposeTemplate = `---
+version: '3.7'
+services:
+
+  twint:
+    build:
+      context: dockerfiles/latest/alpine
+      dockerfile: Dockerfile
+    container_name: twint
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${KIBANA_VERSION}
+    container_name: twint_elastic
+    environment:
+    - node.name=elasticsearch
+    - cluster.initial_master_nodes=elasticsearch
+    - cluster.name=docker-cluster
+    - bootstrap.memory_lock=true
+    - "ES_JAVA_OPTS=${ELASTIC_JAVA_OPTS}"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+    - esdata01:/usr/share/elasticsearch/data
+    ports:
+    - 9200:9200
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
+    container_name: twint_kibana
+    ports:
+    - 5601:5601
+
+volumes:
+  esdata01:
+    driver: local
+
+networks:
+  default:
+    external:
+      name: nw_twint`
 )
 
 const (
