@@ -1,10 +1,37 @@
 ---
 vcs:
   url: https://github.com/twintproject/twint
-  exclude_version:
+  skip_version:
   - v1.0
   - 1.1
+  - 1.1.2.1
+  - 1.1.3.1
+  - 1.1.3
+  - 1.1.2
+  travis:
+    enable: true
+    template: .travis/travis.tmpl
 
 docker:
   images:
-  - name: 
+    # Alpine templates
+    alpine:
+      dockerfile: .docker/alpine.tmpl
+      dockerignore: .docker/dockerignore.tmpl
+      makefile: .docker/makefile.tmpl
+      
+    # Debian-Slim templates
+    slim:
+      dockerfile: .docker/debian-slim.tmpl
+      dockerignore: .docker/dockerignore.tmpl
+      makefile: .docker/makefile.tmpl
+
+    # Ubuntu templates
+    ubuntu:
+      dockerfile: .docker/ubuntu.tmpl
+      dockerignore: .docker/dockerignore.tmpl
+      makefile: .docker/makefile.tmpl
+
+contacts:
+- name: x0rzkov
+  email: x0rzkov@protonmail.com

@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-version"
+	"github.com/jinzhu/configor"
 	"github.com/k0kubun/pp"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/config"
@@ -32,11 +33,21 @@ var (
 	debugMode      = true
 	verboseMode    = false
 	silentMode     = true
-	lastVersion    string
-	vcsTags        []*vcsTag
 	dockerImages   = []string{"alpine", "ubuntu", "slim"}
-	excludeVersion = []string{"v1.0", "1.1", "1.1.2.1", "1.1.3.1", "1.1.3"}
+	excludeVersion = []string{"v1.0", "1.1", "1.1.2.1", "1.1.3.1", "1.1.3", "1.1.2"}
+	vcsTags        []*vcsTag
+	lastVersion    string
+	cfg            *Config
 )
+
+type Config struct {
+	APPName string           `json:"app-name" yaml:"app-name"`
+	Images  map[string]Image `json:"images" yaml:"images"`
+}
+
+type Image struct {
+	Name string `json:"name" yaml:"name"`
+}
 
 type vcsTag struct {
 	Name string
@@ -54,10 +65,13 @@ func isValidVersion(input string) bool {
 
 // Retrieve remote tags without cloning repository
 func main() {
-
+	cfg := &Config{}
+	config := flag.String("file", "x0rzkov.yml", "configuration file")
+	flag.StringVar(&cfg.APPName, "name", "", "app name")
 	flag.Parse()
-	projectName := flag.Arg(0)
-	pp.Println("projectName", projectName)
+
+	// os.Setenv("CONFIGOR_ENV_PREFIX", "-")
+	loadConfig(*config)
 
 	err, tags := getRemoteTags()
 	if err != nil {
@@ -105,6 +119,20 @@ func main() {
 		}
 	}
 	generateTravis(vcsTags)
+}
+
+func loadConfig(path ...string) (error, *Config) {
+	err := configor.New(&configor.Config{
+		Debug:                true,
+		Verbose:              true,
+		AutoReload:           true,
+		ErrorOnUnmatchedKeys: false,
+		AutoReloadInterval:   time.Minute,
+		AutoReloadCallback: func(config interface{}) {
+			fmt.Printf("%v changed", config)
+		},
+	}).Load(cfg, path...)
+	return err, cfg
 }
 
 type dockerfileData struct {
