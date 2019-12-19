@@ -1,4 +1,5 @@
 # twint-docker [![Build Status](https://travis-ci.com/x0rzkov/twint-docker.svg?branch=alpine)](https://travis-ci.com/x0rzkov/twint-docker)
+[![Build Status](https://cloud.drone.io/api/badges/x0rzkov/twint-docker/status.svg?ref=refs/heads/alpine)](https://cloud.drone.io/x0rzkov/twint-docker)
 
 ## How to use
 
