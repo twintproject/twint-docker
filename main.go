@@ -29,12 +29,13 @@ import (
 */
 
 var (
-	debugMode   = false
-	verboseMode = false
-	silentMode  = true
-	vcsTags     []*vcsTag
-	lastVersion string
-	cfg         *Config
+	debugMode      = false
+	verboseMode    = false
+	silentMode     = true
+	autoReloadMode = false
+	vcsTags        []*vcsTag
+	lastVersion    string
+	cfg            *Config
 )
 
 type Config struct {
@@ -98,8 +99,9 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	pp.Println(cfg)
-	// os.Exit(1)
+	if debugMode {
+		pp.Println(cfg)
+	}
 
 	err, tags := getRemoteTags()
 	if err != nil {
@@ -131,8 +133,10 @@ func main() {
 	removeContents(cfg.Docker.OutputPath)
 	createDirectories(vcsTags)
 	for dockerImage, dockerData := range cfg.Docker.Images {
-		pp.Println("dockerImage: ", dockerImage)
-		pp.Println(dockerData)
+		if debugMode {
+			pp.Println("dockerImage: ", dockerImage)
+			pp.Println(dockerData)
+		}
 		for _, vcsTag := range vcsTags {
 			switch dockerImage {
 			case "slim":
@@ -158,9 +162,9 @@ func main() {
 
 func loadConfig(path ...string) (*Config, error) {
 	err := configor.New(&configor.Config{
-		Debug:                true,
-		Verbose:              true,
-		AutoReload:           true,
+		Debug:                debugMode,
+		Verbose:              verboseMode,
+		AutoReload:           autoReloadMode,
 		ErrorOnUnmatchedKeys: false,
 		AutoReloadInterval:   time.Minute,
 		AutoReloadCallback: func(config interface{}) {
