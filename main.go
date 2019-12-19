@@ -479,6 +479,8 @@ before_install:
   - chmod +x dist_linux/docker-slim-sensor
   - sudo mv dist_linux/docker-slim /usr/local/bin
   - sudo mv dist_linux/docker-slim-sensor /usr/local/bin
+  - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+  - sudo service docker restart
 
 before_script:
   - cd dockerfiles/"$VERSION"
@@ -493,7 +495,7 @@ language: bash
 
 script:
   - docker-slim version
-  - docker build -t "$IMAGE" .
+  - docker build --squash -t "$IMAGE" .
   - sudo docker-slim build "$IMAGE"
   - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
