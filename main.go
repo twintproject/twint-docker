@@ -346,8 +346,7 @@ RUN chmod +x /entrypoint.sh
 RUN \
 apt-get update && \
 apt-get install -y \
-git \
-python3-pip
+git
 
 RUN \
 pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@{{.Version}}#egg=twint
