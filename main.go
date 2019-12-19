@@ -392,6 +392,8 @@ const (
 	travisTemplate = `after_script:
   - docker images
 
+sudo: required
+
 before_install:
   - sudo rm -f /usr/local/bin/docker-slim
   - sudo rm -f /usr/local/bin/docker-slim-sensor
@@ -416,7 +418,7 @@ language: bash
 script:
   - docker-slim version
   - docker build -t "$IMAGE" .
-  - docker-slim build "$IMAGE"
+  - sudo docker-slim build "$IMAGE"
   - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push "$IMAGE"
