@@ -35,7 +35,7 @@ var (
 	lastVersion    string
 	vcsTags        []*vcsTag
 	dockerImages   = []string{"alpine", "ubuntu", "slim"}
-	excludeVersion = []string{"v1.0", "1.1"}
+	excludeVersion = []string{"v1.0", "1.1", "1.1.2.1", "1.1.3.1"}
 )
 
 type vcsTag struct {

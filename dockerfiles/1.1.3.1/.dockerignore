@@ -1,9 +1,0 @@
-slim
-alpine
-Makefile
-docker-compose.yml
-docker-compose.*.yml
-.git
-.git/
-.git/*
-.git/**
