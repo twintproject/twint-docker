@@ -98,7 +98,7 @@ services:
     container_name: ksql-server-kc
     image: "confluentinc/cp-ksql-server:5.2.1"
     depends_on:
-      - broker
+    - broker
     environment:
       KSQL_BOOTSTRAP_SERVERS: broker:9093
       KSQL_LISTENERS: http://0.0.0.0:8088
