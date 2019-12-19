@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM python:3.7-slim-stretch
 
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
@@ -10,8 +10,7 @@ RUN chmod +x /entrypoint.sh
 RUN \
 apt-get update && \
 apt-get install -y \
-git \
-python3-pip
+git
 
 RUN \
 pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@1.1.3.1#egg=twint
