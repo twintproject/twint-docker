@@ -1,5 +1,5 @@
-IMAGE := x0rzkov/twint-docker
-VERSION:= $(shell grep IBM_CLOUD_CLI Dockerfile | awk '{print $2}' | cut -d '=' -f 2)
+IMAGE := x0rzkov/twint-docker-generator
+VERSION:= $(shell grep TWINT_GENERATOR Dockerfile.generator | awk '{print $2}' | cut -d '=' -f 2)
 
 ## test		:	test.
 test:
@@ -8,7 +8,7 @@ test:
 ## image		:	build image and tag them.
 .PHONY: image
 image:
-	@docker build -t ${IMAGE}:${VERSION} .
+	@docker build -t ${IMAGE}:${VERSION} -d Dockerfile.generator .
 	@docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest
 
 ## push-image	:	push docker image.
