@@ -24,6 +24,13 @@ RUN git clone --depth=1 -b v2.1.11 https://github.com/twintproject/twint /opt/ap
 FROM alpine:3.10
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
+# Create runtime user
+RUN mkdir -p /opt \
+	&& adduser -D twint -h /opt/app -s /bin/sh \
+ 	&& su twint -c 'cd /opt/app; mkdir -p data'
+
+# Switch to user context
+USER twint
 WORKDIR /opt/app
 
 # Install Python and external runtime dependencies only
@@ -35,8 +42,5 @@ COPY --from=build /opt/venv /opt/venv
 # Activate the virtual environment
 ENV PATH="/opt/venv/bin:$PATH" \
 	VIRTUAL_ENV="/opt/venv"
-
-# Copy your application
-WORKDIR /opt/app
 
 ENTRYPOINT ["twint"]
