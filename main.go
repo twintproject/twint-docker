@@ -26,16 +26,19 @@ import (
 	- https://github.com/jinzhu/configor
 	- https://github.com/hawx/ggg/blob/master/repos/repo.go (markdown)
 	- https://github.com/zet4/go-travis-docker-test/blob/master/.travis.yml
+	- https://stackoverflow.com/questions/32551811/read-file-as-template-execute-it-and-write-it-back
+	- https://github.com/go-bindata/go-bindata
 */
 
 var (
-	debugMode      = false
-	verboseMode    = false
-	silentMode     = true
-	autoReloadMode = false
-	vcsTags        []*vcsTag
-	lastVersion    string
-	cfg            *Config
+	debugMode            = false
+	verboseMode          = false
+	silentMode           = true
+	autoReloadMode       = false
+	errorOnUnmatchedKeys = false
+	vcsTags              []*vcsTag
+	lastVersion          string
+	cfg                  *Config
 )
 
 type Config struct {
@@ -165,7 +168,7 @@ func loadConfig(path ...string) (*Config, error) {
 		Debug:                debugMode,
 		Verbose:              verboseMode,
 		AutoReload:           autoReloadMode,
-		ErrorOnUnmatchedKeys: false,
+		ErrorOnUnmatchedKeys: errorOnUnmatchedKeys,
 		AutoReloadInterval:   time.Minute,
 		AutoReloadCallback: func(config interface{}) {
 			fmt.Printf("%v changed", config)
@@ -175,8 +178,10 @@ func loadConfig(path ...string) (*Config, error) {
 }
 
 type dockerfileData struct {
-	Version string
-	Dir     string
+	Version    string `json:"version" yaml:"version"`
+	Dir        string `json:"dir" yaml:"dir"`
+	Filename   string `json:"filename" yaml:"filename"`
+	OutputPath string `json:"output-path" yaml:"output-path"`
 }
 
 func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
@@ -184,6 +189,19 @@ func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) err
 	if debugMode {
 		pp.Println("outputPath: ", outputPath)
 	}
+
+	/*
+		data, err := Asset("pub/style/foo.css")
+		if err != nil {
+			return err
+		}
+		t, err := template.ParseFiles(path)
+		if err != nil {
+			log.Print(err)
+			return err
+		}
+	*/
+
 	tDockerfile := template.Must(template.New(tmplName).Parse(tmplID))
 	dockerfile, err := os.Create(outputPath)
 	if err != nil {
@@ -203,7 +221,8 @@ func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) err
 }
 
 type travisData struct {
-	Versions []*vcsTag
+	Versions []*vcsTag         `json:"-" yaml:"-"`
+	Commands map[string]string `json:"commands" yaml:"commands"`
 }
 
 func generateTravis(vcsTag []*vcsTag) error {
@@ -229,6 +248,9 @@ func generateTravis(vcsTag []*vcsTag) error {
 }
 
 type entrypointData struct {
+	Shell    string   `default:"!/bin/sh" json:"shell" yaml:"shell"`
+	Funcs    []string `json:"functions" yaml:"functions"`
+	Commands []string `json:"commands" yaml:"commands"`
 }
 
 func generateEntrypoint(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
@@ -256,6 +278,9 @@ func generateEntrypoint(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) err
 }
 
 type makefileData struct {
+	Version string            `json:"version" yaml:"version"`
+	Vars    []string          `json:"variables" yaml:"variables"`
+	Targets map[string]string `json:"targets" yaml:"targets"`
 }
 
 func generateMakefile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {

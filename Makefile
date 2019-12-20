@@ -5,6 +5,16 @@ VERSION:= $(shell grep TWINT_GENERATOR Dockerfile.generator | awk '{print $2}' |
 test:
 	true
 
+## build		:	build generator.
+.PHONY: build
+build:
+	@go-bindata .docker/templates/...
+
+## deps		:	install dependencies.
+.PHONY: deps
+deps:
+	@go get -u github.com/go-bindata/go-bindata/...
+
 ## image		:	build image and tag them.
 .PHONY: image
 image:

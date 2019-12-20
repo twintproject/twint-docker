@@ -9,6 +9,7 @@ dockerfiles
 dockerfiles/**
 .docker
 .docker/**
+!.docker/templates
 Dockerfile*
 docker-compose.*
 data

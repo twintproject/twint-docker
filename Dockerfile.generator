@@ -8,7 +8,10 @@ COPY .  /go/src/github.com/x0rzkov/twint-docker
 WORKDIR /go/src/github.com/x0rzkov/twint-docker
 
 RUN cd /go/src/github.com/x0rzkov/twint-docker \
- && go build -v
+	&& go get -u github.com/go-bindata/go-bindata/... \
+	&& go-bindata .docker/templates/... \
+	&& cat bindata.go \
+ 	&& go build -v
 
 FROM alpine:3.10 AS runtime
 
