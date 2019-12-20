@@ -28,10 +28,12 @@ import (
 	- https://github.com/zet4/go-travis-docker-test/blob/master/.travis.yml
 	- https://stackoverflow.com/questions/32551811/read-file-as-template-execute-it-and-write-it-back
 	- https://github.com/go-bindata/go-bindata
+	- https://github.com/jakubbujny/docker-compose-generator-cli/blob/master/src/dcgc/yml_operator/appender.go
+	- https://github.com/Luzifer/gen-dockerfile/blob/master/main.go#L85
 */
 
 var (
-	debugMode            = false
+	debugMode            = true
 	verboseMode          = false
 	silentMode           = true
 	autoReloadMode       = false
@@ -146,17 +148,17 @@ func main() {
 				generateDockerfile("slim", dockerImage+"Template", debianSlimTemplate, vcsTag)
 				generateEntrypoint("slim", "entrypointTemplate", entrypointTemplate, vcsTag)
 				generateMakefile("slim", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerignore("slim", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
+				generateDockerIgnore("slim", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			case "alpine":
 				generateDockerfile("alpine", dockerImage+"Template", alpineTemplate, vcsTag)
 				generateEntrypoint("alpine", "entrypointTemplate", entrypointTemplate, vcsTag)
 				generateMakefile("alpine", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerignore("alpine", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
+				generateDockerIgnore("alpine", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			case "ubuntu":
 				generateDockerfile("", dockerImage+"Template", ubuntuTemplate, vcsTag)
 				generateEntrypoint("", "entrypointTemplate", entrypointTemplate, vcsTag)
 				generateMakefile("", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerignore("", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
+				generateDockerIgnore("", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
 			}
 		}
 	}
@@ -184,6 +186,7 @@ type dockerfileData struct {
 	OutputPath string `json:"output-path" yaml:"output-path"`
 }
 
+// https://github.com/Luzifer/gen-dockerfile/blob/master/main.go#L85
 func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
 	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Dockerfile")
 	if debugMode {
@@ -202,6 +205,7 @@ func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) err
 		}
 	*/
 
+	// tDockerfile := template.Must(template.New(tmplName).ParseFiles(tmplID))
 	tDockerfile := template.Must(template.New(tmplName).Parse(tmplID))
 	dockerfile, err := os.Create(outputPath)
 	if err != nil {
@@ -226,6 +230,7 @@ type travisData struct {
 }
 
 func generateTravis(vcsTag []*vcsTag) error {
+	// tTravisfile := template.Must(template.New("tmplTravis").Parse(travisTemplate))
 	tTravisfile := template.Must(template.New("tmplTravis").Parse(travisTemplate))
 	travisfile, err := os.Create(".travis.yml")
 	if err != nil {
@@ -284,6 +289,7 @@ type makefileData struct {
 }
 
 func generateMakefile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
+	// tMakefile := template.Must(template.New("tmplMakefile").ParseFiles(makefileTemplate))
 	tMakefile := template.Must(template.New("tmplMakefile").Parse(makefileTemplate))
 	outputPathMakefile := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Makefile")
 	if debugMode {
@@ -303,10 +309,11 @@ func generateMakefile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error
 	return nil
 }
 
-type dockerignoreData struct {
+type dockerIgnoreData struct {
+	Patterns []string `json:"patterns" yaml:"patterns"`
 }
 
-func generateDockerignore(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
+func generateDockerIgnore(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
 	tDockerIgnore := template.Must(template.New("tmplDockerIgnore").Parse(dockerignoreTemplate))
 	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, ".dockerignore")
 	if debugMode {
@@ -317,8 +324,37 @@ func generateDockerignore(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) e
 		fmt.Println("Error creating the template :", err)
 		return err
 	}
-	cfg := &dockerignoreData{}
+	cfg := &dockerIgnoreData{}
 	err = tDockerIgnore.Execute(makefile, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type dockerComposeData struct {
+	Version string `json:"version" yaml:"version"`
+	Base    string `json:"base" yaml:"base"`
+	Dir     string `json:"dir" yaml:"dir"`
+}
+
+func generateDockerCompose(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
+	tDockerCompose := template.Must(template.New("tmplDockerIgnore").Parse(dockerignoreTemplate))
+	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, ".dockerignore")
+	if debugMode {
+		pp.Println("outputPath: ", outputPath)
+	}
+	dockerCompose, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &dockerComposeData{
+		Base:    "",
+		Version: "",
+	}
+	err = tDockerCompose.Execute(dockerCompose, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err

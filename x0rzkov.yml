@@ -23,16 +23,19 @@ docker:
     alpine:
       dockerfile: .docker/alpine.tmpl
       dockerignore: .docker/dockerignore.tmpl
+      dockercompose: .docker/docker-compose.tmpl
       makefile: .docker/makefile.tmpl
       readme: .docker/readme.tmpl
     slim:
       dockerfile: .docker/debian-slim.tmpl
       dockerignore: .docker/dockerignore.tmpl
+      dockercompose: .docker/docker-compose.tmpl
       makefile: .docker/makefile.tmpl
       readme: .docker/readme.tmpl
     ubuntu:
       dockerfile: .docker/ubuntu.tmpl
       dockerignore: .docker/dockerignore.tmpl
+      dockercompose: .docker/docker-compose.tmpl
       makefile: .docker/makefile.tmpl
       readme: .docker/readme.tmpl
 
