@@ -18,7 +18,7 @@ docker-compose build
 
 #### Create an alias
 ```shell
-alias twint="docker run -ti --rm -v $(pwd)/data:/opt/app/data x0rzkov/twint:{{ .Version }}"
+alias twint="docker run -ti --rm -v $(pwd)/data:/opt/app/data x0rzkov/twint:{{ .Version }}{{if .Base}}-{{end}}{{ .Base }}"
 ```               
 
 ### Elasticsearch and Kibana
