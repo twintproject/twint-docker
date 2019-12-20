@@ -1,5 +1,5 @@
 ---
-app-name: test
+app-name: twint
 vcs:
   name: origin
   urls: 
@@ -19,6 +19,7 @@ ci:
 
 docker:
   output-path: ./dockerfiles
+  account: x0rzkov
   images:
     alpine:
       dockerfile: .docker/templates/alpine.tmpl
