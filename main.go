@@ -418,7 +418,8 @@ func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error
 	}
 	cfg := &readmeData{
 		Base:    prefixPath,
-		Version: vcsTag.Name,
+		Version: vcsTag.Version,
+		Dir:     vcsTag.Dir,
 	}
 	err = tReadme.Execute(readme, cfg)
 	if err != nil {
@@ -449,6 +450,7 @@ func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) e
 	cfg := &dockerSyncData{
 		Base:    prefixPath,
 		Version: vcsTag.Name,
+		Dir:     vcsTag.Dir,
 	}
 	err = tDockerSync.Execute(dockerSync, cfg)
 	if err != nil {

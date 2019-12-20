@@ -1,0 +1,13 @@
+version: "2"
+options:
+  verbose: true
+syncs:
+  app_data:
+    src: ${PWD}/twint
+    sync_strategy: 'native_osx'
+    sync_userid: 1000
+    sync_groupid: 1000
+    sync_args:
+    - "-prefer newer"
+    - "-ignore='Path .git'"
+    - "-ignore='BelowPath .git'"
