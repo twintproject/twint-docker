@@ -21,23 +21,26 @@ docker:
   output-path: ./dockerfiles
   images:
     alpine:
-      dockerfile: .docker/alpine.tmpl
-      dockerignore: .docker/dockerignore.tmpl
-      dockercompose: .docker/docker-compose.tmpl
-      makefile: .docker/makefile.tmpl
-      readme: .docker/readme.tmpl
+      dockerfile: .docker/templates/alpine.tmpl
+      docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
+      dockerignore: .docker/templates/dockerignore.tmpl
+      dockercompose: .docker/templates/docker-compose.tmpl
+      makefile: .docker/templates/makefile.tmpl
+      readme: .docker/templates/readme-alpine.tmpl
     slim:
-      dockerfile: .docker/debian-slim.tmpl
-      dockerignore: .docker/dockerignore.tmpl
-      dockercompose: .docker/docker-compose.tmpl
-      makefile: .docker/makefile.tmpl
-      readme: .docker/readme.tmpl
+      dockerfile: .docker/templates/debian-slim.tmpl
+      docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
+      dockerignore: .docker/templates/dockerignore.tmpl
+      dockercompose: .docker/templates/docker-compose.tmpl
+      makefile: .docker/templates/makefile.tmpl
+      readme: .docker/templates/readme.tmpl
     ubuntu:
-      dockerfile: .docker/ubuntu.tmpl
-      dockerignore: .docker/dockerignore.tmpl
-      dockercompose: .docker/docker-compose.tmpl
-      makefile: .docker/makefile.tmpl
-      readme: .docker/readme.tmpl
+      dockerfile: .docker/templates/ubuntu.tmpl
+      docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
+      dockerignore: .docker/templates/dockerignore.tmpl
+      dockercompose: .docker/templates/docker-compose.tmpl
+      makefile: .docker/templates/makefile.tmpl
+      readme: .docker/templates/readme.tmpl
 
 contacts:
 - name: x0rzkov

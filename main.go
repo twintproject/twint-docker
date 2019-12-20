@@ -44,14 +44,20 @@ var (
 )
 
 type Config struct {
-	APPName string `json:"app-name" yaml:"app-name"`
-	Docker  Docker `json:"docker" yaml:"docker"`
-	VCS     VCS    `json:"vcs" yaml:"vcs"`
-	CI      CI     `json:"ci" yaml:"ci"`
+	APPName  string    `json:"app-name" yaml:"app-name"`
+	Docker   Docker    `json:"docker" yaml:"docker"`
+	VCS      VCS       `json:"vcs" yaml:"vcs"`
+	CI       CI        `json:"ci" yaml:"ci"`
+	Contacts []Contact `json:"contacts" yaml:"contacts"`
 }
 
 type CI struct {
 	Travis Travis `json:"travis" yaml:"travis"`
+}
+
+type Contact struct {
+	Name  string `json:"name" yaml:"name"`
+	Email string `json:"email" yaml:"email"`
 }
 
 type Travis struct {
@@ -71,11 +77,13 @@ type VCS struct {
 }
 
 type Image struct {
-	Name            string `json:"name" yaml:"name"`
-	DockerFileTpl   string `json:"dockerfile" yaml:"dockerfile"`
-	DockerIgnoreTpl string `json:"dockerignore" yaml:"dockerignore"`
-	MakefileTpl     string `json:"makefile" yaml:"makefile"`
-	ReadmeTpl       string `json:"readme" yaml:"readme"`
+	Name                string `json:"name" yaml:"name"`
+	DockerFileTpl       string `json:"dockerfile" yaml:"dockerfile"`
+	DockerEntryPointTpl string `json:"docker-entrypoint" yaml:"docker-entrypoint"`
+	DockerIgnoreTpl     string `json:"dockerignore" yaml:"dockerignore"`
+	DockerComposeTpl    string `json:"dockercompose" yaml:"dockercompose"`
+	MakefileTpl         string `json:"makefile" yaml:"makefile"`
+	ReadmeTpl           string `json:"readme" yaml:"readme"`
 }
 
 type vcsTag struct {
@@ -143,22 +151,30 @@ func main() {
 			pp.Println(dockerData)
 		}
 		for _, vcsTag := range vcsTags {
-			switch dockerImage {
-			case "slim":
-				generateDockerfile("slim", dockerImage+"Template", debianSlimTemplate, vcsTag)
-				generateEntrypoint("slim", "entrypointTemplate", entrypointTemplate, vcsTag)
-				generateMakefile("slim", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerIgnore("slim", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
-			case "alpine":
-				generateDockerfile("alpine", dockerImage+"Template", alpineTemplate, vcsTag)
-				generateEntrypoint("alpine", "entrypointTemplate", entrypointTemplate, vcsTag)
-				generateMakefile("alpine", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerIgnore("alpine", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
-			case "ubuntu":
-				generateDockerfile("", dockerImage+"Template", ubuntuTemplate, vcsTag)
-				generateEntrypoint("", "entrypointTemplate", entrypointTemplate, vcsTag)
-				generateMakefile("", "makefileTemplate", makefileTemplate, vcsTag)
-				generateDockerIgnore("", "dockerignoreTemplate", dockerignoreTemplate, vcsTag)
+			prefixPath := dockerImage
+			if dockerImage == "ubuntu" {
+				prefixPath = ""
+			}
+			if debugMode {
+				pp.Println("prefixPath:", prefixPath)
+			}
+			if err := generateDockerfile(prefixPath, "dockerImageTemplate", dockerData.DockerFileTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+			if err := generateDockerEntrypoint(prefixPath, "entrypointTemplate", dockerData.DockerEntryPointTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+			if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+			if err := generateDockerIgnore(prefixPath, "dockerIgnoreTemplate", dockerData.DockerIgnoreTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+			if err := generateDockerCompose(prefixPath, "dockercomposeTemplate", dockerData.DockerComposeTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+			if err := generateReadme(prefixPath, "readmeTemplate", dockerData.ReadmeTpl, vcsTag); err != nil {
+				log.Fatalln(err)
 			}
 		}
 	}
@@ -187,26 +203,13 @@ type dockerfileData struct {
 }
 
 // https://github.com/Luzifer/gen-dockerfile/blob/master/main.go#L85
-func generateDockerfile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
-	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Dockerfile")
-	if debugMode {
-		pp.Println("outputPath: ", outputPath)
+func generateDockerfile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "Dockerfile")
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
 	}
-
-	/*
-		data, err := Asset("pub/style/foo.css")
-		if err != nil {
-			return err
-		}
-		t, err := template.ParseFiles(path)
-		if err != nil {
-			log.Print(err)
-			return err
-		}
-	*/
-
-	// tDockerfile := template.Must(template.New(tmplName).ParseFiles(tmplID))
-	tDockerfile := template.Must(template.New(tmplName).Parse(tmplID))
+	tDockerfile := template.Must(template.New(tmplName).Parse(string(tmpl)))
 	dockerfile, err := os.Create(outputPath)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
@@ -230,8 +233,13 @@ type travisData struct {
 }
 
 func generateTravis(vcsTag []*vcsTag) error {
-	// tTravisfile := template.Must(template.New("tmplTravis").Parse(travisTemplate))
-	tTravisfile := template.Must(template.New("tmplTravis").Parse(travisTemplate))
+
+	tmpl, err := Asset(".travis.yml")
+	if err != nil {
+		return err
+	}
+
+	tTravisfile := template.Must(template.New("tmplTravis").Parse(string(tmpl)))
 	travisfile, err := os.Create(".travis.yml")
 	if err != nil {
 		if debugMode {
@@ -252,24 +260,28 @@ func generateTravis(vcsTag []*vcsTag) error {
 	return nil
 }
 
-type entrypointData struct {
+type dockerEntrypointData struct {
 	Shell    string   `default:"!/bin/sh" json:"shell" yaml:"shell"`
 	Funcs    []string `json:"functions" yaml:"functions"`
 	Commands []string `json:"commands" yaml:"commands"`
 }
 
-func generateEntrypoint(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
-	tEntrypoint := template.Must(template.New("tmplEntrypoint").Parse(entrypointTemplate))
-	outputPathEntrypoint := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "docker-entrypoint.sh")
-	if debugMode {
-		pp.Println("outputPathEntrypoint: ", outputPathEntrypoint)
+func generateDockerEntrypoint(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
 	}
+
+	tEntrypoint := template.Must(template.New("tmplEntrypoint").Parse(string(tmpl)))
+	outputPathEntrypoint := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "docker-entrypoint.sh")
+
 	entrypoint, err := os.Create(outputPathEntrypoint)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err
 	}
-	cfg := &entrypointData{}
+	cfg := &dockerEntrypointData{}
 	err = tEntrypoint.Execute(entrypoint, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
@@ -288,13 +300,13 @@ type makefileData struct {
 	Targets map[string]string `json:"targets" yaml:"targets"`
 }
 
-func generateMakefile(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
-	// tMakefile := template.Must(template.New("tmplMakefile").ParseFiles(makefileTemplate))
-	tMakefile := template.Must(template.New("tmplMakefile").Parse(makefileTemplate))
-	outputPathMakefile := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, "Makefile")
-	if debugMode {
-		pp.Println("outputPathMakefile: ", outputPathMakefile)
+func generateMakefile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
 	}
+	tMakefile := template.Must(template.New("tmplMakefile").Parse(string(tmpl)))
+	outputPathMakefile := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "Makefile")
 	makefile, err := os.Create(outputPathMakefile)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
@@ -313,19 +325,20 @@ type dockerIgnoreData struct {
 	Patterns []string `json:"patterns" yaml:"patterns"`
 }
 
-func generateDockerIgnore(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
-	tDockerIgnore := template.Must(template.New("tmplDockerIgnore").Parse(dockerignoreTemplate))
-	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, ".dockerignore")
-	if debugMode {
-		pp.Println("outputPath: ", outputPath)
+func generateDockerIgnore(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
 	}
-	makefile, err := os.Create(outputPath)
+	tDockerIgnore := template.Must(template.New(tmplName).Parse(string(tmpl)))
+	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, ".dockerignore")
+	dockerIgnore, err := os.Create(outputPath)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err
 	}
 	cfg := &dockerIgnoreData{}
-	err = tDockerIgnore.Execute(makefile, cfg)
+	err = tDockerIgnore.Execute(dockerIgnore, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err
@@ -339,22 +352,53 @@ type dockerComposeData struct {
 	Dir     string `json:"dir" yaml:"dir"`
 }
 
-func generateDockerCompose(prefixPath, tmplName, tmplID string, vcsTag *vcsTag) error {
-	tDockerCompose := template.Must(template.New("tmplDockerIgnore").Parse(dockerignoreTemplate))
-	outputPath := filepath.Join("dockerfiles", vcsTag.Dir, prefixPath, ".dockerignore")
-	if debugMode {
-		pp.Println("outputPath: ", outputPath)
+func generateDockerCompose(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
 	}
+	tDockerCompose := template.Must(template.New(tmplName).Parse(string(tmpl)))
+	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "docker-compose.yml")
 	dockerCompose, err := os.Create(outputPath)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err
 	}
 	cfg := &dockerComposeData{
+		Base:    prefixPath,
+		Version: vcsTag.Name,
+	}
+	err = tDockerCompose.Execute(dockerCompose, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type readmeData struct {
+	Version string `json:"version" yaml:"version"`
+	Base    string `json:"base" yaml:"base"`
+	Dir     string `json:"dir" yaml:"dir"`
+}
+
+func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
+	}
+	tReadme := template.Must(template.New(tmplName).Parse(string(tmpl)))
+	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "README.md")
+	readme, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &readmeData{
 		Base:    "",
 		Version: "",
 	}
-	err = tDockerCompose.Execute(dockerCompose, cfg)
+	err = tReadme.Execute(readme, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err
