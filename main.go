@@ -418,7 +418,7 @@ func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error
 	}
 	cfg := &readmeData{
 		Base:    prefixPath,
-		Version: vcsTag.Version,
+		Version: vcsTag.Name,
 		Dir:     vcsTag.Dir,
 	}
 	err = tReadme.Execute(readme, cfg)

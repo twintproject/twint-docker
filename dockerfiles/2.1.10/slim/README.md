@@ -7,7 +7,7 @@
 For first usage, you need to build image docker.
 
 ```shell
-docker pull x0rzkov/twint:v2.1.10
+docker pull x0rzkov/twint:2.1.10
 ```
 
 or 
@@ -18,7 +18,7 @@ docker-compose build
 
 #### Create an alias
 ```shell
-alias twint="docker run -ti --rm -v $(pwd)/data:/opt/app/data x0rzkov/twint:v2.1.10-slim"
+alias twint="docker run -ti --rm -v $(pwd)/data:/opt/app/data x0rzkov/twint:2.1.10-slim"
 ```               
 
 ### Elasticsearch and Kibana
