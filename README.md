@@ -17,7 +17,9 @@ docker-compose build
 alias twint="docker run -ti --rm -v $(pwd)/data:/opt/app/data x0rzkov/twint:latest-alpine"
 ```               
 
-### Elasticsearch and Kibana
+## Docker-Compose
+
+#### Elasticsearch and Kibana
 
 Start to up elaticsearch and kibana
 
@@ -25,13 +27,21 @@ Start to up elaticsearch and kibana
 docker-compose up -d elasticsearch kibana
 ```
 
-### Execute Twint command
+#### Tor proxy
+
+Start to up tor
+
+``` bash
+docker-compose up -d tor
+```
+
+#### Execute Twint command
 
 ``` bash
 docker-compose run -v $PWD/twint:/srv/twint twint {{CMD TWINT}}
 ```
 
-### Examples of command
+#### Examples of command
 
 A few simple examples to help you understand the basics:
 
