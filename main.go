@@ -44,11 +44,14 @@ var (
 )
 
 type Config struct {
-	APPName  string    `json:"app-name" yaml:"app-name"`
-	Docker   Docker    `json:"docker" yaml:"docker"`
-	VCS      VCS       `json:"vcs" yaml:"vcs"`
-	CI       CI        `json:"ci" yaml:"ci"`
-	Contacts []Contact `json:"contacts" yaml:"contacts"`
+	APPName     string    `json:"app-name" yaml:"app-name"`
+	debugMode   string    `json:"slient-mode" yaml:"slient-mode"`
+	verboseMode string    `json:"slient-mode" yaml:"slient-mode"`
+	silentMode  string    `json:"slient-mode" yaml:"slient-mode"`
+	Docker      Docker    `json:"docker" yaml:"docker"`
+	VCS         VCS       `json:"vcs" yaml:"vcs"`
+	CI          CI        `json:"ci" yaml:"ci"`
+	Contacts    []Contact `json:"contacts" yaml:"contacts"`
 }
 
 type CI struct {
