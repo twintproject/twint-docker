@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   twint:
-    image: x0rxkov/twint:{{ .Version }}{{if .Base}}-{{end}}{{ .Base }}
+    image: x0rzkov/twint:{{ .Dir }}{{if .Base}}-{{end}}{{ .Base }}
     build:
       context: .
       dockerfile: Dockerfile

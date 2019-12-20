@@ -389,6 +389,7 @@ func generateDockerCompose(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag
 	cfg := &dockerComposeData{
 		Base:    prefixPath,
 		Version: vcsTag.Name,
+		Dir:     vcsTag.Dir,
 	}
 	err = tDockerCompose.Execute(dockerCompose, cfg)
 	if err != nil {

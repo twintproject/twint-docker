@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   twint:
-    image: x0rxkov/twint:v2.1.11-alpine
+    image: x0rzkov/twint:latest-alpine
     build:
       context: .
       dockerfile: Dockerfile
