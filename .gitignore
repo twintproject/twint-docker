@@ -3,3 +3,6 @@ travis.go
 x0rzkov.go
 *.tar.gz
 contribs
+contribs/
+contribs/*
+contribs/**
