@@ -440,7 +440,7 @@ func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) e
 		return err
 	}
 	tDockerSync := template.Must(template.New(tmplName).Parse(string(tmpl)))
-	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "README.md")
+	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "docker-sync.yml")
 	dockerSync, err := os.Create(outputPath)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
