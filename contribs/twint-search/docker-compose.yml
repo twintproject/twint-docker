@@ -3,15 +3,14 @@ version: '3.6'
 services:
 
   twint:
-    build:
-      context: ./twint
-      dockerfile: Dockerfile
+    image: x0rzkov/twint:latest-alpine
     container_name: twint
     volumes:
     - './output:/opt/twint'
     command: ["-h"]
 
   searchapp:
+    image: x0rzkov/twint-search:latest
     build:
       context: ./searchapp
       dockerfile: Dockerfile

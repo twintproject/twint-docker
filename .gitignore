@@ -2,3 +2,4 @@ workspace
 travis.go
 x0rzkov.go
 *.tar.gz
+contribs

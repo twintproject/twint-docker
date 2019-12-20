@@ -7,8 +7,9 @@ test:
 
 ## build		:	build generator.
 .PHONY: build
-build:
+build: deps
 	@go-bindata .docker/templates/...
+	@go build -v
 
 ## deps		:	install dependencies.
 .PHONY: deps

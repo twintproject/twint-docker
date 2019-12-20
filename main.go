@@ -20,20 +20,8 @@ import (
 	"gopkg.in/src-d/go-git.v4/storage/memory"
 )
 
-/*
-	Refs:
-	- https://github.com/ozankasikci/dockerfile-generator
-	- https://github.com/jinzhu/configor
-	- https://github.com/hawx/ggg/blob/master/repos/repo.go (markdown)
-	- https://github.com/zet4/go-travis-docker-test/blob/master/.travis.yml
-	- https://stackoverflow.com/questions/32551811/read-file-as-template-execute-it-and-write-it-back
-	- https://github.com/go-bindata/go-bindata
-	- https://github.com/jakubbujny/docker-compose-generator-cli/blob/master/src/dcgc/yml_operator/appender.go
-	- https://github.com/Luzifer/gen-dockerfile/blob/master/main.go#L85
-*/
-
 var (
-	debugMode            = true
+	// debugMode            = false
 	verboseMode          = false
 	silentMode           = true
 	autoReloadMode       = false
@@ -45,9 +33,9 @@ var (
 
 type Config struct {
 	APPName     string    `json:"app-name" yaml:"app-name"`
-	debugMode   string    `json:"slient-mode" yaml:"slient-mode"`
-	verboseMode string    `json:"slient-mode" yaml:"slient-mode"`
-	silentMode  string    `json:"slient-mode" yaml:"slient-mode"`
+	DebugMode   bool      `default:"false" json:"debug-mode" yaml:"debug-mode"`
+	VerboseMode bool      `default:"false"json:"verbose-mode" yaml:"verbose-mode"`
+	SilentMode  bool      `default:"false"  json:"slient-mode" yaml:"slient-mode"`
 	Docker      Docker    `json:"docker" yaml:"docker"`
 	VCS         VCS       `json:"vcs" yaml:"vcs"`
 	CI          CI        `json:"ci" yaml:"ci"`
@@ -69,6 +57,7 @@ type Travis struct {
 }
 
 type Docker struct {
+	Owner      string           `json:"owner" yaml:"owner"`
 	OutputPath string           `default:"./dockerfiles" json:"output-path" yaml:"output-path"`
 	Images     map[string]Image `json:"images" yaml:"images"`
 }
@@ -83,6 +72,7 @@ type Image struct {
 	Name                string `json:"name" yaml:"name"`
 	DockerFileTpl       string `json:"dockerfile" yaml:"dockerfile"`
 	DockerEntryPointTpl string `json:"docker-entrypoint" yaml:"docker-entrypoint"`
+	DockerSyncTpl       string `json:"docker-sync" yaml:"docker-sync"`
 	DockerIgnoreTpl     string `json:"dockerignore" yaml:"dockerignore"`
 	DockerComposeTpl    string `json:"dockercompose" yaml:"dockercompose"`
 	MakefileTpl         string `json:"makefile" yaml:"makefile"`
@@ -104,89 +94,121 @@ func isValidVersion(input string) bool {
 }
 
 func main() {
+	// instanciate new config object
 	cfg = &Config{}
+
+	// define cli flags
 	config := flag.String("config", "x0rzkov.yml", "configuration file")
-	// debugMode = flag.Bool("debug", false, "debug mode")
-	// flag.StringVar(&cfg.APPName, "name", "", "app name")
+	flag.BoolVar(&cfg.DebugMode, "debug", false, "debug mode")
 	flag.Parse()
 
-	// os.Setenv("CONFIGOR_ENV_PREFIX", "-")
+	// load config into struct
 	cfg, err := loadConfig(*config)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	if debugMode {
+	if cfg.DebugMode {
 		pp.Println(cfg)
 	}
 
+	// fetch remote tags list
 	err, tags := getRemoteTags()
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	if debugMode {
+	if cfg.DebugMode {
 		pp.Println("tags: ", tags)
 	}
+
+	// clean-up version prefixes
 	var vcsTags []*vcsTag
 	for _, tag := range tags {
 		dir := tag
 		if strings.HasPrefix(tag, "v") {
 			dir = strings.Replace(tag, "v", "", -1)
 		}
+		// exclude versions to skip from generation iteration
 		if isValidVersion(tag) {
 			vcsTags = append(vcsTags, &vcsTag{Name: tag, Dir: dir})
 		}
 	}
 
+	// get the last version released
 	lastVersion = getLastVersion(tags)
 	log.Printf("Latest version: %v", lastVersion)
 	vcsTags = append(vcsTags, &vcsTag{Name: "v" + lastVersion, Dir: "latest"})
-
-	if debugMode {
+	if cfg.DebugMode {
 		pp.Println("vcsTags: ", vcsTags)
 	}
 
+	// remove previously generated content
 	removeContents(cfg.Docker.OutputPath)
+
+	// create all destination directories based on release founds
 	createDirectories(vcsTags)
+
+	// create content for each images
 	for dockerImage, dockerData := range cfg.Docker.Images {
-		if debugMode {
+		if cfg.DebugMode {
 			pp.Println("dockerImage: ", dockerImage)
 			pp.Println(dockerData)
 		}
+
+		// create content for each versions
 		for _, vcsTag := range vcsTags {
 			prefixPath := dockerImage
 			if dockerImage == "ubuntu" {
 				prefixPath = ""
 			}
-			if debugMode {
+			if cfg.DebugMode {
 				pp.Println("prefixPath:", prefixPath)
 			}
+
+			// generate Dockerfile
 			if err := generateDockerfile(prefixPath, "dockerImageTemplate", dockerData.DockerFileTpl, vcsTag); err != nil {
 				log.Fatalln(err)
 			}
+
+			// generate docker-entrypoint.sh
 			if err := generateDockerEntrypoint(prefixPath, "entrypointTemplate", dockerData.DockerEntryPointTpl, vcsTag); err != nil {
 				log.Fatalln(err)
 			}
-			if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl, vcsTag); err != nil {
-				log.Fatalln(err)
-			}
+
+			// generate .dockerignore
 			if err := generateDockerIgnore(prefixPath, "dockerIgnoreTemplate", dockerData.DockerIgnoreTpl, vcsTag); err != nil {
 				log.Fatalln(err)
 			}
+
+			// generate docker-compose.yml
 			if err := generateDockerCompose(prefixPath, "dockercomposeTemplate", dockerData.DockerComposeTpl, vcsTag); err != nil {
 				log.Fatalln(err)
 			}
+
+			// generate docker-sync.yml
+			if err := generateDockerSync(prefixPath, "dockerSyncTemplate", dockerData.DockerSyncTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+
+			// generate Makefile
+			if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+
+			// generate README.md
 			if err := generateReadme(prefixPath, "readmeTemplate", dockerData.ReadmeTpl, vcsTag); err != nil {
 				log.Fatalln(err)
 			}
+
 		}
 	}
+
+	// generate travis file
 	generateTravis(vcsTags)
 }
 
 func loadConfig(path ...string) (*Config, error) {
 	err := configor.New(&configor.Config{
-		Debug:                debugMode,
+		Debug:                cfg.DebugMode,
 		Verbose:              verboseMode,
 		AutoReload:           autoReloadMode,
 		ErrorOnUnmatchedKeys: errorOnUnmatchedKeys,
@@ -245,17 +267,17 @@ func generateTravis(vcsTag []*vcsTag) error {
 	tTravisfile := template.Must(template.New("tmplTravis").Parse(string(tmpl)))
 	travisfile, err := os.Create(".travis.yml")
 	if err != nil {
-		if debugMode {
+		if cfg.DebugMode {
 			fmt.Println("Error creating the template :", err)
 		}
 		return err
 	}
-	cfg := &travisData{
+	dataTravis := &travisData{
 		Versions: vcsTag,
 	}
-	err = tTravisfile.Execute(travisfile, cfg)
+	err = tTravisfile.Execute(travisfile, dataTravis)
 	if err != nil {
-		if debugMode {
+		if cfg.DebugMode {
 			fmt.Println("Error creating the template :", err)
 		}
 		return err
@@ -270,15 +292,12 @@ type dockerEntrypointData struct {
 }
 
 func generateDockerEntrypoint(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
-
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
 	}
-
-	tEntrypoint := template.Must(template.New("tmplEntrypoint").Parse(string(tmpl)))
+	tEntrypoint := template.Must(template.New(tmplName).Parse(string(tmpl)))
 	outputPathEntrypoint := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "docker-entrypoint.sh")
-
 	entrypoint, err := os.Create(outputPathEntrypoint)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
@@ -402,6 +421,36 @@ func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error
 		Version: vcsTag.Name,
 	}
 	err = tReadme.Execute(readme, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type dockerSyncData struct {
+	Version string `json:"version" yaml:"version"`
+	Base    string `json:"base" yaml:"base"`
+	Dir     string `json:"dir" yaml:"dir"`
+}
+
+func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
+	}
+	tDockerSync := template.Must(template.New(tmplName).Parse(string(tmpl)))
+	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "README.md")
+	dockerSync, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &dockerSyncData{
+		Base:    prefixPath,
+		Version: vcsTag.Name,
+	}
+	err = tDockerSync.Execute(dockerSync, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err

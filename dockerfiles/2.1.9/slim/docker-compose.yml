@@ -7,7 +7,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: twint_cli
+    container_name: twint-cli
+
+  twint-search:
+    image: x0rzkov/twint-search:latest
+    container_name: twint-search
+    ports:
+    - 3000:3000
+    environment:
+    - NODE_ENV=production
 
   tor-privoxy:
     container_name: twint_torprivoxy
