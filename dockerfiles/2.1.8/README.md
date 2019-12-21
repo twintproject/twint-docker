@@ -12,7 +12,7 @@
      1. [Examples of command](#examples-of-command)
   1. [Datas](#datas)
 1. [Authors](#authors)
-1. [🤝 Contributing](#🤝-contributing)
+1. [🤝 Contributing](#-contributing)
 1. [Show your support](#show-your-support)
 <!-- ToC end -->
 
@@ -94,8 +94,8 @@ Let's play now :)
 
 ## Authors
 
-👤 **x0rxkov**
-* Github: [@x0rxkov](https://github.com/x0rxkov)
+👤 **x0rzkov**
+* Github: [@x0rzkov](https://github.com/x0rzkov)
 
 👤 **sebastienhouzet**
 * Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
