@@ -41,14 +41,17 @@ to do...
 
 ## Authors
 
+👤 **pielco11**
+* Github: [@pielco11](https://github.com/pielco11)
+* Twitter: [@pielco11](https://twitter.com/noneprivacy) ![Twitter Follow](https://img.shields.io/twitter/follow/noneprivacy?label=Follow&style=social)
+
 👤 **x0rzkov**
 * Github: [@x0rzkov](https://github.com/x0rzkov)
+* Twitter: [@x0rzkov](https://twitter.com/x0rzkov) ![Twitter Follow](https://img.shields.io/twitter/follow/x0rzkov?label=Follow&style=social)
 
 👤 **sebastienhouzet**
 * Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
 
-👤 **pielco11**
-* Github: [@pielco11](https://github.com/pielco11)
 
 ## 🤝 Contributing
 
