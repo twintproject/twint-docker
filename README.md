@@ -47,8 +47,8 @@ Then check the README.md for each versions.
 ### Available images
 | Image   |      Size      |  Arch |  Os |  Link |
 |----------|:-------------:|------|------|------|
-| docker pull x0rzkov/twint:latest-slim|**180 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/slim/)|
 | docker pull x0rzkov/twint:latest-alpine|**80 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/alpine/)|
+| docker pull x0rzkov/twint:latest-slim|**180 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/slim/)|
 | docker pull x0rzkov/twint:latest|**264 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/)|
 | docker pull x0rzkov/twint:2.0.0|**263 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/)|
 | docker pull x0rzkov/twint:2.0.0-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.0.0/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/alpine/)|
@@ -56,7 +56,7 @@ Then check the README.md for each versions.
 | docker pull x0rzkov/twint:2.1.0|**263 MB**|amd64|linux|[`./dockerfiles/2.1.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/)|
 | docker pull x0rzkov/twint:2.1.0-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.0/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/alpine/)|
 | docker pull x0rzkov/twint:2.1.0-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/slim/)|
-| docker pull x0rzkov/twint:2.1.10|**264 MB**|amd64|linux|[`./dockerfiles/2.1.10`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/)|
+| docker pull x0rzkov/twint:2.1.10|**247 MB**|amd64|linux|[`./dockerfiles/2.1.10`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/)|
 | docker pull x0rzkov/twint:2.1.10-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.10/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/alpine/)|
 | docker pull x0rzkov/twint:2.1.10-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.10/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/slim/)|
 | docker pull x0rzkov/twint:2.1.11|**264 MB**|amd64|linux|[`./dockerfiles/2.1.11`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/)|
@@ -64,10 +64,10 @@ Then check the README.md for each versions.
 | docker pull x0rzkov/twint:2.1.11-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.11/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/slim/)|
 | docker pull x0rzkov/twint:2.1.4|**247 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/)|
 | docker pull x0rzkov/twint:2.1.4-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.4/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/alpine/)|
-| docker pull x0rzkov/twint:2.1.4-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.4/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/slim/)|
-| docker pull x0rzkov/twint:2.1.6|**263 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/)|
+| docker pull x0rzkov/twint:2.1.4-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.4/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/slim/)|
+| docker pull x0rzkov/twint:2.1.6|**247 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/)|
 | docker pull x0rzkov/twint:2.1.6-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.6/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/alpine/)|
-| docker pull x0rzkov/twint:2.1.6-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.6/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/slim/)|
+| docker pull x0rzkov/twint:2.1.6-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.6/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/slim/)|
 | docker pull x0rzkov/twint:2.1.8|**263 MB**|amd64|linux|[`./dockerfiles/2.1.8`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/)|
 | docker pull x0rzkov/twint:2.1.8-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.8/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/alpine/)|
 | docker pull x0rzkov/twint:2.1.8-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.8/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/slim/)|
@@ -89,7 +89,7 @@ Then check the README.md for each versions.
 * Email: x0rzkov@protonmail.com
 
 👤 **sebastienhouzet**
-
+* Twitter: [@noneprivacy](https://twitter.com/sebastienhouzet) ![Twitter Follow](https://img.shields.io/twitter/follow/sebastienhouzet?label=Follow&style=social)
 * Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
 
 
