@@ -1,7 +1,7 @@
 # twint-docker based on Alpine, Ubuntu and Debian Slim
 
 <p align="center">
-    <a href="https://travis-ci.com/sebdah/x0rzkov/twint-docker"><img src="https://img.shields.io/travis/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://travis-ci.com/x0rzkov/twint-docker"><img src="https://img.shields.io/travis/x0rzkov/twint-docker.svg" /></a>
     <a href="https://cloud.drone.io/x0rzkov/twint-docker"><img src="https://cloud.drone.io/api/badges/x0rzkov/twint-docker/status.svg?ref=refs/heads/alpine" /></a>
 </p>
 
