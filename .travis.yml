@@ -14,6 +14,14 @@ before_install:
   - sudo mv dist_linux/docker-slim-sensor /usr/local/bin
   - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
   - sudo service docker restart
+  - sudo apt-get update
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  - docker-compose --version
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose --version
 
 before_script:
   - cd dockerfiles/"$VERSION"
@@ -23,9 +31,9 @@ env:
   - VERSION=2.1.9
   - VERSION=2.1.9/alpine
   - VERSION=2.1.9/slim
-  - VERSION=2.1.10
-  - VERSION=2.1.10/alpine
-  - VERSION=2.1.10/slim
+  - VERSION=2.1.11
+  - VERSION=2.1.11/alpine
+  - VERSION=2.1.11/slim
   - VERSION=2.0.0
   - VERSION=2.0.0/alpine
   - VERSION=2.0.0/slim
@@ -35,15 +43,15 @@ env:
   - VERSION=2.1.4
   - VERSION=2.1.4/alpine
   - VERSION=2.1.4/slim
-  - VERSION=2.1.6
-  - VERSION=2.1.6/alpine
-  - VERSION=2.1.6/slim
-  - VERSION=2.1.11
-  - VERSION=2.1.11/alpine
-  - VERSION=2.1.11/slim
   - VERSION=2.1.0
   - VERSION=2.1.0/alpine
   - VERSION=2.1.0/slim
+  - VERSION=2.1.6
+  - VERSION=2.1.6/alpine
+  - VERSION=2.1.6/slim
+  - VERSION=2.1.10
+  - VERSION=2.1.10/alpine
+  - VERSION=2.1.10/slim
   - VERSION=latest
   - VERSION=latest/alpine
   - VERSION=latest/slim
@@ -55,8 +63,10 @@ script:
   - docker build --squash -t "$IMAGE" .
   - sudo docker-slim build "$IMAGE"
   - sudo docker run -ti "$IMAGE" -h
+  - docker-compose pull
+  - docker-compose build
   - docker images
-  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
   - docker push "$IMAGE"
 
 services: docker

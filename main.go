@@ -23,23 +23,22 @@ import (
 )
 
 var (
-	verboseMode          = false
-	autoReloadMode       = false
-	errorOnUnmatchedKeys = false
-	vcsTags              []*vcsTag
-	lastVersion          string
-	cfg                  *Config
+	cfg         *Config
+	vcsTags     []*vcsTag
+	lastVersion string
 )
 
 type Config struct {
-	APPName     string    `json:"app-name" yaml:"app-name"`
-	DebugMode   bool      `default:"false" json:"debug-mode" yaml:"debug-mode"`
-	VerboseMode bool      `default:"false"json:"verbose-mode" yaml:"verbose-mode"`
-	SilentMode  bool      `default:"false"  json:"slient-mode" yaml:"slient-mode"`
-	Docker      Docker    `json:"docker" yaml:"docker"`
-	VCS         VCS       `json:"vcs" yaml:"vcs"`
-	CI          CI        `json:"ci" yaml:"ci"`
-	Contacts    []Contact `json:"contacts" yaml:"contacts"`
+	APPName              string    `json:"app-name" yaml:"app-name"`
+	DebugMode            bool      `default:"false" json:"debug-mode" yaml:"debug-mode"`
+	VerboseMode          bool      `default:"false" json:"verbose-mode" yaml:"verbose-mode"`
+	SilentMode           bool      `default:"false" json:"slient-mode" yaml:"slient-mode"`
+	AutoReloadMode       bool      `default:"false" json:"autoreload-mode" yaml:"autoreload-mode"`
+	ErrorOnUnmatchedKeys bool      `default:"false" json:"error-on-unmatched-keys" yaml:"error-on-unmatched-keys"`
+	Docker               Docker    `json:"docker" yaml:"docker"`
+	VCS                  VCS       `json:"vcs" yaml:"vcs"`
+	CI                   CI        `json:"ci" yaml:"ci"`
+	Contacts             []Contact `json:"contacts" yaml:"contacts"`
 }
 
 type CI struct {
@@ -101,6 +100,9 @@ func main() {
 	// define cli flags
 	config := flag.String("config", "x0rzkov.yml", "configuration file")
 	flag.BoolVar(&cfg.DebugMode, "debug", false, "debug mode")
+	flag.BoolVar(&cfg.VerboseMode, "verbose", false, "verbose mode")
+	flag.BoolVar(&cfg.AutoReloadMode, "autoreload", false, "autoreload mode")
+	flag.BoolVar(&cfg.ErrorOnUnmatchedKeys, "strict", false, "error on unmatched keys")
 	flag.Parse()
 
 	// load config into struct
@@ -136,7 +138,9 @@ func main() {
 
 	// get the last version released
 	lastVersion = getLastVersion(tags)
-	log.Printf("Latest version: %v", lastVersion)
+	if cfg.VerboseMode {
+		log.Printf("Latest version: %v", lastVersion)
+	}
 	vcsTags = append(vcsTags, &vcsTag{Name: "v" + lastVersion, Dir: "latest"})
 	if cfg.DebugMode {
 		pp.Println("vcsTags: ", vcsTags)
@@ -231,26 +235,34 @@ func main() {
 	}
 
 	// generate travis file
-	generateTravis(vcsTags)
+	if err := generateTravis(vcsTags); err != nil {
+		log.Fatalln(err)
+	}
 
 	// get images info from docker-hub already pushed
+
+	// get the docker image name
 	dockerRepository := fmt.Sprintf("%s/%s", cfg.Docker.Namespace, cfg.Docker.BaseName)
+
+	// get the current repository remote url path
 	vcsRepository, err := getRemoteURLPath(".")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	// get the docker image table
 	dockerImageTable, err := getImagesInfo(dockerRepository, vcsRepository)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// generate main README (contacts, docker images)
+	// get the current repository branch
 	currentBranch, err := getCurrentBranch(".")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	// generate main README (contacts, docker images)
 	if err := generateReadmeRoot(dockerImageTable, vcsRepository, currentBranch); err != nil {
 		log.Fatalln(err)
 	}
@@ -260,9 +272,9 @@ func loadConfig(paths ...string) (*Config, error) {
 	// load config from paths
 	err := configor.New(&configor.Config{
 		Debug:                cfg.DebugMode,
-		Verbose:              verboseMode,
-		AutoReload:           autoReloadMode,
-		ErrorOnUnmatchedKeys: errorOnUnmatchedKeys,
+		Verbose:              cfg.VerboseMode,
+		AutoReload:           cfg.AutoReloadMode,
+		ErrorOnUnmatchedKeys: cfg.ErrorOnUnmatchedKeys,
 		AutoReloadInterval:   time.Minute,
 		AutoReloadCallback: func(config interface{}) {
 			fmt.Printf("%v changed", config)
@@ -272,10 +284,10 @@ func loadConfig(paths ...string) (*Config, error) {
 }
 
 type dockerfileData struct {
-	Version    string `json:"version" yaml:"version"`
-	Dir        string `json:"dir" yaml:"dir"`
-	Filename   string `json:"filename" yaml:"filename"`
-	OutputPath string `json:"output-path" yaml:"output-path"`
+	Version    string
+	Dir        string
+	Filename   string
+	OutputPath string
 }
 
 // https://github.com/Luzifer/gen-dockerfile/blob/master/main.go#L85
@@ -288,24 +300,28 @@ func generateDockerfile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) e
 	tDockerfile := template.Must(template.New(tmplName).Parse(string(tmpl)))
 	dockerfile, err := os.Create(outputPath)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &dockerfileData{
+	dockerfileData := &dockerfileData{
 		Version: vcsTag.Name,
 		Dir:     vcsTag.Dir,
 	}
-	err = tDockerfile.Execute(dockerfile, cfg)
+	err = tDockerfile.Execute(dockerfile, dockerfileData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
 }
 
 type travisData struct {
-	Versions []*vcsTag         `json:"-" yaml:"-"`
-	Commands map[string]string `json:"commands" yaml:"commands"`
+	Versions []*vcsTag
+	Commands map[string]string
 }
 
 func generateTravis(vcsTag []*vcsTag) error {
@@ -316,7 +332,7 @@ func generateTravis(vcsTag []*vcsTag) error {
 	tTravisfile := template.Must(template.New("tmplTravis").Parse(string(tmpl)))
 	travisfile, err := os.Create(".travis.yml")
 	if err != nil {
-		if cfg.DebugMode {
+		if cfg.VerboseMode {
 			fmt.Println("Error creating the template :", err)
 		}
 		return err
@@ -326,7 +342,7 @@ func generateTravis(vcsTag []*vcsTag) error {
 	}
 	err = tTravisfile.Execute(travisfile, dataTravis)
 	if err != nil {
-		if cfg.DebugMode {
+		if cfg.VerboseMode {
 			fmt.Println("Error creating the template :", err)
 		}
 		return err
@@ -335,9 +351,9 @@ func generateTravis(vcsTag []*vcsTag) error {
 }
 
 type dockerEntrypointData struct {
-	Shell    string   `default:"!/bin/sh" json:"shell" yaml:"shell"`
-	Funcs    []string `json:"functions" yaml:"functions"`
-	Commands []string `json:"commands" yaml:"commands"`
+	Shell    string
+	Funcs    []string
+	Commands []string
 }
 
 func generateDockerEntrypoint(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
@@ -349,13 +365,17 @@ func generateDockerEntrypoint(prefixPath, tmplName, tmplFile string, vcsTag *vcs
 	outputPathEntrypoint := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "docker-entrypoint.sh")
 	entrypoint, err := os.Create(outputPathEntrypoint)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &dockerEntrypointData{}
-	err = tEntrypoint.Execute(entrypoint, cfg)
+	dockerEntrypointData := &dockerEntrypointData{}
+	err = tEntrypoint.Execute(entrypoint, dockerEntrypointData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	err = os.Chmod(outputPathEntrypoint, 0755)
@@ -366,9 +386,9 @@ func generateDockerEntrypoint(prefixPath, tmplName, tmplFile string, vcsTag *vcs
 }
 
 type makefileData struct {
-	Version string            `json:"version" yaml:"version"`
-	Vars    []string          `json:"variables" yaml:"variables"`
-	Targets map[string]string `json:"targets" yaml:"targets"`
+	Version string
+	Vars    []string
+	Targets map[string]string
 }
 
 func generateMakefile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
@@ -380,20 +400,24 @@ func generateMakefile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) err
 	outputPathMakefile := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "Makefile")
 	makefile, err := os.Create(outputPathMakefile)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &makefileData{}
-	err = tMakefile.Execute(makefile, cfg)
+	makefileData := &makefileData{}
+	err = tMakefile.Execute(makefile, makefileData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
 }
 
 type dockerIgnoreData struct {
-	Patterns []string `json:"patterns" yaml:"patterns"`
+	Patterns []string
 }
 
 func generateDockerIgnore(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
@@ -405,22 +429,26 @@ func generateDockerIgnore(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag)
 	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, ".dockerignore")
 	dockerIgnore, err := os.Create(outputPath)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &dockerIgnoreData{}
-	err = tDockerIgnore.Execute(dockerIgnore, cfg)
+	dockerIgnoreData := &dockerIgnoreData{}
+	err = tDockerIgnore.Execute(dockerIgnore, dockerIgnoreData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
 }
 
 type dockerComposeData struct {
-	Version string `json:"version" yaml:"version"`
-	Base    string `json:"base" yaml:"base"`
-	Dir     string `json:"dir" yaml:"dir"`
+	Version string
+	Base    string
+	Dir     string
 }
 
 func generateDockerCompose(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
@@ -432,26 +460,30 @@ func generateDockerCompose(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag
 	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "docker-compose.yml")
 	dockerCompose, err := os.Create(outputPath)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &dockerComposeData{
+	dockerComposeData := &dockerComposeData{
 		Base:    prefixPath,
 		Version: vcsTag.Name,
 		Dir:     vcsTag.Dir,
 	}
-	err = tDockerCompose.Execute(dockerCompose, cfg)
+	err = tDockerCompose.Execute(dockerCompose, dockerComposeData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
 }
 
 type readmeData struct {
-	Version string `json:"version" yaml:"version"`
-	Base    string `json:"base" yaml:"base"`
-	Dir     string `json:"dir" yaml:"dir"`
+	Version string
+	Base    string
+	Dir     string
 }
 
 func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
@@ -463,29 +495,33 @@ func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error
 	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "README.md")
 	readme, err := os.Create(outputPath)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &readmeData{
+	readmeData := &readmeData{
 		Base:    prefixPath,
 		Version: vcsTag.Name,
 		Dir:     vcsTag.Dir,
 	}
-	err = tReadme.Execute(readme, cfg)
+	err = tReadme.Execute(readme, readmeData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
 }
 
 type envData struct {
-	Version   string `json:"version" yaml:"version"`
-	Base      string `json:"base" yaml:"base"`
-	Dir       string `json:"dir" yaml:"dir"`
-	VcsURL    string `json:"vcs-url" yaml:"vcs-url"`
-	Owner     string `json:"owner" yaml:"owner"`
-	Namespace string `json:"namespace" yaml:"namespace"`
+	Version   string
+	Base      string
+	Dir       string
+	VcsURL    string
+	Owner     string
+	Namespace string
 }
 
 func generateEnv(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
@@ -497,10 +533,12 @@ func generateEnv(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
 	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, ".env")
 	env, err := os.Create(outputPath)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &envData{
+	envData := &envData{
 		Namespace: cfg.Docker.Namespace,
 		Owner:     cfg.Docker.Namespace,
 		VcsURL:    cfg.VCS.URLs[0],
@@ -509,18 +547,20 @@ func generateEnv(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
 		Dir:       vcsTag.Dir,
 	}
 	// pp.Println(cfg)
-	err = tEnv.Execute(env, cfg)
+	err = tEnv.Execute(env, envData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
 }
 
 type dockerSyncData struct {
-	Version string `json:"version" yaml:"version"`
-	Base    string `json:"base" yaml:"base"`
-	Dir     string `json:"dir" yaml:"dir"`
+	Version string
+	Base    string
+	Dir     string
 }
 
 func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
@@ -532,17 +572,21 @@ func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) e
 	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "docker-sync.yml")
 	dockerSync, err := os.Create(outputPath)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
-	cfg := &dockerSyncData{
+	dockerSyncData := &dockerSyncData{
 		Base:    prefixPath,
 		Version: vcsTag.Name,
 		Dir:     vcsTag.Dir,
 	}
-	err = tDockerSync.Execute(dockerSync, cfg)
+	err = tDockerSync.Execute(dockerSync, dockerSyncData)
 	if err != nil {
-		fmt.Println("Error creating the template :", err)
+		if cfg.VerboseMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
@@ -580,7 +624,7 @@ func generateReadmeRoot(table, vcsPath, currentBranch string) error {
 	}
 	err = tReadmeRoot.Execute(readmeRoot, dataReadmeRoot)
 	if err != nil {
-		if cfg.DebugMode {
+		if cfg.VerboseMode {
 			fmt.Println("Error creating the template :", err)
 		}
 		return err
@@ -643,7 +687,9 @@ func getRemoteTags() (error, []string) {
 		Name: cfg.VCS.Name,
 		URLs: cfg.VCS.URLs,
 	})
-	log.Print("Fetching tags...")
+	if cfg.VerboseMode {
+		log.Print("Fetching tags...")
+	}
 	// We can then use every Remote functions to retrieve wanted information
 	refs, err := rem.List(&git.ListOptions{})
 	if err != nil {
@@ -681,7 +727,6 @@ func getRemoteURLPath(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	// pp.Println(g)
 	return strings.Replace(g.Path, ".git", "", -1), nil
 }
 
