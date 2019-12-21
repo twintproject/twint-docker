@@ -23,7 +23,7 @@
 For first usage, you need to build image docker.
 
 ```shell
-docker pull x0rzkov/twint:latest
+docker pull x0rzkov/twint:latest-alpine
 ```
 
 or 
