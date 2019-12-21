@@ -76,13 +76,14 @@ For datas generate by twint, you can found result on folder twint
 
 👤 **x0rxkov**
 * Github: [@x0rxkov](https://github.com/x0rxkov)
+
 👤 **sebastienhouzet**
 * Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
 
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/x0rzkov/twint-docker/issues).
-See [`docs/CONTRIBUTING.md`](https://github.com/x0rzkov/twint-dockers/blob/master/docs/CONTRIBUTING.md) for details.
+See [`./docs/CONTRIBUTING.md`](https://github.com/x0rzkov/twint-dockers/blob/master/docs/CONTRIBUTING.md) for details.
 
 ## Show your support
 
