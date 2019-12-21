@@ -67,6 +67,7 @@ type VCS struct {
 	Name        string   `json:"name" yaml:"name"`
 	URLs        []string `json:"urls" yaml:"urls"`
 	SkipVersion []string `json:"skip-version" yaml:"skip-version"`
+	Readme      string   `json:"readme" yaml:"readme"`
 }
 
 type Image struct {
@@ -215,6 +216,8 @@ func main() {
 	// get images info from docker-hub already pushed
 	repository := fmt.Sprintf("%s/%s", cfg.Docker.Namespace, cfg.Docker.BaseName)
 	getImagesInfo(repository)
+
+	// generate main README (contacts, docker images)
 }
 
 func loadConfig(paths ...string) (*Config, error) {

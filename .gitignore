@@ -1,8 +1,4 @@
 workspace
-travis.go
-x0rzkov.go
-docker.go
-docker-hub.go
 *.tar.gz
 contribs
 contribs/

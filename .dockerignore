@@ -16,6 +16,3 @@ data
 data/**
 twint
 twint/**
-travis.go
-docker.go
-docker-hub.go
