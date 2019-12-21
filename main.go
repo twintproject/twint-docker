@@ -275,7 +275,7 @@ type travisData struct {
 }
 
 func generateTravis(vcsTag []*vcsTag) error {
-	tmpl, err := Asset(".travis.yml")
+	tmpl, err := Asset(".docker/templates/travis.tmpl")
 	if err != nil {
 		return err
 	}
