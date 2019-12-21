@@ -102,7 +102,7 @@ func getImagesInfo(dockerRepository, vcsRepository string) (string, error) {
 	}
 
 	var dockerImageTable string
-	dockerImageTable = fmt.Sprint("| Image   |      Size      |  Os |  Arch |  Link |\n")
+	dockerImageTable = fmt.Sprint("| Image   |      Size      |  Arch |  Os |  Link |\n")
 	dockerImageTable += fmt.Sprint("|----------|:-------------:|------|------|------|\n")
 
 	for _, tagInfoResponse := range tagInfos {

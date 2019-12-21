@@ -45,7 +45,7 @@ docker run -ti --rm x0rzkov/twint:[[TAG]] -h
 Then check the README.md for each versions.
 
 ### Available images
-| Image   |      Size      |  Os |  Arch |  Link |
+| Image   |      Size      |  Arch |  Os |  Link |
 |----------|:-------------:|------|------|------|
 | docker pull x0rzkov/twint:latest-slim|**180 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/slim/)|
 | docker pull x0rzkov/twint:latest-alpine|**80 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/alpine/)|
@@ -62,7 +62,7 @@ Then check the README.md for each versions.
 | docker pull x0rzkov/twint:2.1.11|**264 MB**|amd64|linux|[`./dockerfiles/2.1.11`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/)|
 | docker pull x0rzkov/twint:2.1.11-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.11/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/alpine/)|
 | docker pull x0rzkov/twint:2.1.11-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.11/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/slim/)|
-| docker pull x0rzkov/twint:2.1.4|**263 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/)|
+| docker pull x0rzkov/twint:2.1.4|**247 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/)|
 | docker pull x0rzkov/twint:2.1.4-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.4/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/alpine/)|
 | docker pull x0rzkov/twint:2.1.4-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.4/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/slim/)|
 | docker pull x0rzkov/twint:2.1.6|**263 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/)|
