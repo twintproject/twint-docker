@@ -27,7 +27,7 @@ docker:
       disabled: false
       dockerfile: .docker/templates/dockerfile_alpine.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      docker-sync: .docker/templates/docker-sync.tmpl
+      # docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl
@@ -37,7 +37,7 @@ docker:
       disabled: false
       dockerfile: .docker/templates/dockerfile_debian-slim.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      docker-sync: .docker/templates/docker-sync.tmpl
+      # docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl
@@ -47,7 +47,7 @@ docker:
       disabled: false
       dockerfile: .docker/templates/dockerfile_ubuntu.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      docker-sync: .docker/templates/docker-sync.tmpl
+      # docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl

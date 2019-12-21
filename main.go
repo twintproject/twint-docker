@@ -170,45 +170,63 @@ func main() {
 			}
 
 			// generate Dockerfile
-			if err := generateDockerfile(prefixPath, "dockerImageTemplate", dockerData.DockerFileTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.DockerFileTpl != "" {
+				if err := generateDockerfile(prefixPath, "dockerImageTemplate", dockerData.DockerFileTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
+			} else {
+				// trigger an error if Dockerfile is not at least generate
+				log.Fatalln("you need to define at least the dockerfile template")
 			}
 
 			// generate docker-entrypoint.sh
-			if err := generateDockerEntrypoint(prefixPath, "entrypointTemplate", dockerData.DockerEntryPointTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.DockerEntryPointTpl != "" {
+				if err := generateDockerEntrypoint(prefixPath, "entrypointTemplate", dockerData.DockerEntryPointTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
 			}
 
 			// generate .dockerignore
-			if err := generateDockerIgnore(prefixPath, "dockerIgnoreTemplate", dockerData.DockerIgnoreTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.DockerIgnoreTpl != "" {
+				if err := generateDockerIgnore(prefixPath, "dockerIgnoreTemplate", dockerData.DockerIgnoreTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
 			}
 
 			// generate docker-compose.yml
-			if err := generateDockerCompose(prefixPath, "dockercomposeTemplate", dockerData.DockerComposeTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.DockerComposeTpl != "" {
+				if err := generateDockerCompose(prefixPath, "dockercomposeTemplate", dockerData.DockerComposeTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
 			}
 
 			// generate docker-sync.yml
-			if err := generateDockerSync(prefixPath, "dockerSyncTemplate", dockerData.DockerSyncTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.DockerSyncTpl != "" {
+				if err := generateDockerSync(prefixPath, "dockerSyncTemplate", dockerData.DockerSyncTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
 			}
 
 			// generate .env
-			if err := generateEnv(prefixPath, "envTemplate", dockerData.EnvTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.EnvTpl != "" {
+				if err := generateEnv(prefixPath, "envTemplate", dockerData.EnvTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
 			}
 
 			// generate Makefile
-			if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.MakefileTpl != "" {
+				if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
 			}
 
 			// generate README.md
-			if err := generateReadme(prefixPath, "readmeTemplate", dockerData.ReadmeTpl, vcsTag); err != nil {
-				log.Fatalln(err)
+			if dockerData.ReadmeTpl != "" {
+				if err := generateReadme(prefixPath, "readmeTemplate", dockerData.ReadmeTpl, vcsTag); err != nil {
+					log.Fatalln(err)
+				}
 			}
-
 		}
 	}
 
@@ -228,47 +246,14 @@ func main() {
 	}
 
 	// generate main README (contacts, docker images)
-	if err := generateReadmeRoot(dockerImageTable, vcsRepository); err != nil {
+	currentBranch, err := getCurrentBranch(".")
+	if err != nil {
 		log.Fatalln(err)
 	}
-}
 
-type readmeRootData struct {
-	DockerImagesTable string
-	Contacts          []Contact
-	VcsPath           string
-	DockerNamespace   string
-	DockerBase        string
-}
-
-func generateReadmeRoot(table, vcsPath string) error {
-	tmpl, err := Asset(".docker/templates/readme_root.tmpl")
-	if err != nil {
-		return err
+	if err := generateReadmeRoot(dockerImageTable, vcsRepository, currentBranch); err != nil {
+		log.Fatalln(err)
 	}
-	tReadmeRoot := template.Must(template.New("readme_root").Parse(string(tmpl)))
-	readmeRoot, err := os.Create("README.md")
-	if err != nil {
-		if cfg.DebugMode {
-			fmt.Println("Error creating the template :", err)
-		}
-		return err
-	}
-	dataReadmeRoot := &readmeRootData{
-		DockerImagesTable: table,
-		Contacts:          cfg.Contacts,
-		VcsPath:           vcsPath,
-		DockerNamespace:   cfg.Docker.Namespace,
-		DockerBase:        cfg.Docker.BaseName,
-	}
-	err = tReadmeRoot.Execute(readmeRoot, dataReadmeRoot)
-	if err != nil {
-		if cfg.DebugMode {
-			fmt.Println("Error creating the template :", err)
-		}
-		return err
-	}
-	return nil
 }
 
 func loadConfig(paths ...string) (*Config, error) {
@@ -558,6 +543,46 @@ func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) e
 	err = tDockerSync.Execute(dockerSync, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type readmeRootData struct {
+	DockerImagesTable string
+	Contacts          []Contact
+	VcsPath           string
+	DockerNamespace   string
+	DockerBase        string
+	CurrentBranch     string
+}
+
+func generateReadmeRoot(table, vcsPath, currentBranch string) error {
+	tmpl, err := Asset(".docker/templates/readme_root.tmpl")
+	if err != nil {
+		return err
+	}
+	tReadmeRoot := template.Must(template.New("readme_root").Parse(string(tmpl)))
+	readmeRoot, err := os.Create("README.md")
+	if err != nil {
+		if cfg.DebugMode {
+			fmt.Println("Error creating the template :", err)
+		}
+		return err
+	}
+	dataReadmeRoot := &readmeRootData{
+		DockerImagesTable: table,
+		Contacts:          cfg.Contacts,
+		VcsPath:           vcsPath,
+		DockerNamespace:   cfg.Docker.Namespace,
+		DockerBase:        cfg.Docker.BaseName,
+		CurrentBranch:     currentBranch,
+	}
+	err = tReadmeRoot.Execute(readmeRoot, dataReadmeRoot)
+	if err != nil {
+		if cfg.DebugMode {
+			fmt.Println("Error creating the template :", err)
+		}
 		return err
 	}
 	return nil
