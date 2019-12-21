@@ -1,5 +1,6 @@
 # twint-docker
 
+<!-- ToC start -->
 ## Table of Contents
 1. [How to use](#how-to-use)
     1. [First use](#first-use)
@@ -13,6 +14,7 @@
 3. [Authors](#authors)
 4. [🤝 Contributing](#contributing)
 5. [Show your support](#show-your-support)
+<!-- ToC end -->
 
 ## How to use
 
