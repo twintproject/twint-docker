@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/jinzhu/configor"
 	"github.com/k0kubun/pp"
+	"github.com/whilp/git-urls"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/config"
 	"gopkg.in/src-d/go-git.v4/plumbing"
@@ -215,8 +216,13 @@ func main() {
 	generateTravis(vcsTags)
 
 	// get images info from docker-hub already pushed
-	repository := fmt.Sprintf("%s/%s", cfg.Docker.Namespace, cfg.Docker.BaseName)
-	getImagesInfo(repository)
+	dockerRepository := fmt.Sprintf("%s/%s", cfg.Docker.Namespace, cfg.Docker.BaseName)
+	vcsRepository, err := getRemoteURLPath(".")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	getImagesInfo(dockerRepository, vcsRepository)
 
 	// generate main README (contacts, docker images)
 }
@@ -584,6 +590,32 @@ func getRemoteTags() (error, []string) {
 	return nil, tags
 }
 
+func getRepositoriesDir() string {
+	d, _ := os.Getwd()
+	return filepath.Clean(filepath.Join(d))
+}
+
+func getRemoteURLPath(path string) (string, error) {
+	if path == "" {
+		path = "."
+	}
+	// We instantiate a new repository targeting the given path (the .git folder)
+	r, err := git.PlainOpen(path)
+	if err != nil {
+		return "", err
+	}
+	cfg, err := r.Config()
+	if err != nil {
+		return "", err
+	}
+	g, err := giturls.Parse(cfg.Remotes["origin"].URLs[0])
+	if err != nil {
+		return "", err
+	}
+	// pp.Println(g)
+	return strings.Replace(g.Path, ".git", "", -1), nil
+}
+
 func getCurrentBranch(path string) (string, error) {
 	if path == "" {
 		path = "."
@@ -619,6 +651,7 @@ func currentBranch(repo *git.Repository) (*config.Branch, error) {
 			Name:   branchName,
 		}, nil
 	}
+	pp.Println(branch)
 	return branch, err
 }
 

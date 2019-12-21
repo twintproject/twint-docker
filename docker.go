@@ -64,8 +64,8 @@ type TagInfoResultImage struct {
 	Variant      interface{} `json:"variant"`
 }
 
-func getImagesInfo(repository string) {
-	r, err := request(fmt.Sprintf("https://hub.docker.com/v2/repositories/%s/tags/?page_size=100", repository))
+func getImagesInfo(dockerRepository, vcsRepository string) {
+	r, err := request(fmt.Sprintf("https://hub.docker.com/v2/repositories/%s/tags/?page_size=100", dockerRepository))
 	if err != nil || r.StatusCode != 200 {
 		fmt.Printf(" [%s]\n", ("Failed"))
 		panic("Failed to connect to docker-hub repository.")
@@ -110,8 +110,8 @@ func getImagesInfo(repository string) {
 
 	for _, tagInfoResponse := range tagInfos {
 		linkVersion := strings.Replace(tagInfoResponse.Name, "-", "/", -1)
-		link := fmt.Sprintf("[`./dockerfiles/%s`](https://github.com/%s/tree/%s/dockerfiles/%s/)", linkVersion, repository, branch, linkVersion)
-		fmt.Println("| docker pull", repository+"/"+tagInfoResponse.Name, "|", tagInfoResponse.HumanSize, "|", tagInfoResponse.Architecture, "|", tagInfoResponse.Os, "|", link, "|")
+		link := fmt.Sprintf("[`./dockerfiles/%s`](https://github.com/%s/tree/%s/dockerfiles/%s/)", linkVersion, vcsRepository, branch, linkVersion)
+		fmt.Println("| docker pull", dockerRepository+"/"+tagInfoResponse.Name, "|", tagInfoResponse.HumanSize, "|", tagInfoResponse.Architecture, "|", tagInfoResponse.Os, "|", link, "|")
 	}
 }
 
