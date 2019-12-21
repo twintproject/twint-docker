@@ -39,33 +39,33 @@ Then check the README.md for each versions.
 ### Available images
 | Image   |      Size      |  Os |  Arch |
 |----------|:-------------:|------|------|
-| x0rzkov/twint/latest | 247 MB | amd64 | linux |
-| x0rzkov/twint/latest-slim | 168 MB | amd64 | linux |
-| x0rzkov/twint/latest-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.11-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.0 | 247 MB | amd64 | linux |
-| x0rzkov/twint/2.1.10-slim | 168 MB | amd64 | linux |
-| x0rzkov/twint/2.0.0-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.10 | 247 MB | amd64 | linux |
-| x0rzkov/twint/2.1.11-slim | 168 MB | amd64 | linux |
-| x0rzkov/twint/2.1.0-slim | 167 MB | amd64 | linux |
-| x0rzkov/twint/2.0.0-slim | 167 MB | amd64 | linux |
-| x0rzkov/twint/2.1.6-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.11 | 247 MB | amd64 | linux |
-| x0rzkov/twint/2.1.8 | 247 MB | amd64 | linux |
-| x0rzkov/twint/2.1.4-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.6-slim | 167 MB | amd64 | linux |
-| x0rzkov/twint/2.1.8-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.6 | 247 MB | amd64 | linux |
-| x0rzkov/twint/2.1.4-slim | 167 MB | amd64 | linux |
-| x0rzkov/twint/2.0.0 | 247 MB | amd64 | linux |
-| x0rzkov/twint/2.1.8-slim | 167 MB | amd64 | linux |
-| x0rzkov/twint/2.1.9 | 247 MB | amd64 | linux |
-| x0rzkov/twint/2.1.10-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.9-slim | 168 MB | amd64 | linux |
-| x0rzkov/twint/2.1.0-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.9-alpine | 80 MB | amd64 | linux |
-| x0rzkov/twint/2.1.4 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/latest | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/latest-slim | 168 MB | amd64 | linux |
+| docker pull x0rzkov/twint/latest-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.11-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.0 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.10-slim | 168 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.0.0-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.10 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.11-slim | 168 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.0-slim | 167 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.0.0-slim | 167 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.6-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.11 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.8 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.4-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.6-slim | 167 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.8-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.6 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.4-slim | 167 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.0.0 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.8-slim | 167 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.9 | 247 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.10-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.9-slim | 168 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.0-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.9-alpine | 80 MB | amd64 | linux |
+| docker pull x0rzkov/twint/2.1.4 | 247 MB | amd64 | linux |
 
 ## Authors
 
