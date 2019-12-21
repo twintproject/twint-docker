@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/dustin/go-humanize v1.0.0
+	github.com/google/go-github/v28 v28.1.1 // indirect
 	github.com/hashicorp/go-version v1.2.0
 	github.com/jinzhu/configor v1.1.1
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect

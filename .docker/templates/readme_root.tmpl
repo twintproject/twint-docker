@@ -48,18 +48,12 @@ Then check the README.md for each versions.
 {{ .DockerImagesTable }}
 
 ## Authors
-
-👤 **pielco11**
-* Github: [@pielco11](https://github.com/pielco11)
-* Twitter: [@noneprivacy](https://twitter.com/noneprivacy) ![Twitter Follow](https://img.shields.io/twitter/follow/noneprivacy?label=Follow&style=social)
-
-👤 **x0rzkov**
-* Github: [@x0rzkov](https://github.com/x0rzkov)
-* Twitter: [@x0rzkov](https://twitter.com/x0rzkov) ![Twitter Follow](https://img.shields.io/twitter/follow/x0rzkov?label=Follow&style=social)
-
-👤 **sebastienhouzet**
-* Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
-
+{{range $val := .Contacts}}
+👤 **{{ $val.Name }}**
+{{ if $val.Twitter }}* Twitter: [@noneprivacy](https://twitter.com/{{ $val.Twitter }}) ![Twitter Follow](https://img.shields.io/twitter/follow/{{ $val.Twitter }}?label=Follow&style=social){{ end }}
+{{ if $val.Github }}* Github: [@{{ $val.Github }}](https://github.com/{{ $val.Github }}){{ end }}
+{{ if $val.Email }}* Email: {{ $val.Email }}{{ end }}
+{{end}}
 
 ## 🤝 Contributing
 

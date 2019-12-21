@@ -47,47 +47,51 @@ Then check the README.md for each versions.
 ### Available images
 | Image   |      Size      |  Os |  Arch |  Link |
 |----------|:-------------:|------|------|------|
+| docker pull x0rzkov/twint:latest-slim|**180 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/slim/)|
 | docker pull x0rzkov/twint:latest-alpine|**80 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/alpine/)|
-| docker pull x0rzkov/twint:latest|**247 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/)|
-| docker pull x0rzkov/twint:latest-slim|**168 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/slim/)|
-| docker pull x0rzkov/twint:2.0.0|**247 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/)|
+| docker pull x0rzkov/twint:latest|**264 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/)|
+| docker pull x0rzkov/twint:2.0.0|**263 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/)|
 | docker pull x0rzkov/twint:2.0.0-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.0.0/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/alpine/)|
-| docker pull x0rzkov/twint:2.0.0-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.0.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/slim/)|
-| docker pull x0rzkov/twint:2.1.0|**247 MB**|amd64|linux|[`./dockerfiles/2.1.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/)|
+| docker pull x0rzkov/twint:2.0.0-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.0.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/slim/)|
+| docker pull x0rzkov/twint:2.1.0|**263 MB**|amd64|linux|[`./dockerfiles/2.1.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/)|
 | docker pull x0rzkov/twint:2.1.0-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.0/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/alpine/)|
-| docker pull x0rzkov/twint:2.1.0-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/slim/)|
-| docker pull x0rzkov/twint:2.1.10|**247 MB**|amd64|linux|[`./dockerfiles/2.1.10`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/)|
+| docker pull x0rzkov/twint:2.1.0-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/slim/)|
+| docker pull x0rzkov/twint:2.1.10|**264 MB**|amd64|linux|[`./dockerfiles/2.1.10`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/)|
 | docker pull x0rzkov/twint:2.1.10-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.10/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/alpine/)|
-| docker pull x0rzkov/twint:2.1.10-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.10/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/slim/)|
-| docker pull x0rzkov/twint:2.1.11|**247 MB**|amd64|linux|[`./dockerfiles/2.1.11`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/)|
+| docker pull x0rzkov/twint:2.1.10-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.10/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/slim/)|
+| docker pull x0rzkov/twint:2.1.11|**264 MB**|amd64|linux|[`./dockerfiles/2.1.11`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/)|
 | docker pull x0rzkov/twint:2.1.11-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.11/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/alpine/)|
-| docker pull x0rzkov/twint:2.1.11-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.11/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/slim/)|
-| docker pull x0rzkov/twint:2.1.4|**247 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/)|
+| docker pull x0rzkov/twint:2.1.11-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.11/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/slim/)|
+| docker pull x0rzkov/twint:2.1.4|**263 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/)|
 | docker pull x0rzkov/twint:2.1.4-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.4/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/alpine/)|
-| docker pull x0rzkov/twint:2.1.4-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.4/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/slim/)|
-| docker pull x0rzkov/twint:2.1.6|**247 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/)|
+| docker pull x0rzkov/twint:2.1.4-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.4/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/slim/)|
+| docker pull x0rzkov/twint:2.1.6|**263 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/)|
 | docker pull x0rzkov/twint:2.1.6-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.6/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/alpine/)|
-| docker pull x0rzkov/twint:2.1.6-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.6/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/slim/)|
-| docker pull x0rzkov/twint:2.1.8|**247 MB**|amd64|linux|[`./dockerfiles/2.1.8`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/)|
+| docker pull x0rzkov/twint:2.1.6-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.6/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/slim/)|
+| docker pull x0rzkov/twint:2.1.8|**263 MB**|amd64|linux|[`./dockerfiles/2.1.8`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/)|
 | docker pull x0rzkov/twint:2.1.8-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.8/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/alpine/)|
-| docker pull x0rzkov/twint:2.1.8-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.8/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/slim/)|
-| docker pull x0rzkov/twint:2.1.9|**247 MB**|amd64|linux|[`./dockerfiles/2.1.9`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/)|
+| docker pull x0rzkov/twint:2.1.8-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.8/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/slim/)|
+| docker pull x0rzkov/twint:2.1.9|**264 MB**|amd64|linux|[`./dockerfiles/2.1.9`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/)|
 | docker pull x0rzkov/twint:2.1.9-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.1.9/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/alpine/)|
-| docker pull x0rzkov/twint:2.1.9-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.9/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/slim/)|
+| docker pull x0rzkov/twint:2.1.9-slim|**180 MB**|amd64|linux|[`./dockerfiles/2.1.9/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/slim/)|
 
 
 ## Authors
 
 👤 **pielco11**
-* Github: [@pielco11](https://github.com/pielco11)
 * Twitter: [@noneprivacy](https://twitter.com/noneprivacy) ![Twitter Follow](https://img.shields.io/twitter/follow/noneprivacy?label=Follow&style=social)
+* Github: [@pielco11](https://github.com/pielco11)
+
 
 👤 **x0rzkov**
+* Twitter: [@noneprivacy](https://twitter.com/x0rzkov) ![Twitter Follow](https://img.shields.io/twitter/follow/x0rzkov?label=Follow&style=social)
 * Github: [@x0rzkov](https://github.com/x0rzkov)
-* Twitter: [@x0rzkov](https://twitter.com/x0rzkov) ![Twitter Follow](https://img.shields.io/twitter/follow/x0rzkov?label=Follow&style=social)
+* Email: x0rzkov@protonmail.com
 
 👤 **sebastienhouzet**
+
 * Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
+
 
 
 ## 🤝 Contributing

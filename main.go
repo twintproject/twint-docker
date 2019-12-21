@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -12,6 +13,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/google/go-github/v28/github"
 	"github.com/hashicorp/go-version"
 	"github.com/jinzhu/configor"
 	"github.com/k0kubun/pp"
@@ -262,6 +264,9 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	// fetch github contributors
+	fetchContributors("twintproject", "twint-docker")
+
 	// generate main README (contacts, docker images)
 	if err := generateReadmeRoot(dockerImageTable, vcsRepository, currentBranch); err != nil {
 		log.Fatalln(err)
@@ -292,6 +297,9 @@ type dockerfileData struct {
 
 // https://github.com/Luzifer/gen-dockerfile/blob/master/main.go#L85
 func generateDockerfile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating dockerfile")
+	}
 	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, "Dockerfile")
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
@@ -325,6 +333,9 @@ type travisData struct {
 }
 
 func generateTravis(vcsTag []*vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating travis file")
+	}
 	tmpl, err := Asset(".docker/templates/travis.tmpl")
 	if err != nil {
 		return err
@@ -357,6 +368,9 @@ type dockerEntrypointData struct {
 }
 
 func generateDockerEntrypoint(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating docker-entrypoint")
+	}
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
@@ -392,6 +406,9 @@ type makefileData struct {
 }
 
 func generateMakefile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating makefile")
+	}
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
@@ -421,6 +438,9 @@ type dockerIgnoreData struct {
 }
 
 func generateDockerIgnore(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating dockerignore")
+	}
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
@@ -452,6 +472,9 @@ type dockerComposeData struct {
 }
 
 func generateDockerCompose(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating docker-compose")
+	}
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
@@ -487,6 +510,9 @@ type readmeData struct {
 }
 
 func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating readme")
+	}
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
@@ -525,6 +551,9 @@ type envData struct {
 }
 
 func generateEnv(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating envfile")
+	}
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
@@ -564,6 +593,9 @@ type dockerSyncData struct {
 }
 
 func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	if cfg.VerboseMode {
+		log.Print("generating docker-sync file")
+	}
 	tmpl, err := Asset(tmplFile)
 	if err != nil {
 		return err
@@ -602,6 +634,9 @@ type readmeRootData struct {
 }
 
 func generateReadmeRoot(table, vcsPath, currentBranch string) error {
+	if cfg.VerboseMode {
+		log.Print("generating main readme")
+	}
 	tmpl, err := Asset(".docker/templates/readme_root.tmpl")
 	if err != nil {
 		return err
@@ -782,4 +817,15 @@ func refBranchName(ref *plumbing.Reference) string {
 func refBranchNameStr(str string) string {
 	parts := strings.Split(str, "/")
 	return strings.Join(parts[2:], "/")
+}
+
+func fetchContributors(owner, repo string) {
+	client := github.NewClient(nil)
+	stats, _, err := client.Repositories.ListContributors(context.Background(), owner, repo, nil)
+	if _, ok := err.(*github.AcceptedError); ok {
+		log.Println("scheduled on GitHub side")
+	}
+	if cfg.DebugMode {
+		pp.Println(stats)
+	}
 }
