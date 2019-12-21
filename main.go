@@ -91,15 +91,6 @@ type vcsTag struct {
 	Dir  string
 }
 
-func isValidVersion(input string) bool {
-	for _, version := range cfg.VCS.SkipVersion {
-		if version == input {
-			return false
-		}
-	}
-	return true
-}
-
 func main() {
 	// instanciate new config object
 	cfg = &Config{}
@@ -533,6 +524,15 @@ func createDirectories(tags []*vcsTag) {
 			}
 		}
 	}
+}
+
+func isValidVersion(input string) bool {
+	for _, version := range cfg.VCS.SkipVersion {
+		if version == input {
+			return false
+		}
+	}
+	return true
 }
 
 func removeContents(dir string) error {
