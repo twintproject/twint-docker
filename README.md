@@ -84,7 +84,7 @@ Then check the README.md for each versions.
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/x0rzkov/twint-docker/issues).
-See [`./docs/CONTRIBUTING.md`](https://github.com/x0rzkov/twint-dockers/tree/alpine/docs/CONTRIBUTING.md) for details.
+See [`./docs/CONTRIBUTING.md`](https://github.com/x0rzkov/twint-dockers/blob/alpine/docs/CONTRIBUTING.md) for details.
 
 ## Show your support
 
