@@ -74,8 +74,8 @@ For datas generate by twint, you can found result on folder twint
 
 ## Authors
 
-👤 **x0rxkov**
-* Github: [@x0rxkov](https://github.com/x0rxkov)
+👤 **x0rzkov**
+* Github: [@x0rzkov](https://github.com/x0rzkov)
 
 👤 **sebastienhouzet**
 * Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
