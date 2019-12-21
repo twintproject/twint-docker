@@ -211,6 +211,10 @@ func main() {
 
 	// generate travis file
 	generateTravis(vcsTags)
+
+	// get images info from docker-hub already pushed
+	repository := fmt.Sprintf("%s/%s", cfg.Docker.Namespace, cfg.Docker.BaseName)
+	getImagesInfo(repository)
 }
 
 func loadConfig(paths ...string) (*Config, error) {

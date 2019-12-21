@@ -100,9 +100,6 @@ Let's play now :)
 👤 **sebastienhouzet**
 * Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
 
-👤 **pielco11**
-* Github: [@pielco11](https://github.com/pielco11)
-
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/x0rzkov/twint-docker/issues).
