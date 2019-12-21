@@ -12,7 +12,7 @@
      1. [Examples of command](#examples-of-command)
   1. [Datas](#datas)
 1. [Authors](#authors)
-1. [🤝 Contributing](#contributing)
+1. [🤝 Contributing](#🤝-contributing)
 1. [Show your support](#show-your-support)
 <!-- ToC end -->
 
@@ -91,3 +91,20 @@ docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --resume 109
 For datas generate by twint, you can found result on folder twint
 
 Let's play now :)
+
+## Authors
+
+👤 **x0rxkov**
+* Github: [@x0rxkov](https://github.com/x0rxkov)
+
+👤 **sebastienhouzet**
+* Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/x0rzkov/twint-docker/issues).
+See [`./docs/CONTRIBUTING.md`](https://github.com/x0rzkov/twint-dockers/blob/master/docs/CONTRIBUTING.md) for details.
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
