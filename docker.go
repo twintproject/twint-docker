@@ -1,20 +1,35 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os/exec"
 	"sort"
 	"strings"
 
+	"github.com/blang/semver"
 	"github.com/dustin/go-humanize"
 	"github.com/hashicorp/go-version"
+	"github.com/k0kubun/pp"
 )
 
 // RequestError interface
 type RequestError interface {
 	Error() string
+}
+
+type tagInfo struct {
+	Name          string           `json:"name"`
+	FullSize      uint64           `json:"full_size"`
+	HumanSize     string           `json:"human_size"`
+	Version       *version.Version `json:"version"`
+	VersionNumber string           `json:"version-number"`
+	Architecture  string           `json:"arch"`
+	Os            string           `json:"os"`
 }
 
 type TagsInfoResponse struct {
@@ -63,16 +78,73 @@ func getImagesInfo(repository string) {
 		panic(err)
 	}
 
+	var tagInfos []*tagInfo
+	for _, t := range tagsInfoResponse.Results {
+		ti := &tagInfo{
+			Name:         t.Name,
+			HumanSize:    humanize.Bytes(t.FullSize),
+			FullSize:     t.FullSize,
+			Architecture: t.Images[0].Architecture,
+			Os:           t.Images[0].Os,
+		}
+		v, _ := version.NewVersion(t.Name)
+		if v != nil {
+			ti.Version = v
+			ti.VersionNumber = v.String()
+		}
+		tagInfos = append(tagInfos, ti)
+	}
+
+	sort.Slice(tagInfos, func(i, j int) bool { return tagInfos[i].VersionNumber < tagInfos[j].VersionNumber })
+	if cfg.DebugMode {
+		pp.Println(tagInfos)
+	}
+
+	branch, err := getCurrentBranch(".")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	fmt.Println("| Image   |      Size      |  Os |  Arch |  Link |")
 	fmt.Println("|----------|:-------------:|------|------|------|")
-	for _, tagInfoResponse := range tagsInfoResponse.Results {
+
+	for _, tagInfoResponse := range tagInfos {
 		linkVersion := strings.Replace(tagInfoResponse.Name, "-", "/", -1)
-		link := fmt.Sprintf("[`./dockerfiles/%s`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/%s/)", linkVersion, linkVersion)
-		fmt.Println("| docker pull", repository+"/"+tagInfoResponse.Name, "|", humanize.Bytes(tagInfoResponse.FullSize), "|", tagInfoResponse.Images[0].Architecture, "|", tagInfoResponse.Images[0].Os, "|", link, "|")
+		link := fmt.Sprintf("[`./dockerfiles/%s`](https://github.com/%s/tree/%s/dockerfiles/%s/)", linkVersion, repository, branch, linkVersion)
+		fmt.Println("| docker pull", repository+"/"+tagInfoResponse.Name, "|", tagInfoResponse.HumanSize, "|", tagInfoResponse.Architecture, "|", tagInfoResponse.Os, "|", link, "|")
 	}
 }
 
-func tagInfoSorting() {
+func semverSorting(version string) {
+	v, err := semver.Make(version)
+	if err != nil {
+		log.Fatalln("version:", version, "error:", err)
+	}
+	fmt.Printf("Major: %d\n", v.Major)
+	fmt.Printf("Minor: %d\n", v.Minor)
+	fmt.Printf("Patch: %d\n", v.Patch)
+	fmt.Printf("Pre: %s\n", v.Pre)
+	fmt.Printf("Build: %s\n", v.Build)
+
+	// Prerelease versions array
+	if len(v.Pre) > 0 {
+		fmt.Println("Prerelease versions:")
+		for i, pre := range v.Pre {
+			fmt.Printf("%d: %q\n", i, pre)
+		}
+	}
+
+	// Build meta data array
+	if len(v.Build) > 0 {
+		fmt.Println("Build meta data:")
+		for i, build := range v.Build {
+			fmt.Printf("%d: %q\n", i, build)
+		}
+	}
+
+}
+
+func tagInfoSorting(tagsInfo TagsInfoResponse) {
 	versionsRaw := []string{"1.1", "0.7.1", "1.4-beta", "1.4", "2"}
 	versions := make([]*version.Version, len(versionsRaw))
 	for i, raw := range versionsRaw {
@@ -81,6 +153,25 @@ func tagInfoSorting() {
 	}
 	// After this, the versions are properly sorted
 	sort.Sort(version.Collection(versions))
+}
+
+func getGitConfig(config string) (string, error) {
+	buf := new(bytes.Buffer)
+
+	cmd := exec.Command("git", "config", "--get", config)
+	cmd.Stdout = buf
+	err := cmd.Run()
+
+	return strings.TrimSpace(buf.String()), err
+}
+
+func getGitBranch() (string, error) {
+	buf := new(bytes.Buffer)
+	cmd := exec.Command("git", "branch")
+	cmd.Stdout = buf
+	err := cmd.Run()
+	cleanBranch := strings.Replace(strings.Replace(strings.TrimSpace(buf.String()), "* ", "", -1), "\n", "", -1)
+	return cleanBranch, err
 }
 
 // Request makes an HTTP request

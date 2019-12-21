@@ -17,6 +17,7 @@ import (
 	"github.com/k0kubun/pp"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/config"
+	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/storage/memory"
 )
 
@@ -581,4 +582,55 @@ func getRemoteTags() (error, []string) {
 		}
 	}
 	return nil, tags
+}
+
+func getCurrentBranch(path string) (string, error) {
+	if path == "" {
+		path = "."
+	}
+	// We instantiate a new repository targeting the given path (the .git folder)
+	r, err := git.PlainOpen(path)
+	if err != nil {
+		return "", err
+	}
+	b, err := currentBranch(r)
+	if err != nil {
+		return "", err
+	}
+	return b.Name, nil
+}
+
+// currentBranch returns the current branch of a repository.
+// It is possible that there isn't a current branch, in which case it returns null.
+func currentBranch(repo *git.Repository) (*config.Branch, error) {
+	head, err := repo.Head()
+	if err != nil {
+		return nil, err
+	}
+	if !head.Name().IsBranch() {
+		return nil, nil
+	}
+	branchName := refBranchName(head)
+	branch, err := repo.Branch(branchName)
+	if err == git.ErrBranchNotFound {
+		// Branch tracking is not configured.
+		return &config.Branch{
+			Remote: "origin",
+			Name:   branchName,
+		}, nil
+	}
+	return branch, err
+}
+
+// RefBranchName returns the branch name of a reference.
+// It assumes that the ref has a branch type.
+func refBranchName(ref *plumbing.Reference) string {
+	return refBranchNameStr(ref.String())
+}
+
+// RefBranchNameStr returns the branch name of a reference string.
+// It assumes that the ref has a branch type.
+func refBranchNameStr(str string) string {
+	parts := strings.Split(str, "/")
+	return strings.Join(parts[2:], "/")
 }
