@@ -108,7 +108,7 @@ func getImagesInfo(dockerRepository, vcsRepository string) (string, error) {
 	for _, tagInfoResponse := range tagInfos {
 		linkVersion := strings.Replace(tagInfoResponse.Name, "-", "/", -1)
 		link := fmt.Sprintf("[`./dockerfiles/%s`](https://github.com/%s/tree/%s/dockerfiles/%s/)", linkVersion, vcsRepository, branch, linkVersion)
-		dockerImageTable += fmt.Sprint("| docker pull ", dockerRepository+"/"+tagInfoResponse.Name, "|", tagInfoResponse.HumanSize, "|", tagInfoResponse.Architecture, "|", tagInfoResponse.Os, "|", link, "|\n")
+		dockerImageTable += fmt.Sprint("| docker pull ", dockerRepository+":"+tagInfoResponse.Name, "|**", tagInfoResponse.HumanSize, "**|", tagInfoResponse.Architecture, "|", tagInfoResponse.Os, "|", link, "|\n")
 	}
 
 	return dockerImageTable, nil

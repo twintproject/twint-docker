@@ -228,7 +228,7 @@ func main() {
 	}
 
 	// generate main README (contacts, docker images)
-	if err := generateReadmeRoot(dockerImageTable); err != nil {
+	if err := generateReadmeRoot(dockerImageTable, vcsRepository); err != nil {
 		log.Fatalln(err)
 	}
 }
@@ -236,9 +236,12 @@ func main() {
 type readmeRootData struct {
 	DockerImagesTable string
 	Contacts          []Contact
+	VcsPath           string
+	DockerNamespace   string
+	DockerBase        string
 }
 
-func generateReadmeRoot(table string) error {
+func generateReadmeRoot(table, vcsPath string) error {
 	tmpl, err := Asset(".docker/templates/readme_root.tmpl")
 	if err != nil {
 		return err
@@ -254,6 +257,9 @@ func generateReadmeRoot(table string) error {
 	dataReadmeRoot := &readmeRootData{
 		DockerImagesTable: table,
 		Contacts:          cfg.Contacts,
+		VcsPath:           vcsPath,
+		DockerNamespace:   cfg.Docker.Namespace,
+		DockerBase:        cfg.Docker.BaseName,
 	}
 	err = tReadmeRoot.Execute(readmeRoot, dataReadmeRoot)
 	if err != nil {
