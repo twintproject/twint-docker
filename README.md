@@ -43,7 +43,7 @@ to do...
 
 👤 **pielco11**
 * Github: [@pielco11](https://github.com/pielco11)
-* Twitter: [@pielco11](https://twitter.com/noneprivacy) ![Twitter Follow](https://img.shields.io/twitter/follow/noneprivacy?label=Follow&style=social)
+* Twitter: [@noneprivacy](https://twitter.com/noneprivacy) ![Twitter Follow](https://img.shields.io/twitter/follow/noneprivacy?label=Follow&style=social)
 
 👤 **x0rzkov**
 * Github: [@x0rzkov](https://github.com/x0rzkov)
