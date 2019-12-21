@@ -30,6 +30,7 @@ script:
   - docker-slim version
   - docker build --squash -t "$IMAGE" .
   - sudo docker-slim build "$IMAGE"
+  - sudo docker run -ti "$IMAGE" -h
   - docker images
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker push "$IMAGE"
