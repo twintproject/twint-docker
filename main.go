@@ -57,7 +57,8 @@ type Travis struct {
 }
 
 type Docker struct {
-	Owner      string           `json:"owner" yaml:"owner"`
+	Namespace  string           `json:"namespace" yaml:"namespace"`
+	BaseName   string           `json:"basename" yaml:"basename"`
 	OutputPath string           `default:"./dockerfiles" json:"output-path" yaml:"output-path"`
 	Images     map[string]Image `json:"images" yaml:"images"`
 }
@@ -69,14 +70,20 @@ type VCS struct {
 }
 
 type Image struct {
-	Name                string `json:"name" yaml:"name"`
-	DockerFileTpl       string `json:"dockerfile" yaml:"dockerfile"`
-	DockerEntryPointTpl string `json:"docker-entrypoint" yaml:"docker-entrypoint"`
-	DockerSyncTpl       string `json:"docker-sync" yaml:"docker-sync"`
-	DockerIgnoreTpl     string `json:"dockerignore" yaml:"dockerignore"`
-	DockerComposeTpl    string `json:"dockercompose" yaml:"dockercompose"`
-	MakefileTpl         string `json:"makefile" yaml:"makefile"`
-	ReadmeTpl           string `json:"readme" yaml:"readme"`
+	Disabled            bool     `default:"false" json:"disabled" yaml:"disabled"`
+	Namespace           string   `json:"namespace" yaml:"namespace"`
+	BaseName            string   `json:"basename" yaml:"basename"`
+	Args                []string `json:"build-args" yaml:"build-args"`
+	Envs                []string `json:"environment" yaml:"environment"`
+	Labels              []string `json:"labels" yaml:"labels"`
+	DockerFileTpl       string   `required:"true" json:"dockerfile" yaml:"dockerfile"`
+	DockerEntryPointTpl string   `json:"docker-entrypoint" yaml:"docker-entrypoint"`
+	DockerSyncTpl       string   `json:"docker-sync" yaml:"docker-sync"`
+	DockerIgnoreTpl     string   `json:"dockerignore" yaml:"dockerignore"`
+	DockerComposeTpl    string   `json:"dockercompose" yaml:"dockercompose"`
+	MakefileTpl         string   `json:"makefile" yaml:"makefile"`
+	ReadmeTpl           string   `json:"readme" yaml:"readme"`
+	EnvTpl              string   `json:"envfile" yaml:"envfile"`
 }
 
 type vcsTag struct {
@@ -154,6 +161,10 @@ func main() {
 			pp.Println(dockerData)
 		}
 
+		if dockerData.Disabled {
+			continue
+		}
+
 		// create content for each versions
 		for _, vcsTag := range vcsTags {
 			prefixPath := dockerImage
@@ -186,6 +197,11 @@ func main() {
 
 			// generate docker-sync.yml
 			if err := generateDockerSync(prefixPath, "dockerSyncTemplate", dockerData.DockerSyncTpl, vcsTag); err != nil {
+				log.Fatalln(err)
+			}
+
+			// generate .env
+			if err := generateEnv(prefixPath, "envTemplate", dockerData.EnvTpl, vcsTag); err != nil {
 				log.Fatalln(err)
 			}
 
@@ -422,6 +438,44 @@ func generateReadme(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error
 		Dir:     vcsTag.Dir,
 	}
 	err = tReadme.Execute(readme, cfg)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	return nil
+}
+
+type envData struct {
+	Version   string `json:"version" yaml:"version"`
+	Base      string `json:"base" yaml:"base"`
+	Dir       string `json:"dir" yaml:"dir"`
+	VcsURL    string `json:"vcs-url" yaml:"vcs-url"`
+	Owner     string `json:"owner" yaml:"owner"`
+	Namespace string `json:"namespace" yaml:"namespace"`
+}
+
+func generateEnv(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+	tmpl, err := Asset(tmplFile)
+	if err != nil {
+		return err
+	}
+	tEnv := template.Must(template.New(tmplName).Parse(string(tmpl)))
+	outputPath := filepath.Join(cfg.Docker.OutputPath, vcsTag.Dir, prefixPath, ".env")
+	env, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Println("Error creating the template :", err)
+		return err
+	}
+	cfg := &envData{
+		Namespace: cfg.Docker.Namespace,
+		Owner:     cfg.Docker.Namespace,
+		VcsURL:    cfg.VCS.URLs[0],
+		Base:      prefixPath,
+		Version:   vcsTag.Name,
+		Dir:       vcsTag.Dir,
+	}
+	// pp.Println(cfg)
+	err = tEnv.Execute(env, cfg)
 	if err != nil {
 		fmt.Println("Error creating the template :", err)
 		return err

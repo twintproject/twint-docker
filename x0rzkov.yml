@@ -19,32 +19,39 @@ ci:
 
 docker:
   output-path: ./dockerfiles
-  account: x0rzkov
+  namespace: x0rzkov
+  basename: twint
   images:
     alpine:
-      dockerfile: .docker/templates/alpine.tmpl
+      disabled: false
+      dockerfile: .docker/templates/dockerfile_alpine.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
       docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl
-      readme: .docker/templates/readme-alpine.tmpl
+      readme: .docker/templates/readme_alpine.tmpl
+      envfile: .docker/templates/env.tmpl
     slim:
-      dockerfile: .docker/templates/debian-slim.tmpl
+      disabled: false
+      dockerfile: .docker/templates/dockerfile_debian-slim.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
       docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl
       readme: .docker/templates/readme.tmpl
+      envfile: .docker/templates/env.tmpl
     ubuntu:
-      dockerfile: .docker/templates/ubuntu.tmpl
+      disabled: false
+      dockerfile: .docker/templates/dockerfile_ubuntu.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
       docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl
       readme: .docker/templates/readme.tmpl
+      envfile: .docker/templates/env.tmpl
 
 contacts:
 - name: x0rzkov
