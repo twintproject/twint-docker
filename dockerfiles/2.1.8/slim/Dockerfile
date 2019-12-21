@@ -21,4 +21,4 @@ rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENTRYPOINT ["/entrypoint.sh"]
 VOLUME /twint
-WORKDIR /srv/twint
+WORKDIR /opt/twint/data

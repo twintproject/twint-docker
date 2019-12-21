@@ -34,7 +34,7 @@ RUN apk add --no-cache python3 libffi openblas libstdc++
 
 # Switch to user context
 USER twint
-WORKDIR /opt/app
+WORKDIR /opt/twint/data
 
 # Copy the virtual environment from the previous image
 COPY --from=build /opt/venv /opt/venv
