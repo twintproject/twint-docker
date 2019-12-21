@@ -55,5 +55,12 @@ docker:
       envfile: .docker/templates/env.tmpl
 
 contacts:
+- name: pielco11
+  twitter: noneprivacy
+  github: pielco11
 - name: x0rzkov
   email: x0rzkov@protonmail.com
+  twitter: x0rzkov
+  github: x0rzkov
+- name: sebastienhouzet
+  github: sebastienhouzet

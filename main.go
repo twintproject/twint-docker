@@ -23,9 +23,7 @@ import (
 )
 
 var (
-	// debugMode            = false
 	verboseMode          = false
-	silentMode           = true
 	autoReloadMode       = false
 	errorOnUnmatchedKeys = false
 	vcsTags              []*vcsTag
@@ -49,8 +47,10 @@ type CI struct {
 }
 
 type Contact struct {
-	Name  string `json:"name" yaml:"name"`
-	Email string `json:"email" yaml:"email"`
+	Name    string `json:"name" yaml:"name"`
+	Email   string `json:"email" yaml:"email"`
+	Twitter string `json:"twitter" yaml:"twitter"`
+	Github  string `json:"github" yaml:"github"`
 }
 
 type Travis struct {
@@ -222,9 +222,47 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	getImagesInfo(dockerRepository, vcsRepository)
+	dockerImageTable, err := getImagesInfo(dockerRepository, vcsRepository)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	// generate main README (contacts, docker images)
+	if err := generateReadmeRoot(dockerImageTable); err != nil {
+		log.Fatalln(err)
+	}
+}
+
+type readmeRootData struct {
+	DockerImagesTable string
+	Contacts          []Contact
+}
+
+func generateReadmeRoot(table string) error {
+	tmpl, err := Asset(".docker/templates/readme_root.tmpl")
+	if err != nil {
+		return err
+	}
+	tReadmeRoot := template.Must(template.New("readme_root").Parse(string(tmpl)))
+	readmeRoot, err := os.Create("README.md")
+	if err != nil {
+		if cfg.DebugMode {
+			fmt.Println("Error creating the template :", err)
+		}
+		return err
+	}
+	dataReadmeRoot := &readmeRootData{
+		DockerImagesTable: table,
+		Contacts:          cfg.Contacts,
+	}
+	err = tReadmeRoot.Execute(readmeRoot, dataReadmeRoot)
+	if err != nil {
+		if cfg.DebugMode {
+			fmt.Println("Error creating the template :", err)
+		}
+		return err
+	}
+	return nil
 }
 
 func loadConfig(paths ...string) (*Config, error) {
@@ -651,7 +689,9 @@ func currentBranch(repo *git.Repository) (*config.Branch, error) {
 			Name:   branchName,
 		}, nil
 	}
-	pp.Println(branch)
+	if cfg.DebugMode {
+		pp.Println(branch)
+	}
 	return branch, err
 }
 

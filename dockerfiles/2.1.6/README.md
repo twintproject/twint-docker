@@ -53,6 +53,16 @@ Start to up tor
 docker-compose up -d tor
 ```
 
+### Twint Search interface
+
+Start to up elasticsearch and twint-search
+
+```shell
+docker-compose up -d twint-search elasticsearch
+```
+
+Then open in your browser [http://localhost:3000](http://localhost:3000)
+
 ### Execute Twint command
 
 ```shell

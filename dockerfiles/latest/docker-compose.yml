@@ -8,6 +8,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: twint-cli
+    volume:
+    - $PWD/twint:/opt/twint/data
 
   twint-search:
     image: x0rzkov/twint-search:latest

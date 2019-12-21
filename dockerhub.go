@@ -5,13 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os/exec"
 	"sort"
 	"strings"
 
-	"github.com/blang/semver"
 	"github.com/dustin/go-humanize"
 	"github.com/hashicorp/go-version"
 	"github.com/k0kubun/pp"
@@ -64,20 +62,20 @@ type TagInfoResultImage struct {
 	Variant      interface{} `json:"variant"`
 }
 
-func getImagesInfo(dockerRepository, vcsRepository string) {
+func getImagesInfo(dockerRepository, vcsRepository string) (string, error) {
 	r, err := request(fmt.Sprintf("https://hub.docker.com/v2/repositories/%s/tags/?page_size=100", dockerRepository))
 	if err != nil || r.StatusCode != 200 {
 		fmt.Printf(" [%s]\n", ("Failed"))
-		panic("Failed to connect to docker-hub repository.")
+		fmt.Println("Failed to connect to docker-hub repository.")
+		return "", err
 	} else {
 		defer r.Body.Close()
 	}
 	byt := readResponseBody(r)
 	var tagsInfoResponse TagsInfoResponse
 	if err := json.Unmarshal(byt, &tagsInfoResponse); err != nil {
-		panic(err)
+		return "", err
 	}
-
 	var tagInfos []*tagInfo
 	for _, t := range tagsInfoResponse.Results {
 		ti := &tagInfo{
@@ -102,76 +100,20 @@ func getImagesInfo(dockerRepository, vcsRepository string) {
 
 	branch, err := getCurrentBranch(".")
 	if err != nil {
-		log.Fatalln(err)
+		return "", err
 	}
 
-	fmt.Println("| Image   |      Size      |  Os |  Arch |  Link |")
-	fmt.Println("|----------|:-------------:|------|------|------|")
+	var dockerImageTable string
+	dockerImageTable = fmt.Sprint("| Image   |      Size      |  Os |  Arch |  Link |\n")
+	dockerImageTable += fmt.Sprint("|----------|:-------------:|------|------|------|\n")
 
 	for _, tagInfoResponse := range tagInfos {
 		linkVersion := strings.Replace(tagInfoResponse.Name, "-", "/", -1)
 		link := fmt.Sprintf("[`./dockerfiles/%s`](https://github.com/%s/tree/%s/dockerfiles/%s/)", linkVersion, vcsRepository, branch, linkVersion)
-		fmt.Println("| docker pull", dockerRepository+"/"+tagInfoResponse.Name, "|", tagInfoResponse.HumanSize, "|", tagInfoResponse.Architecture, "|", tagInfoResponse.Os, "|", link, "|")
-	}
-}
-
-func semverSorting(version string) {
-	v, err := semver.Make(version)
-	if err != nil {
-		log.Fatalln("version:", version, "error:", err)
-	}
-	fmt.Printf("Major: %d\n", v.Major)
-	fmt.Printf("Minor: %d\n", v.Minor)
-	fmt.Printf("Patch: %d\n", v.Patch)
-	fmt.Printf("Pre: %s\n", v.Pre)
-	fmt.Printf("Build: %s\n", v.Build)
-
-	// Prerelease versions array
-	if len(v.Pre) > 0 {
-		fmt.Println("Prerelease versions:")
-		for i, pre := range v.Pre {
-			fmt.Printf("%d: %q\n", i, pre)
-		}
+		dockerImageTable += fmt.Sprint("| docker pull", dockerRepository+"/"+tagInfoResponse.Name, "|", tagInfoResponse.HumanSize, "|", tagInfoResponse.Architecture, "|", tagInfoResponse.Os, "|", link, "|\n")
 	}
 
-	// Build meta data array
-	if len(v.Build) > 0 {
-		fmt.Println("Build meta data:")
-		for i, build := range v.Build {
-			fmt.Printf("%d: %q\n", i, build)
-		}
-	}
-
-}
-
-func tagInfoSorting(tagsInfo TagsInfoResponse) {
-	versionsRaw := []string{"1.1", "0.7.1", "1.4-beta", "1.4", "2"}
-	versions := make([]*version.Version, len(versionsRaw))
-	for i, raw := range versionsRaw {
-		v, _ := version.NewVersion(raw)
-		versions[i] = v
-	}
-	// After this, the versions are properly sorted
-	sort.Sort(version.Collection(versions))
-}
-
-func getGitConfig(config string) (string, error) {
-	buf := new(bytes.Buffer)
-
-	cmd := exec.Command("git", "config", "--get", config)
-	cmd.Stdout = buf
-	err := cmd.Run()
-
-	return strings.TrimSpace(buf.String()), err
-}
-
-func getGitBranch() (string, error) {
-	buf := new(bytes.Buffer)
-	cmd := exec.Command("git", "branch")
-	cmd.Stdout = buf
-	err := cmd.Run()
-	cleanBranch := strings.Replace(strings.Replace(strings.TrimSpace(buf.String()), "* ", "", -1), "\n", "", -1)
-	return cleanBranch, err
+	return dockerImageTable, nil
 }
 
 // Request makes an HTTP request

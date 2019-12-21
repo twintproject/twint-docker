@@ -1,8 +1,9 @@
 version: "2"
 options:
   verbose: true
+
 syncs:
-  app_data:
+  twint:
     src: ${PWD}/twint
     sync_strategy: 'native_osx'
     sync_userid: 1000
