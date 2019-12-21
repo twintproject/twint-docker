@@ -66,7 +66,7 @@ Then open in your browser [http://localhost:3000](http://localhost:3000)
 ### Execute Twint command
 
 ```shell
-docker-compose run -v $PWD/twint:/opt/app/data twint
+docker-compose run -v $PWD/twint:/opt/app/data twint -h
 ```
 
 ### Examples of command
