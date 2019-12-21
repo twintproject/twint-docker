@@ -50,7 +50,7 @@ Then check the README.md for each versions.
 ## Authors
 {{range $val := .Contacts}}
 👤 **{{ $val.Name }}**
-{{ if $val.Twitter }}* Twitter: [@noneprivacy](https://twitter.com/{{ $val.Twitter }}) ![Twitter Follow](https://img.shields.io/twitter/follow/{{ $val.Twitter }}?label=Follow&style=social){{ end }}
+{{ if $val.Twitter }}* Twitter: [@{{ $val.Twitter }}](https://twitter.com/{{ $val.Twitter }}) ![Twitter Follow](https://img.shields.io/twitter/follow/{{ $val.Twitter }}?label=Follow&style=social){{ end }}
 {{ if $val.Github }}* Github: [@{{ $val.Github }}](https://github.com/{{ $val.Github }}){{ end }}
 {{ if $val.Email }}* Email: {{ $val.Email }}{{ end }}
 {{end}}
