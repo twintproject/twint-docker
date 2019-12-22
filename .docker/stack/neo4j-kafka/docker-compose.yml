@@ -3,17 +3,14 @@ version: '3.7'
 services:
 
   twint:
-    image: x0rzkov/twint:alpine3.10-v2.1.10
-    build:
-      context: .docker/twint
-      dockerfile: Dockerfile
+    image: x0rzkov/twint:latest-alpine
 
   twint-graph:
     image: x0rzkov/twint-graph:alpine3.10
     build:
       context: .
       dockerfile: Dockerfile
-    # container_name: twint-graph
+    container_name: twint-graph
     depends_on:
     - zookeeper
     - broker
