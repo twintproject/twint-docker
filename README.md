@@ -24,6 +24,23 @@
     <a href="https://travis-ci.com/x0rzkov/twint-docker" alt="travis badge"><img src="https://img.shields.io/travis/x0rzkov/twint-docker.svg" /></a>
 </p>
 
+## Requirements
+If you don't have Docker/Docker-Compose check **Setup Docker** section
+
+<details>
+<summary><b>Setup Docker</b></summary>
+<p>
+
+## Docker
+macOS: <a href="https://docs.docker.com/docker-for-mac/install/"> https://docs.docker.com/docker-for-mac/install/ </a>
+linux: <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/"> https://docs.docker.com/install/linux/docker-ce/ubuntu/ </a>
+
+## Docker Compose
+
+linux: <a href="https://docs.docker.com/compose/install/"> https://docs.docker.com/compose/install/ </a>
+</p>
+</details>
+
 ## How to use
 
 For first usage, you need to build image docker.
@@ -47,9 +64,9 @@ Then check the README.md for each versions.
 ### Available images
 | Image   |      Size      |  Arch |  Os |  Link |
 |----------|:-------------:|------|------|------|
-| docker pull x0rzkov/twint:latest-alpine|**80 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/alpine/)|
 | docker pull x0rzkov/twint:latest|**247 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/)|
 | docker pull x0rzkov/twint:latest-slim|**168 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/slim/)|
+| docker pull x0rzkov/twint:latest-alpine|**80 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/alpine/)|
 | docker pull x0rzkov/twint:2.0.0|**247 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/)|
 | docker pull x0rzkov/twint:2.0.0-alpine|**80 MB**|amd64|linux|[`./dockerfiles/2.0.0/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/alpine/)|
 | docker pull x0rzkov/twint:2.0.0-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.0.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/slim/)|
