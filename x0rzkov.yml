@@ -56,7 +56,7 @@ docker:
       readme: .docker/templates/readme.tmpl
       envfile: .docker/templates/env.tmpl
 
-contacts:
+authors:
 - name: pielco11
   twitter: noneprivacy
   github: pielco11
