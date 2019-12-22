@@ -17,12 +17,15 @@ vcs:
 ci:
   travis:
     enable: true
-    template: .travis/travis.tmpl
+    template: .docker/templates/travis.tmpl
+
+docs:
+  contributors: .docker/templates/contributors.tmpl
 
 docker:
-  output-path: ./dockerfiles
-  namespace: x0rzkov
-  basename: twint
+  output-path: ./dockerfiles # destination folder
+  namespace: x0rzkov # docker-hub account
+  basename: twint # docker image basename
   images:
     alpine:
       disabled: false
@@ -38,7 +41,6 @@ docker:
       disabled: false
       dockerfile: .docker/templates/dockerfile_debian-slim.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      # docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl
@@ -48,7 +50,6 @@ docker:
       disabled: false
       dockerfile: .docker/templates/dockerfile_ubuntu.tmpl
       docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      # docker-sync: .docker/templates/docker-sync.tmpl
       dockerignore: .docker/templates/dockerignore.tmpl
       dockercompose: .docker/templates/docker-compose.tmpl
       makefile: .docker/templates/makefile.tmpl

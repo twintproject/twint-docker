@@ -31,23 +31,23 @@ var (
 )
 
 type Config struct {
-	APPName              string    `json:"app-name" yaml:"app-name"`
-	DebugMode            bool      `default:"false" json:"debug-mode" yaml:"debug-mode"`
-	VerboseMode          bool      `default:"false" json:"verbose-mode" yaml:"verbose-mode"`
-	SilentMode           bool      `default:"false" json:"slient-mode" yaml:"slient-mode"`
-	AutoReloadMode       bool      `default:"false" json:"autoreload-mode" yaml:"autoreload-mode"`
-	ErrorOnUnmatchedKeys bool      `default:"false" json:"error-on-unmatched-keys" yaml:"error-on-unmatched-keys"`
-	Docker               Docker    `json:"docker" yaml:"docker"`
-	VCS                  VCS       `json:"vcs" yaml:"vcs"`
-	CI                   CI        `json:"ci" yaml:"ci"`
-	Contacts             []Contact `json:"contacts" yaml:"contacts"`
+	APPName              string   `json:"app-name" yaml:"app-name"`
+	DebugMode            bool     `default:"false" json:"debug-mode" yaml:"debug-mode"`
+	VerboseMode          bool     `default:"false" json:"verbose-mode" yaml:"verbose-mode"`
+	SilentMode           bool     `default:"false" json:"slient-mode" yaml:"slient-mode"`
+	AutoReloadMode       bool     `default:"false" json:"autoreload-mode" yaml:"autoreload-mode"`
+	ErrorOnUnmatchedKeys bool     `default:"false" json:"error-on-unmatched-keys" yaml:"error-on-unmatched-keys"`
+	Docker               Docker   `json:"docker" yaml:"docker"`
+	VCS                  VCS      `json:"vcs" yaml:"vcs"`
+	CI                   CI       `json:"ci" yaml:"ci"`
+	Authors              []Author `json:"authors" yaml:"authors"`
 }
 
 type CI struct {
 	Travis Travis `json:"travis" yaml:"travis"`
 }
 
-type Contact struct {
+type Author struct {
 	Name    string `json:"name" yaml:"name"`
 	Email   string `json:"email" yaml:"email"`
 	Twitter string `json:"twitter" yaml:"twitter"`
@@ -626,7 +626,7 @@ func generateDockerSync(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) e
 
 type readmeRootData struct {
 	DockerImagesTable string
-	Contacts          []Contact
+	Authors           []Author
 	VcsPath           string
 	DockerNamespace   string
 	DockerBase        string
@@ -651,7 +651,7 @@ func generateReadmeRoot(table, vcsPath, currentBranch string) error {
 	}
 	dataReadmeRoot := &readmeRootData{
 		DockerImagesTable: table,
-		Contacts:          cfg.Contacts,
+		Authors:           cfg.Authors,
 		VcsPath:           vcsPath,
 		DockerNamespace:   cfg.Docker.Namespace,
 		DockerBase:        cfg.Docker.BaseName,

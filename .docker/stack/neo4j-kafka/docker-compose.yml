@@ -2,30 +2,8 @@
 version: '3.7'
 services:
 
-  twint:
-    image: x0rzkov/twint:latest-alpine
-
-  twint-graph:
-    image: x0rzkov/twint-graph:alpine3.10
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: twint-graph
-    depends_on:
-    - zookeeper
-    - broker
-    - schema_registry
-    links:
-    - broker
-    - schema_registry
-    environment:
-      TWINT_SEARCH: ${TWINT_SEARCH}
-      TWINT_OUTPUT: ${TWINT_OUTPUT}
-      TWINT_SINCE: ${TWINT_SINCE}
-      TWINT_HIDE_OUTPUT: ${TWINT_HIDE_OUTPUT}
-
   neo4j:
-    image: neo4j:3.4.10
+    image: neo4j:3.5
     hostname: neo4j
     container_name: neo4j-kc
     depends_on:
