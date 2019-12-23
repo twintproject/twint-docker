@@ -6,6 +6,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/dustin/go-humanize v1.0.0
 	github.com/fatih/color v1.7.0 // indirect
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/google/go-github/v28 v28.1.1 // indirect
 	github.com/gosuri/uitable v0.0.4 // indirect
 	github.com/hashicorp/go-version v1.2.0

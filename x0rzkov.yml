@@ -26,35 +26,81 @@ docker:
   output-path: ./dockerfiles # destination folder
   namespace: x0rzkov # docker-hub account
   basename: twint # docker image basename
+  summary:
+  description: 
   images:
     alpine:
       disabled: false
-      dockerfile: .docker/templates/dockerfile_alpine.tmpl
-      docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      # docker-sync: .docker/templates/docker-sync.tmpl
-      dockerignore: .docker/templates/dockerignore.tmpl
-      dockercompose: .docker/templates/docker-compose.tmpl
-      makefile: .docker/templates/makefile.tmpl
-      readme: .docker/templates/readme_alpine.tmpl
-      envfile: .docker/templates/env.tmpl
+      stage:
+        maintainer: x0rxkov <x0rxkov@protonmail.com>
+        build:
+          base: alpine
+          tag: 3.10
+        runtime:
+          base: alpine
+          tag: 3.10
+      dockerfile: 
+        file: .docker/templates/dockerfile_alpine.tmpl
+      docker-entrypoint: 
+        file: .docker/templates/docker-entrypoint.tmpl
+      docker-sync: 
+        disabled: true
+        file: .docker/templates/docker-sync.tmpl
+      dockerignore: 
+        file: .docker/templates/dockerignore.tmpl
+      dockercompose: 
+        file: .docker/templates/docker-compose.tmpl
+      makefile: 
+        file: .docker/templates/makefile.tmpl
+      readme: 
+        file: .docker/templates/readme_alpine.tmpl
+      envfile: 
+        file: .docker/templates/env.tmpl
+
     slim:
       disabled: false
-      dockerfile: .docker/templates/dockerfile_debian-slim.tmpl
-      docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      dockerignore: .docker/templates/dockerignore.tmpl
-      dockercompose: .docker/templates/docker-compose.tmpl
-      makefile: .docker/templates/makefile.tmpl
-      readme: .docker/templates/readme.tmpl
-      envfile: .docker/templates/env.tmpl
+      stage:
+        maintainer: x0rxkov <x0rxkov@protonmail.com>
+        runtime:
+          base: python
+          tag: 3.7-slim-stretch
+      maintainer: x0rxkov <x0rxkov@protonmail.com>
+      dockerfile: 
+        file: .docker/templates/dockerfile_debian-slim.tmpl
+      docker-entrypoint: 
+        file: .docker/templates/docker-entrypoint.tmpl
+      dockerignore: 
+        file: .docker/templates/dockerignore.tmpl
+      dockercompose: 
+        file: .docker/templates/docker-compose.tmpl
+      makefile: 
+        file: .docker/templates/makefile.tmpl
+      readme: 
+        file: .docker/templates/readme.tmpl
+      envfile: 
+        file: .docker/templates/env.tmpl
+
     ubuntu:
       disabled: false
-      dockerfile: .docker/templates/dockerfile_ubuntu.tmpl
-      docker-entrypoint: .docker/templates/docker-entrypoint.tmpl
-      dockerignore: .docker/templates/dockerignore.tmpl
-      dockercompose: .docker/templates/docker-compose.tmpl
-      makefile: .docker/templates/makefile.tmpl
-      readme: .docker/templates/readme.tmpl
-      envfile: .docker/templates/env.tmpl
+      stage:
+        maintainer: Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
+        runtime:
+          base: ubuntu
+          tag: 19.10
+      dockerfile: 
+        file: .docker/templates/dockerfile_ubuntu.tmpl
+      docker-entrypoint: 
+        file: .docker/templates/docker-entrypoint.tmpl
+      dockerignore: 
+        file: .docker/templates/dockerignore.tmpl
+      dockercompose: 
+        file: .docker/templates/docker-compose.tmpl
+      makefile: 
+        file: .docker/templates/makefile.tmpl
+      readme: 
+        file: .docker/templates/readme.tmpl
+      envfile: 
+        file: .docker/templates/env.tmpl
 
 authors:
 - name: pielco11

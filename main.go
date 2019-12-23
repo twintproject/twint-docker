@@ -43,6 +43,18 @@ type Config struct {
 	Authors              []Author `json:"authors" yaml:"authors"`
 }
 
+type Stage struct {
+	Maintainer string      `json:"maintainer,omitempty" yaml:"maintainer,omitempty"`
+	Build      DockerImage `json:"build,omitempty" yaml:"build,omitempty"`
+	Runtime    DockerImage `required:"true" json:"runtime" yaml:"runtime"`
+}
+
+type DockerImage struct {
+	Owner string `json:"owner,omitempty" yaml:"owner,omitempty"`
+	Base  string `required:"true" json:"base" yaml:"base"`
+	Tag   string `required:"true" json:"tag" yaml:"tag"`
+}
+
 type CI struct {
 	Travis Travis `json:"travis" yaml:"travis"`
 }
@@ -76,18 +88,25 @@ type VCS struct {
 type Image struct {
 	Disabled            bool     `default:"false" json:"disabled" yaml:"disabled"`
 	Namespace           string   `json:"namespace" yaml:"namespace"`
-	BaseName            string   `json:"basename" yaml:"basename"`
+	Tag                 string   `json:"tag" yaml:"tag"`
+	Base                string   `json:"base" yaml:"base"`
+	Stage               Stage    `json:"stage" yaml:"stage"`
 	Args                []string `json:"build-args" yaml:"build-args"`
 	Envs                []string `json:"environment" yaml:"environment"`
 	Labels              []string `json:"labels" yaml:"labels"`
-	DockerFileTpl       string   `required:"true" json:"dockerfile" yaml:"dockerfile"`
-	DockerEntryPointTpl string   `json:"docker-entrypoint" yaml:"docker-entrypoint"`
-	DockerSyncTpl       string   `json:"docker-sync" yaml:"docker-sync"`
-	DockerIgnoreTpl     string   `json:"dockerignore" yaml:"dockerignore"`
-	DockerComposeTpl    string   `json:"dockercompose" yaml:"dockercompose"`
-	MakefileTpl         string   `json:"makefile" yaml:"makefile"`
-	ReadmeTpl           string   `json:"readme" yaml:"readme"`
-	EnvTpl              string   `json:"envfile" yaml:"envfile"`
+	DockerFileTpl       Template `required:"true" json:"dockerfile" yaml:"dockerfile"`
+	DockerEntryPointTpl Template `json:"docker-entrypoint" yaml:"docker-entrypoint"`
+	DockerSyncTpl       Template `json:"docker-sync" yaml:"docker-sync"`
+	DockerIgnoreTpl     Template `json:"dockerignore" yaml:"dockerignore"`
+	DockerComposeTpl    Template `json:"dockercompose" yaml:"dockercompose"`
+	MakefileTpl         Template `json:"makefile" yaml:"makefile"`
+	ReadmeTpl           Template `json:"readme" yaml:"readme"`
+	EnvTpl              Template `json:"envfile" yaml:"envfile"`
+}
+
+type Template struct {
+	Disabled bool   `default:"false" json:"disabled" yaml:"disabled"`
+	File     string `json:"file" yaml:"file"`
 }
 
 type vcsTag struct {
@@ -176,8 +195,8 @@ func main() {
 			}
 
 			// generate Dockerfile
-			if dockerData.DockerFileTpl != "" {
-				if err := generateDockerfile(prefixPath, "dockerImageTemplate", dockerData.DockerFileTpl, vcsTag); err != nil {
+			if dockerData.DockerFileTpl.File != "" {
+				if err := generateDockerfile(prefixPath, "dockerImageTemplate", dockerData.DockerFileTpl.File, vcsTag, dockerData); err != nil {
 					log.Fatalln(err)
 				}
 			} else {
@@ -186,50 +205,50 @@ func main() {
 			}
 
 			// generate docker-entrypoint.sh
-			if dockerData.DockerEntryPointTpl != "" {
-				if err := generateDockerEntrypoint(prefixPath, "entrypointTemplate", dockerData.DockerEntryPointTpl, vcsTag); err != nil {
+			if dockerData.DockerEntryPointTpl.File != "" {
+				if err := generateDockerEntrypoint(prefixPath, "entrypointTemplate", dockerData.DockerEntryPointTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate .dockerignore
-			if dockerData.DockerIgnoreTpl != "" {
-				if err := generateDockerIgnore(prefixPath, "dockerIgnoreTemplate", dockerData.DockerIgnoreTpl, vcsTag); err != nil {
+			if dockerData.DockerIgnoreTpl.File != "" {
+				if err := generateDockerIgnore(prefixPath, "dockerIgnoreTemplate", dockerData.DockerIgnoreTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate docker-compose.yml
-			if dockerData.DockerComposeTpl != "" {
-				if err := generateDockerCompose(prefixPath, "dockercomposeTemplate", dockerData.DockerComposeTpl, vcsTag); err != nil {
+			if dockerData.DockerComposeTpl.File != "" {
+				if err := generateDockerCompose(prefixPath, "dockercomposeTemplate", dockerData.DockerComposeTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate docker-sync.yml
-			if dockerData.DockerSyncTpl != "" {
-				if err := generateDockerSync(prefixPath, "dockerSyncTemplate", dockerData.DockerSyncTpl, vcsTag); err != nil {
+			if dockerData.DockerSyncTpl.File != "" {
+				if err := generateDockerSync(prefixPath, "dockerSyncTemplate", dockerData.DockerSyncTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate .env
-			if dockerData.EnvTpl != "" {
-				if err := generateEnv(prefixPath, "envTemplate", dockerData.EnvTpl, vcsTag); err != nil {
+			if dockerData.EnvTpl.File != "" {
+				if err := generateEnv(prefixPath, "envTemplate", dockerData.EnvTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate Makefile
-			if dockerData.MakefileTpl != "" {
-				if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl, vcsTag); err != nil {
+			if dockerData.MakefileTpl.File != "" {
+				if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate README.md
-			if dockerData.ReadmeTpl != "" {
-				if err := generateReadme(prefixPath, "readmeTemplate", dockerData.ReadmeTpl, vcsTag); err != nil {
+			if dockerData.ReadmeTpl.File != "" {
+				if err := generateReadme(prefixPath, "readmeTemplate", dockerData.ReadmeTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
@@ -265,7 +284,7 @@ func main() {
 	}
 
 	// fetch github contributors
-	fetchContributors("twintproject", "twint-docker")
+	fetchContributors("x0rzkov", "twint-docker")
 
 	// generate main README (contacts, docker images)
 	if err := generateReadmeRoot(dockerImageTable, vcsRepository, currentBranch); err != nil {
@@ -293,10 +312,15 @@ type dockerfileData struct {
 	Dir        string
 	Filename   string
 	OutputPath string
+	Base       string
+	Tag        string
+	Image      string
+	Stage      Stage
+	Maintainer string
 }
 
 // https://github.com/Luzifer/gen-dockerfile/blob/master/main.go#L85
-func generateDockerfile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) error {
+func generateDockerfile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag, dockerData Image) error {
 	if cfg.VerboseMode {
 		log.Print("generating dockerfile")
 	}
@@ -313,9 +337,15 @@ func generateDockerfile(prefixPath, tmplName, tmplFile string, vcsTag *vcsTag) e
 		}
 		return err
 	}
+
+	// pp.Println(dockerData)
+	// os.Exit(1)
+
 	dockerfileData := &dockerfileData{
-		Version: vcsTag.Name,
-		Dir:     vcsTag.Dir,
+		Maintainer: dockerData.Stage.Maintainer,
+		Stage:      dockerData.Stage,
+		Version:    vcsTag.Name,
+		Dir:        vcsTag.Dir,
 	}
 	err = tDockerfile.Execute(dockerfile, dockerfileData)
 	if err != nil {

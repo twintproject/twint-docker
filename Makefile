@@ -1,11 +1,21 @@
 IMAGE := x0rzkov/twint-docker-generator
-VERSION:= $(shell grep TWINT_GENERATOR Dockerfile.generator | awk '{print $2}' | cut -d '=' -f 2)
+# VERSION:= $(shell grep TWINT_GENERATOR_VERSION Dockerfile.generator | awk '{print $2}' | cut -d '=' -f 2)
+
+VERSION := $(shell git describe HEAD)
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD | tr / -)
+NOW=$(shell TZ=UTC date +%Y-%m-%dT%H:%M:%SZ)
 
 ## test		:	test.
 test:
 	true
 
-## build		:	build generator.
+## run		:	run generator (requires golang to be already installed).
+.PHONY: run
+run: deps
+	@go-bindata .docker/templates/...
+	@go run *.go
+
+## build		:	build generator (requires golang to be already installed).
 .PHONY: build
 build: deps
 	@go-bindata .docker/templates/...
@@ -19,7 +29,7 @@ deps:
 ## image		:	build image and tag them.
 .PHONY: image
 image:
-	@docker build -t "$(IMAGE):$(VERSION)" -f Dockerfile.generator .
+	@docker build --build-arg NOW=$(NOW) --build-arg VERSION=$(VERSION) -t "$(IMAGE):$(VERSION)" -f Dockerfile.generator .
 	@docker tag $(IMAGE):$(VERSION) $(IMAGE):latest
 
 ## generate	:	generate dockerfiles and all other templates (travis-ci, makefile,...).

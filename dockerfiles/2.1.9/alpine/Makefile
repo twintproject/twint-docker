@@ -1,6 +1,11 @@
 IMAGE := x0rzkov/twint-docker
 VERSION:= $(shell grep TWINT_VERSION Dockerfile | awk '{print $2}' | cut -d '=' -f 2)
 
+VERSION := $(shell git describe HEAD)
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD | tr / -)
+NOW=$(shell TZ=UTC date +%Y-%m-%dT%H:%M:%SZ)
+BUILD := 0
+
 ## test		:	test.
 test:
 	true
@@ -12,7 +17,7 @@ version:
 ## image		:	build image and tag them.
 .PHONY: image
 image:
-	@docker build -t ${IMAGE}:${VERSION} .
+	@docker build --build-arg NOW=$(NOW) -t ${IMAGE}:${VERSION} .
 	@docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest
 
 ## push-image	:	push docker image.

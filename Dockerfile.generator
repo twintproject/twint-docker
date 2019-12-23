@@ -1,6 +1,6 @@
 FROM golang:1.13-alpine AS builder
 
-ARG TWINT_GENERATOR=0.0.1
+ARG TWINT_GENERATOR_VERSION=0.0.1
 
 RUN apk add --no-cache make
 
@@ -14,6 +14,11 @@ RUN cd /go/src/github.com/x0rzkov/twint-docker \
  	&& go build -v
 
 FROM alpine:3.10 AS runtime
+
+# Build argument
+ARG VERSION=${VERSION:-"{{.Version}}"}
+ARG BUILD
+ARG NOW
 
 # Install tini to /usr/local/sbin
 ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini-muslc-amd64 /usr/local/sbin/tini
@@ -32,6 +37,22 @@ WORKDIR /opt/twint-docker/data
 COPY --from=builder /go/src/github.com/x0rzkov/twint-docker/twint-docker /opt/twint-docker/bin/twint-docker-gen
 COPY x0rzkov.yml /opt/twint-docker/config/x0rzkov.yml
 ENV PATH $PATH:/opt/twint-docker/bin
+
+# Container metadata
+LABEL name="twint" \
+      version="$VERSION" \
+      build="$BUILD" \
+      architecture="x86_64" \
+      build_date="$NOW" \
+      vendor="twintproject" \
+      maintainer="x0rzkov <x0rzkov@protonmail.com>" \
+      url="https://github.com/twintproject/twint-docker" \
+      summary="Dockerized twint project" \
+      description="Dockerized twint project" \
+      vcs-type="git" \
+      vcs-url="https://github.com/twintproject/twint-docker" \
+      vcs-ref="$VERSION" \
+      distribution-scope="public"
 
 # Container configuration
 VOLUME ["/opt/twint-docker/data"]

@@ -1,5 +1,7 @@
 FROM alpine:3.10 AS build
 
+ARG TWINT_VERSION=v2.1.0
+
 WORKDIR /opt/app
 
 # Install Python and external dependencies, including headers and GCC
@@ -24,6 +26,10 @@ RUN git clone --depth=1 -b v2.1.0 https://github.com/twintproject/twint /opt/app
 FROM alpine:3.10
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
+ARG VERSION=${VERSION:-"v2.1.0"}
+ARG BUILD
+ARG NOW
+
 # Create runtime user
 RUN mkdir -p /opt \
 	&& adduser -D twint -h /opt/app -s /bin/sh \
@@ -42,5 +48,20 @@ COPY --from=build /opt/venv /opt/venv
 # Activate the virtual environment
 ENV PATH="/opt/venv/bin:$PATH" \
 	VIRTUAL_ENV="/opt/venv"
+
+LABEL name="twint" \
+      version="$VERSION" \
+      build="$BUILD" \
+      architecture="x86_64" \
+      build_date="$NOW" \
+      vendor="twintproject" \
+      maintainer="x0rzkov <x0rzkov@protonmail.com>" \
+      url="https://github.com/twintproject/twint-docker" \
+      summary="Dockerized twint project" \
+      description="Dockerized twint project" \
+      vcs-type="git" \
+      vcs-url="https://github.com/twintproject/twint-docker" \
+      vcs-ref="$VERSION" \
+      distribution-scope="public"
 
 ENTRYPOINT ["twint"]
