@@ -1,0 +1,50 @@
+---
+version: "3.7"
+services:
+
+  dgraph-zero:
+    image: dgraph/dgraph:latest
+    container_name: dgraph-zero
+    volumes:
+    - type: volume
+      source: dgraph
+      target: /dgraph
+      volume:
+        nocopy: true
+    ports:
+    - 5080:5080
+    - 6080:6080
+    restart: on-failure
+    command: dgraph zero --my=dgraph-zero:5080
+
+  dgraph-server:
+    image: dgraph/dgraph:latest
+    container_name: dgraph-server
+    volumes:
+    - type: volume
+      source: dgraph
+      target: /dgraph
+      volume:
+        nocopy: true
+    ports:
+    - 8080:8080
+    - 9080:9080
+    restart: on-failure
+    command: dgraph server --my=dgraph-server:7080 --lru_mb=2048 --zero=dgraph-zero:5080
+
+  dgraph-ratel:
+    image: dgraph/dgraph:latest
+    container_name: dgraph-ratel
+    volumes:
+    - type: volume
+      source: dgraph
+      target: /dgraph
+      volume:
+        nocopy: true
+    ports:
+    - 8000:8000
+    command: dgraph-ratel
+
+volumes:
+  dgraph:
+

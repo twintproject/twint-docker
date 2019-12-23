@@ -1,56 +1,123 @@
-# How to use
+# twint-docker based on Alpine, Ubuntu and Debian Slim
 
-## First use
+<p align="center">
+    <a href="https://travis-ci.com/x0rzkov/twint-docker"><img src="https://img.shields.io/travis/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://cloud.drone.io/x0rzkov/twint-docker"><img src="https://cloud.drone.io/api/badges/x0rzkov/twint-docker/status.svg?ref=refs/heads/alpine" /></a>
+</p>
 
-For fisrt usage, you need to build image docker.
+<p align="center">
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github all releases"><img src="https://img.shields.io/github/downloads/x0rzkov/twint-docker/total.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github latest release"><img src="https://img.shields.io/github/downloads/x0rzkov/twint-docker/latest/total.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github tag"><img src="https://img.shields.io/github/tag/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github release"><img src="https://img.shields.io/github/release/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github pre release"><img src="https://img.shields.io/github/release/x0rzkov/twint-docker/all.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github fork"><img src="https://img.shields.io/github/forks/x0rzkov/twint-docker.svg?style=social&label=Fork" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github stars"><img src="https://img.shields.io/github/stars/x0rzkov/twint-docker.svg?style=social&label=Star" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github watchers"><img src="https://img.shields.io/github/watchers/x0rzkov/twint-docker.svg?style=social&label=Watch" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github open issues"><img src="https://img.shields.io/github/issues/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github closed issues"><img src="https://img.shields.io/github/issues-closed/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github open pr"><img src="https://img.shields.io/github/issues-pr/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github closed pr"><img src="https://img.shields.io/github/issues-pr-closed/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github contributors"><img src="https://img.shields.io/github/contributors/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://github.com/x0rzkov/twint-docker" alt="github license"><img src="https://img.shields.io/github/license/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://gitter.im/x0rzkov/twint-docker" alt="gitter chat room"><img src="https://badges.gitter.im/x0rzkov/twint-docker.svg" /></a>
+    <a href="https://travis-ci.com/x0rzkov/twint-docker" alt="travis badge"><img src="https://img.shields.io/travis/x0rzkov/twint-docker.svg" /></a>
+</p>
 
-``` bash
-docker-compose build
+## Requirements
+If you don't have Docker/Docker-Compose check **Setup Docker** section
+
+<details>
+<summary><b>Setup Docker</b></summary>
+<p>
+
+## Docker
+macOS: <a href="https://docs.docker.com/docker-for-mac/install/"> https://docs.docker.com/docker-for-mac/install/ </a>
+
+linux: <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/"> https://docs.docker.com/install/linux/docker-ce/ubuntu/ </a>
+
+## Docker Compose
+
+linux: <a href="https://docs.docker.com/compose/install/"> https://docs.docker.com/compose/install/ </a>
+</p>
+</details>
+
+## How to use
+
+For first usage, you need to build image docker.
+
+```shell
+git clone --depth=1 https://github.com/x0rzkov/twint-docker
+cd ./dockerfiles/[[VERSION]]/[[OS]]
+docker-compose up -d
+docker-compose run twint -h
 ```
 
-## Elasticsearch and Kibana
+or 
 
-Start to up elaticsearch and kibana
-
-``` bash
-docker-compose up -d elasticsearch kibana
+```
+docker pull x0rzkov/twint:[[TAG]]
+docker run -ti --rm x0rzkov/twint:[[TAG]] -h
 ```
 
-## Execute Twint command
+Then check the README.md for each versions.
 
-``` bash
-docker-compose run -v $PWD/twint:/srv/twint twint {{CMD TWINT}}
-```
+### Available images
+| Image   |      Size      |  Arch |  Os |  Link |
+|----------|:-------------:|------|------|------|
+| docker pull x0rzkov/twint:latest-alpine|**81 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/alpine/)|
+| docker pull x0rzkov/twint:latest|**248 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/)|
+| docker pull x0rzkov/twint:latest-slim|**168 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/latest/slim/)|
+| docker pull x0rzkov/twint:2.0.0|**247 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/)|
+| docker pull x0rzkov/twint:2.0.0-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.0.0/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/alpine/)|
+| docker pull x0rzkov/twint:2.0.0-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.0.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.0.0/slim/)|
+| docker pull x0rzkov/twint:2.1.0|**247 MB**|amd64|linux|[`./dockerfiles/2.1.0`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/)|
+| docker pull x0rzkov/twint:2.1.0-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.1.0/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/alpine/)|
+| docker pull x0rzkov/twint:2.1.0-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.0/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.0/slim/)|
+| docker pull x0rzkov/twint:2.1.10|**248 MB**|amd64|linux|[`./dockerfiles/2.1.10`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/)|
+| docker pull x0rzkov/twint:2.1.10-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.1.10/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/alpine/)|
+| docker pull x0rzkov/twint:2.1.10-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.10/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.10/slim/)|
+| docker pull x0rzkov/twint:2.1.11|**248 MB**|amd64|linux|[`./dockerfiles/2.1.11`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/)|
+| docker pull x0rzkov/twint:2.1.11-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.1.11/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/alpine/)|
+| docker pull x0rzkov/twint:2.1.11-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.11/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.11/slim/)|
+| docker pull x0rzkov/twint:2.1.4|**247 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/)|
+| docker pull x0rzkov/twint:2.1.4-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.1.4/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/alpine/)|
+| docker pull x0rzkov/twint:2.1.4-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.4/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.4/slim/)|
+| docker pull x0rzkov/twint:2.1.6|**247 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/)|
+| docker pull x0rzkov/twint:2.1.6-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.1.6/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/alpine/)|
+| docker pull x0rzkov/twint:2.1.6-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.6/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.6/slim/)|
+| docker pull x0rzkov/twint:2.1.8|**247 MB**|amd64|linux|[`./dockerfiles/2.1.8`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/)|
+| docker pull x0rzkov/twint:2.1.8-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.1.8/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/alpine/)|
+| docker pull x0rzkov/twint:2.1.8-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.8/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.8/slim/)|
+| docker pull x0rzkov/twint:2.1.9|**248 MB**|amd64|linux|[`./dockerfiles/2.1.9`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/)|
+| docker pull x0rzkov/twint:2.1.9-alpine|**81 MB**|amd64|linux|[`./dockerfiles/2.1.9/alpine`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/alpine/)|
+| docker pull x0rzkov/twint:2.1.9-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.9/slim`](https://github.com/x0rzkov/twint-docker/tree/alpine/dockerfiles/2.1.9/slim/)|
 
-## Examples of command
 
-A few simple examples to help you understand the basics:
+## Authors
 
-``` bash
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username - Scrape all the Tweets from user's timeline.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username -s pineapple - Scrape all Tweets from the user's timeline containing pineapple.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -s pineapple - Collect every Tweet containing pineapple from everyone's Tweets.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --year 2014 - Collect Tweets that were tweeted before 2014.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --since 2015-12-20 - Collect Tweets that were tweeted since 2015-12-20.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username -o file.txt - Scrape Tweets and save to file.txt.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username -o file.csv --csv - Scrape Tweets and save as a csv file.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --email --phone - Show Tweets that might have phone numbers or email addresses.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -s "Donald Trump" --verified - Display Tweets by verified users that Tweeted about Donald Trump.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -g="48.880048,2.385939,1km" -o file.csv --csv - Scrape Tweets from a radius of 1km around a place in Paris and export them docker-compose run -v $PWD/twint:/srv/twint twint to a csv file.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username -es localhost:9200 - Output Tweets to Elasticsearch
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username -o file.json --json - Scrape Tweets and save as a json file.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --database tweets.db - Save Tweets to a SQLite database.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --followers - Scrape a Twitter user's followers.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --following - Scrape who a Twitter user follows.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --favorites - Collect all the Tweets a user has favorited.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --following --user-full - Collect full user information a person follows
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --profile-full - Use a slow, but effective method to gather Tweets from a user's profile (Gathers ~3200 Tweets, docker-compose run -v $PWD/twint:/srv/twint twint Including Retweets).
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --retweets - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
-docker-compose run -v $PWD/twint:/srv/twint twint twint -u username --resume 10940389583058 - Resume a search starting from the specified Tweet ID.
-```
+👤 **pielco11**
+* Twitter: [@noneprivacy](https://twitter.com/noneprivacy) ![Twitter Follow](https://img.shields.io/twitter/follow/noneprivacy?label=Follow&style=social)
+* Github: [@pielco11](https://github.com/pielco11)
 
-## Datas
 
-For datas generate by twint, you can found result on folder twint
+👤 **x0rzkov**
+* Twitter: [@x0rzkov](https://twitter.com/x0rzkov) ![Twitter Follow](https://img.shields.io/twitter/follow/x0rzkov?label=Follow&style=social)
+* Github: [@x0rzkov](https://github.com/x0rzkov)
+* Email: x0rzkov@protonmail.com
 
-Let's play now :)
+👤 **sebastienhouzet**
+* Twitter: [@sebastienhouzet](https://twitter.com/sebastienhouzet) ![Twitter Follow](https://img.shields.io/twitter/follow/sebastienhouzet?label=Follow&style=social)
+* Github: [@sebastienhouzet](https://github.com/sebastienhouzet)
+
+
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/x0rzkov/twint-docker/issues).
+See [`./docs/CONTRIBUTING.md`](https://github.com/x0rzkov/twint-docker/tree/alpine/docs/CONTRIBUTING.md) for details.
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+

@@ -1,0 +1,61 @@
+---
+version: '3.7'
+services:
+
+  twint:
+    image: x0rzkov/twint:2.1.4-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: twint-cli
+    volumes:
+    - $PWD/twint:/opt/twint/data
+
+  twint-search:
+    image: x0rzkov/twint-search:latest
+    container_name: twint-search
+    ports:
+    - 3000:3000
+    environment:
+    - NODE_ENV=production
+
+  tor-privoxy:
+    container_name: twint-torprivoxy
+    image: dockage/tor-privoxy:latest
+    ports:
+    - "9050:9050" # Tor proxy
+    - "9051:9051" # Tor control port
+    - "8118:8118" # Privoxy  
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: twint-elastic
+    environment:
+    - node.name=elasticsearch
+    - cluster.initial_master_nodes=elasticsearch
+    - cluster.name=docker-cluster
+    - bootstrap.memory_lock=true
+    - "ES_JAVA_OPTS=${ELASTIC_JAVA_OPTS}"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+    - esdata01:/usr/share/elasticsearch/data
+    ports:
+    - ${ELASTIC_PORT}:${ELASTIC_PORT}
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
+    container_name: twint-kibana
+    ports:
+    - ${KIBANA_PORT}:${KIBANA_PORT}
+
+volumes:
+  esdata01:
+    driver: local
+
+networks:
+  default:
+    external:
+      name: nw-twint

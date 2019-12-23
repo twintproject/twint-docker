@@ -1,0 +1,84 @@
+# twint-docker based on Alpine, Ubuntu and Debian Slim
+
+<p align="center">
+    <a href="https://travis-ci.com/{{ .VcsPath }}"><img src="https://img.shields.io/travis/{{ .VcsPath }}.svg" /></a>
+    <a href="https://cloud.drone.io/{{ .VcsPath }}"><img src="https://cloud.drone.io/api/badges/{{ .VcsPath }}/status.svg?ref=refs/heads/{{.CurrentBranch}}" /></a>
+</p>
+
+<p align="center">
+    <a href="https://github.com/{{ .VcsPath }}" alt="github all releases"><img src="https://img.shields.io/github/downloads/{{ .VcsPath }}/total.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github latest release"><img src="https://img.shields.io/github/downloads/{{ .VcsPath }}/latest/total.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github tag"><img src="https://img.shields.io/github/tag/{{ .VcsPath }}.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github release"><img src="https://img.shields.io/github/release/{{ .VcsPath }}.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github pre release"><img src="https://img.shields.io/github/release/{{ .VcsPath }}/all.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github fork"><img src="https://img.shields.io/github/forks/{{ .VcsPath }}.svg?style=social&label=Fork" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github stars"><img src="https://img.shields.io/github/stars/{{ .VcsPath }}.svg?style=social&label=Star" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github watchers"><img src="https://img.shields.io/github/watchers/{{ .VcsPath }}.svg?style=social&label=Watch" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github open issues"><img src="https://img.shields.io/github/issues/{{ .VcsPath }}.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github closed issues"><img src="https://img.shields.io/github/issues-closed/{{ .VcsPath }}.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github open pr"><img src="https://img.shields.io/github/issues-pr/{{ .VcsPath }}.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github closed pr"><img src="https://img.shields.io/github/issues-pr-closed/{{ .VcsPath }}.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github contributors"><img src="https://img.shields.io/github/contributors/{{ .VcsPath }}.svg" /></a>
+    <a href="https://github.com/{{ .VcsPath }}" alt="github license"><img src="https://img.shields.io/github/license/{{ .VcsPath }}.svg" /></a>
+    <a href="https://gitter.im/{{ .VcsPath }}" alt="gitter chat room"><img src="https://badges.gitter.im/{{ .VcsPath }}.svg" /></a>
+    <a href="https://travis-ci.com/{{ .VcsPath }}" alt="travis badge"><img src="https://img.shields.io/travis/{{ .VcsPath }}.svg" /></a>
+</p>
+
+## Requirements
+If you don't have Docker/Docker-Compose check **Setup Docker** section
+
+<details>
+<summary><b>Setup Docker</b></summary>
+<p>
+
+## Docker
+macOS: <a href="https://docs.docker.com/docker-for-mac/install/"> https://docs.docker.com/docker-for-mac/install/ </a>
+
+linux: <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/"> https://docs.docker.com/install/linux/docker-ce/ubuntu/ </a>
+
+## Docker Compose
+
+linux: <a href="https://docs.docker.com/compose/install/"> https://docs.docker.com/compose/install/ </a>
+</p>
+</details>
+
+## How to use
+
+For first usage, you need to build image docker.
+
+```shell
+git clone --depth=1 https://github.com/{{ .VcsPath }}
+cd ./dockerfiles/[[VERSION]]/[[OS]]
+docker-compose up -d
+docker-compose run twint -h
+```
+
+or 
+
+```
+docker pull {{.DockerNamespace}}/{{.DockerBase}}:[[TAG]]
+docker run -ti --rm {{.DockerNamespace}}/{{.DockerBase}}:[[TAG]] -h
+```
+
+Then check the README.md for each versions.
+
+### Available images
+{{ .DockerImagesTable }}
+
+## Authors
+{{range $val := .Authors}}
+👤 **{{ $val.Name }}**
+{{ if $val.Twitter }}* Twitter: [@{{ $val.Twitter }}](https://twitter.com/{{ $val.Twitter }}) ![Twitter Follow](https://img.shields.io/twitter/follow/{{ $val.Twitter }}?label=Follow&style=social){{ end }}
+{{ if $val.Github }}* Github: [@{{ $val.Github }}](https://github.com/{{ $val.Github }}){{ end }}
+{{ if $val.Email }}* Email: {{ $val.Email }}{{ end }}
+{{end}}
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/{{ .VcsPath }}/issues).
+See [`./docs/CONTRIBUTING.md`](https://github.com/{{ .VcsPath }}/tree/{{.CurrentBranch}}/docs/CONTRIBUTING.md) for details.
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+

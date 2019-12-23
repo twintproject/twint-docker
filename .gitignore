@@ -1,0 +1,9 @@
+workspace
+*.tar.gz
+contribs
+contribs/
+contribs/*
+contribs/**
+gh.go
+ght.go
+github.go
