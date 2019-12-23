@@ -195,7 +195,7 @@ func main() {
 			}
 
 			// generate Dockerfile
-			if dockerData.DockerFileTpl.File != "" {
+			if dockerData.DockerFileTpl.File != "" && !dockerData.DockerFileTpl.Disabled {
 				if err := generateDockerfile(prefixPath, "dockerImageTemplate", dockerData.DockerFileTpl.File, vcsTag, dockerData); err != nil {
 					log.Fatalln(err)
 				}
@@ -205,49 +205,49 @@ func main() {
 			}
 
 			// generate docker-entrypoint.sh
-			if dockerData.DockerEntryPointTpl.File != "" {
+			if dockerData.DockerEntryPointTpl.File != "" && !dockerData.DockerEntryPointTpl.Disabled {
 				if err := generateDockerEntrypoint(prefixPath, "entrypointTemplate", dockerData.DockerEntryPointTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate .dockerignore
-			if dockerData.DockerIgnoreTpl.File != "" {
+			if dockerData.DockerIgnoreTpl.File != "" && !dockerData.DockerIgnoreTpl.Disabled {
 				if err := generateDockerIgnore(prefixPath, "dockerIgnoreTemplate", dockerData.DockerIgnoreTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate docker-compose.yml
-			if dockerData.DockerComposeTpl.File != "" {
+			if dockerData.DockerComposeTpl.File != "" && !dockerData.DockerComposeTpl.Disabled {
 				if err := generateDockerCompose(prefixPath, "dockercomposeTemplate", dockerData.DockerComposeTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate docker-sync.yml
-			if dockerData.DockerSyncTpl.File != "" {
+			if dockerData.DockerSyncTpl.File != "" && !dockerData.DockerSyncTpl.Disabled {
 				if err := generateDockerSync(prefixPath, "dockerSyncTemplate", dockerData.DockerSyncTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate .env
-			if dockerData.EnvTpl.File != "" {
+			if dockerData.EnvTpl.File != "" && !dockerData.EnvTpl.Disabled {
 				if err := generateEnv(prefixPath, "envTemplate", dockerData.EnvTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate Makefile
-			if dockerData.MakefileTpl.File != "" {
+			if dockerData.MakefileTpl.File != "" && !dockerData.MakefileTpl.Disabled {
 				if err := generateMakefile(prefixPath, "makefileTemplate", dockerData.MakefileTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
 			}
 
 			// generate README.md
-			if dockerData.ReadmeTpl.File != "" {
+			if dockerData.ReadmeTpl.File != "" && !dockerData.ReadmeTpl.Disabled {
 				if err := generateReadme(prefixPath, "readmeTemplate", dockerData.ReadmeTpl.File, vcsTag); err != nil {
 					log.Fatalln(err)
 				}
