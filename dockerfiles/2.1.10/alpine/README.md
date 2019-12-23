@@ -76,15 +76,15 @@ A few simple examples to help you understand the basics:
 
 <details>
 <summary><b>Scrape all the Tweets from user's timeline.</b></summary>
-```shell
+<code>
 docker-compose run -v $PWD/twint:/opt/app/data twint -u username
-```
+</code>
 </details>
 <details>
 <summary><b>Scrape all Tweets from the user's timeline containing pineapple.</b></summary>
-```shell
+<code>
 docker-compose run -v $PWD/twint:/opt/app/data twint -u username -s pineapple
-```
+</code>
 </details>
 
 ```shell
