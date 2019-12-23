@@ -73,11 +73,21 @@ docker-compose run -v $PWD/twint:/opt/app/data twint -h
 
 A few simple examples to help you understand the basics:
 
+
+<details>
+<summary><b>Scrape all the Tweets from user's timeline.</b></summary>
 ```shell
-# Scrape all the Tweets from user's timeline.
 docker-compose run -v $PWD/twint:/opt/app/data twint -u username
-# Scrape all Tweets from the user's timeline containing pineapple.
+```
+</details>
+<details>
+<summary><b>Scrape all Tweets from the user's timeline containing pineapple.</b></summary>
+```shell
 docker-compose run -v $PWD/twint:/opt/app/data twint -u username -s pineapple
+```
+</details>
+
+```shell
 # Collect every Tweet containing pineapple from everyone's Tweets.
 docker-compose run -v $PWD/twint:/opt/app/data twint -s pineapple
 # Collect Tweets that were tweeted before 2014.
