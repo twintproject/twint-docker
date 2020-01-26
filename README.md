@@ -1,25 +1,25 @@
 # twint-docker based on Alpine, Ubuntu and Debian Slim
 
 <p align="center">
-    <a href="https://travis-ci.comtwintproject/twint-docker"><img src="https://img.shields.io/travistwintproject/twint-docker.svg" /></a>
-    <a href="https://cloud.drone.iotwintproject/twint-docker"><img src="https://cloud.drone.io/api/badgestwintproject/twint-docker/status.svg?ref=refs/heads/master" /></a>
+    <a href="https://travis-ci.com/twintproject/twint-docker"><img src="https://img.shields.io/travistwintproject/twint-docker.svg" /></a>
+    <a href="https://cloud.drone.io/twintproject/twint-docker"><img src="https://cloud.drone.io/api/badgestwintproject/twint-docker/status.svg?ref=refs/heads/master" /></a>
 </p>
 
 <p align="center">
-    <a href="https://github.comtwintproject/twint-docker" alt="github all releases"><img src="https://img.shields.io/github/downloadstwintproject/twint-docker/total.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github latest release"><img src="https://img.shields.io/github/downloadstwintproject/twint-docker/latest/total.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github tag"><img src="https://img.shields.io/github/tagtwintproject/twint-docker.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github release"><img src="https://img.shields.io/github/releasetwintproject/twint-docker.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github pre release"><img src="https://img.shields.io/github/releasetwintproject/twint-docker/all.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github fork"><img src="https://img.shields.io/github/forkstwintproject/twint-docker.svg?style=social&label=Fork" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github stars"><img src="https://img.shields.io/github/starstwintproject/twint-docker.svg?style=social&label=Star" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github all releases"><img src="https://img.shields.io/github/downloadstwintproject/twint-docker/total.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github latest release"><img src="https://img.shields.io/github/downloadstwintproject/twint-docker/latest/total.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github tag"><img src="https://img.shields.io/github/tagtwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github release"><img src="https://img.shields.io/github/releasetwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github pre release"><img src="https://img.shields.io/github/releasetwintproject/twint-docker/all.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github fork"><img src="https://img.shields.io/github/forkstwintproject/twint-docker.svg?style=social&label=Fork" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github stars"><img src="https://img.shields.io/github/starstwintproject/twint-docker.svg?style=social&label=Star" /></a>
     <a href="https://github.comtwintproject/twint-docker" alt="github watchers"><img src="https://img.shields.io/github/watcherstwintproject/twint-docker.svg?style=social&label=Watch" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github open issues"><img src="https://img.shields.io/github/issuestwintproject/twint-docker.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github closed issues"><img src="https://img.shields.io/github/issues-closedtwintproject/twint-docker.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github open pr"><img src="https://img.shields.io/github/issues-prtwintproject/twint-docker.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github closed pr"><img src="https://img.shields.io/github/issues-pr-closedtwintproject/twint-docker.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github contributors"><img src="https://img.shields.io/github/contributorstwintproject/twint-docker.svg" /></a>
-    <a href="https://github.comtwintproject/twint-docker" alt="github license"><img src="https://img.shields.io/github/licensetwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github open issues"><img src="https://img.shields.io/github/issuestwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github closed issues"><img src="https://img.shields.io/github/issues-closedtwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github open pr"><img src="https://img.shields.io/github/issues-prtwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github closed pr"><img src="https://img.shields.io/github/issues-pr-closedtwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github contributors"><img src="https://img.shields.io/github/contributorstwintproject/twint-docker.svg" /></a>
+    <a href="https://github.com/twintproject/twint-docker" alt="github license"><img src="https://img.shields.io/github/licensetwintproject/twint-docker.svg" /></a>
     <a href="https://travis-ci.comtwintproject/twint-docker" alt="travis badge"><img src="https://img.shields.io/travistwintproject/twint-docker.svg" /></a>
 </p>
 
