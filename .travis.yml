@@ -24,7 +24,7 @@ before_install:
 
 before_script:
   - cd dockerfiles/"$VERSION"
-  - IMAGE="x0rzkov/twint:${VERSION/\//-}"
+  - IMAGE="thetwintproject/twint:${VERSION/\//-}"
 
 env:
   - VERSION=2.1.9
