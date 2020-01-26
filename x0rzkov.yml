@@ -35,10 +35,10 @@ docker:
         maintainer: x0rxkov <x0rxkov@protonmail.com>
         build:
           base: alpine
-          tag: 3.10
+          tag: 3.11
         runtime:
           base: alpine
-          tag: 3.10
+          tag: 3.11
       dockerfile: 
         file: .docker/templates/dockerfile_alpine.tmpl
       docker-entrypoint: 

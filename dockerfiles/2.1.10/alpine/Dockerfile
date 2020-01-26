@@ -1,4 +1,4 @@
-FROM alpine:3.10 AS build
+FROM alpine:3.11 AS build
 
 ARG TWINT_VERSION=v2.1.10
 
@@ -23,7 +23,7 @@ RUN git clone --depth=1 -b v2.1.10 https://github.com/twintproject/twint /opt/ap
 	&& pip3 install numpy \
 	&& pip3 install .
 
-FROM alpine:3.10
+FROM alpine:3.11
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
 ARG VERSION=${VERSION:-"v2.1.10"}

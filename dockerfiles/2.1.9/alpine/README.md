@@ -73,7 +73,6 @@ docker-compose run -v $PWD/twint:/opt/app/data twint -h
 
 A few simple examples to help you understand the basics:
 
-
 <details>
 	<summary><b>Scrape all the Tweets from user's timeline.</b></summary>
 	<code style="padding:5px;">docker-compose run -v $PWD/twint:/opt/app/data twint -u username</code>
