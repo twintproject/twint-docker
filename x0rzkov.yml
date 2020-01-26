@@ -24,7 +24,7 @@ docs:
 
 docker:
   output-path: ./dockerfiles # destination folder
-  namespace: x0rzkov # docker-hub account
+  namespace: thetwintproject # docker-hub account
   basename: twint # docker image basename
   summary:
   description: 
