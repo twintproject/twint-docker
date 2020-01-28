@@ -1,7 +1,7 @@
 # twint-docker based on Alpine, Ubuntu and Debian Slim
 
 <p align="center">
-    <a href="https://travis-ci.com/twintproject/twint-docker"><img src="https://img.shields.io/travis/twintproject/twint-docker.svg" /></a>
+    <a href="https://travis-ci.com/twintproject/twint-docker"><img src="https://img.shields.io/travis/com/twintproject/twint-docker.svg" /></a>
     <a href="https://cloud.drone.io/twintproject/twint-docker"><img src="https://cloud.drone.io/api/badges/twintproject/twint-docker/status.svg?ref=refs/heads/master" /></a>
 </p>
 
@@ -64,9 +64,9 @@ Then check the README.md for each versions.
 ### Available images
 | Image   |      Size      |  Arch |  Os |  Link |
 |----------|:-------------:|------|------|------|
+| docker pull thetwintproject/twint:latest|**248 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com/twintproject/twint-docker/tree/master/dockerfiles/latest/)|
 | docker pull thetwintproject/twint:latest-alpine|**79 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com/twintproject/twint-docker/tree/master/dockerfiles/latest/alpine/)|
 | docker pull thetwintproject/twint:latest-slim|**168 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com/twintproject/twint-docker/tree/master/dockerfiles/latest/slim/)|
-| docker pull thetwintproject/twint:latest|**248 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com/twintproject/twint-docker/tree/master/dockerfiles/latest/)|
 | docker pull thetwintproject/twint:2.0.0|**247 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com/twintproject/twint-docker/tree/master/dockerfiles/2.0.0/)|
 | docker pull thetwintproject/twint:2.0.0-alpine|**79 MB**|amd64|linux|[`./dockerfiles/2.0.0/alpine`](https://github.com/twintproject/twint-docker/tree/master/dockerfiles/2.0.0/alpine/)|
 | docker pull thetwintproject/twint:2.0.0-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.0.0/slim`](https://github.com/twintproject/twint-docker/tree/master/dockerfiles/2.0.0/slim/)|
