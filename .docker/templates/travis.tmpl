@@ -24,7 +24,7 @@ before_install:
 
 before_script:
   - cd dockerfiles/"$VERSION"
-  - IMAGE="x0rzkov/twint:${VERSION/\//-}"
+  - IMAGE="thetwintproject/twint:${VERSION/\//-}"
 
 env:{{range $val := .Versions}}
   - VERSION={{ $val.Dir }}
