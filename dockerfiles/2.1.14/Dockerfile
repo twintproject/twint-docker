@@ -1,8 +1,8 @@
-FROM python:3.7-slim-stretch
+FROM ubuntu:19.10
 
-MAINTAINER x0rxkov <x0rxkov@protonmail.com>
+MAINTAINER Sébastien Houzet (yoozio.com) <sebastien@yoozio.com>
 
-ARG TWINT_VERSION=v2.1.15
+ARG TWINT_VERSION=v2.1.14
 
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -10,10 +10,11 @@ RUN chmod +x /entrypoint.sh
 RUN \
 apt-get update && \
 apt-get install -y \
-git
+git \
+python3-pip
 
 RUN \
-pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.15#egg=twint
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.14#egg=twint
 
 RUN \
 apt-get clean autoclean && \

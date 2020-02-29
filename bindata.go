@@ -106,7 +106,7 @@ func DockerTemplatesContributorsTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/contributors.tmpl", size: 0, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/contributors.tmpl", size: 0, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -126,7 +126,7 @@ func DockerTemplatesDockerComposeTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/docker-compose.tmpl", size: 1347, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/docker-compose.tmpl", size: 1347, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -146,7 +146,7 @@ func DockerTemplatesDockerEntrypointTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/docker-entrypoint.tmpl", size: 21, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/docker-entrypoint.tmpl", size: 21, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -166,7 +166,7 @@ func DockerTemplatesDockerSyncTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/docker-sync.tmpl", size: 251, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/docker-sync.tmpl", size: 251, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -186,7 +186,7 @@ func DockerTemplatesDockerMkTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/docker.mk.tmpl", size: 3145, mode: os.FileMode(420), modTime: time.Unix(1577185064, 0)}
+	info := bindataFileInfo{name: ".docker/templates/docker.mk.tmpl", size: 3145, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -206,7 +206,7 @@ func DockerTemplatesDockerfile_alpineTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/dockerfile_alpine.tmpl", size: 1934, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/dockerfile_alpine.tmpl", size: 1934, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -226,7 +226,7 @@ func DockerTemplatesDockerfile_debianSlimTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/dockerfile_debian-slim.tmpl", size: 481, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/dockerfile_debian-slim.tmpl", size: 481, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -246,7 +246,7 @@ func DockerTemplatesDockerfile_ubuntuTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/dockerfile_ubuntu.tmpl", size: 505, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/dockerfile_ubuntu.tmpl", size: 505, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -266,7 +266,7 @@ func DockerTemplatesDockerignoreTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/dockerignore.tmpl", size: 87, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/dockerignore.tmpl", size: 87, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -286,7 +286,7 @@ func DockerTemplatesEnvTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/env.tmpl", size: 387, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/env.tmpl", size: 387, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -306,7 +306,7 @@ func DockerTemplatesMakefileTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/makefile.tmpl", size: 801, mode: os.FileMode(420), modTime: time.Unix(1577122364, 0)}
+	info := bindataFileInfo{name: ".docker/templates/makefile.tmpl", size: 801, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -326,7 +326,7 @@ func DockerTemplatesReadmeTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/readme.tmpl", size: 6453, mode: os.FileMode(420), modTime: time.Unix(1577138987, 0)}
+	info := bindataFileInfo{name: ".docker/templates/readme.tmpl", size: 6453, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -346,7 +346,7 @@ func DockerTemplatesReadme_alpineTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/readme_alpine.tmpl", size: 6539, mode: os.FileMode(420), modTime: time.Unix(1577177155, 0)}
+	info := bindataFileInfo{name: ".docker/templates/readme_alpine.tmpl", size: 6539, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -366,7 +366,7 @@ func DockerTemplatesReadme_rootTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/readme_root.tmpl", size: 4458, mode: os.FileMode(420), modTime: time.Unix(1580212246, 0)}
+	info := bindataFileInfo{name: ".docker/templates/readme_root.tmpl", size: 4458, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -386,7 +386,7 @@ func DockerTemplatesTravisTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: ".docker/templates/travis.tmpl", size: 1500, mode: os.FileMode(420), modTime: time.Unix(1580106393, 0)}
+	info := bindataFileInfo{name: ".docker/templates/travis.tmpl", size: 1500, mode: os.FileMode(420), modTime: time.Unix(1582978859, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

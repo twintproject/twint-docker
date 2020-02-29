@@ -2,7 +2,7 @@ FROM python:3.7-slim-stretch
 
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
-ARG TWINT_VERSION=v2.1.15
+ARG TWINT_VERSION=v2.1.13
 
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -13,7 +13,7 @@ apt-get install -y \
 git
 
 RUN \
-pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.15#egg=twint
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@v2.1.13#egg=twint
 
 RUN \
 apt-get clean autoclean && \

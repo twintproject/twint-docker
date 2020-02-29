@@ -1,6 +1,6 @@
 FROM alpine:3.11 AS build
 
-ARG TWINT_VERSION=v2.1.15
+ARG TWINT_VERSION=v2.1.14
 
 WORKDIR /opt/app
 
@@ -16,7 +16,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
 	VIRTUAL_ENV="/opt/venv"
 
 # Install dependencies into the virtual environment with Pipenv
-RUN git clone --depth=1 -b v2.1.15 https://github.com/twintproject/twint /opt/app \
+RUN git clone --depth=1 -b v2.1.14 https://github.com/twintproject/twint /opt/app \
 	&& cd /opt/app \
 	&& pip3 install --upgrade pip \
 	&& pip3 install cython \
@@ -26,7 +26,7 @@ RUN git clone --depth=1 -b v2.1.15 https://github.com/twintproject/twint /opt/ap
 FROM alpine:3.11
 MAINTAINER x0rxkov <x0rxkov@protonmail.com>
 
-ARG VERSION=${VERSION:-"v2.1.15"}
+ARG VERSION=${VERSION:-"v2.1.14"}
 ARG BUILD
 ARG NOW
 

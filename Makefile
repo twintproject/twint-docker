@@ -1,7 +1,7 @@
 IMAGE := x0rzkov/twint-docker-generator
 # VERSION:= $(shell grep TWINT_GENERATOR_VERSION Dockerfile.generator | awk '{print $2}' | cut -d '=' -f 2)
 
-VERSION := $(shell git describe HEAD)
+VERSION := $(shell git describe HEAD --always)
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD | tr / -)
 NOW=$(shell TZ=UTC date +%Y-%m-%dT%H:%M:%SZ)
 
