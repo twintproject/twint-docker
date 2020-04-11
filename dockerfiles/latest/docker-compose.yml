@@ -55,7 +55,7 @@ volumes:
   esdata01:
     driver: local
 
-networks:
-  default:
-    external:
-      name: nw-twint
+# networks:
+#   default:
+#     external:
+#       name: nw-twint
