@@ -26,16 +26,17 @@ For first usage, you need to build image docker.
 docker pull x0rzkov/twint:latest
 ```
 
-or 
+or
 
 ```shell
 docker-compose build
 ```
 
 #### Create an alias
+
 ```shell
 alias twint="docker run -ti --rm -v $(pwd)/data:/opt/app/data x0rzkov/twint:latest"
-```               
+```
 
 ### Elasticsearch and Kibana
 
@@ -115,7 +116,7 @@ A few simple examples to help you understand the basics:
 </details>
 <details>
 	<summary><b>Output Tweets to Elasticsearch</b></summary>
-	<code style="padding:5px;">docker-compose run -v $PWD/twint:/opt/app/data twint -u username -es localhost:9200</code>
+	<code style="padding:5px;">docker-compose run -v $PWD/twint:/opt/app/data twint -u username -es twint-elastic:9200</code>
 </details>
 <details>
 	<summary><b>Scrape Tweets and save as a json file.</b></summary>
