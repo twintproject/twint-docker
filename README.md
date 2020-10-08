@@ -64,45 +64,48 @@ Then check the README.md for each versions.
 ### Available images
 | Image   |      Size      |  Arch |  Os |  Link |
 |----------|:-------------:|------|------|------|
-| docker pull thetwintproject/twint:latest-slim|**168 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/latest/slim/)|
-| docker pull thetwintproject/twint:latest|**252 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/latest/)|
 | docker pull thetwintproject/twint:latest-alpine|**75 MB**|amd64|linux|[`./dockerfiles/latest/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/latest/alpine/)|
-| docker pull thetwintproject/twint:2.0.0|**251 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.0.0/)|
+| docker pull thetwintproject/twint:latest-slim|**167 MB**|amd64|linux|[`./dockerfiles/latest/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/latest/slim/)|
+| docker pull thetwintproject/twint:latest|**247 MB**|amd64|linux|[`./dockerfiles/latest`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/latest/)|
+| docker pull thetwintproject/twint:2.0.0|**246 MB**|amd64|linux|[`./dockerfiles/2.0.0`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.0.0/)|
 | docker pull thetwintproject/twint:2.0.0-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.0.0/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.0.0/alpine/)|
 | docker pull thetwintproject/twint:2.0.0-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.0.0/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.0.0/slim/)|
-| docker pull thetwintproject/twint:2.1.0|**251 MB**|amd64|linux|[`./dockerfiles/2.1.0`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.0/)|
+| docker pull thetwintproject/twint:2.1.0|**246 MB**|amd64|linux|[`./dockerfiles/2.1.0`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.0/)|
 | docker pull thetwintproject/twint:2.1.0-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.0/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.0/alpine/)|
 | docker pull thetwintproject/twint:2.1.0-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.0/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.0/slim/)|
-| docker pull thetwintproject/twint:2.1.10|**252 MB**|amd64|linux|[`./dockerfiles/2.1.10`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.10/)|
+| docker pull thetwintproject/twint:2.1.10|**247 MB**|amd64|linux|[`./dockerfiles/2.1.10`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.10/)|
 | docker pull thetwintproject/twint:2.1.10-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.10/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.10/alpine/)|
-| docker pull thetwintproject/twint:2.1.10-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.10/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.10/slim/)|
-| docker pull thetwintproject/twint:2.1.11|**252 MB**|amd64|linux|[`./dockerfiles/2.1.11`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.11/)|
+| docker pull thetwintproject/twint:2.1.10-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.10/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.10/slim/)|
+| docker pull thetwintproject/twint:2.1.11|**247 MB**|amd64|linux|[`./dockerfiles/2.1.11`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.11/)|
 | docker pull thetwintproject/twint:2.1.11-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.11/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.11/alpine/)|
-| docker pull thetwintproject/twint:2.1.11-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.11/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.11/slim/)|
-| docker pull thetwintproject/twint:2.1.12|**252 MB**|amd64|linux|[`./dockerfiles/2.1.12`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.12/)|
+| docker pull thetwintproject/twint:2.1.11-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.11/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.11/slim/)|
+| docker pull thetwintproject/twint:2.1.12|**247 MB**|amd64|linux|[`./dockerfiles/2.1.12`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.12/)|
 | docker pull thetwintproject/twint:2.1.12-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.12/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.12/alpine/)|
 | docker pull thetwintproject/twint:2.1.12-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.12/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.12/slim/)|
-| docker pull thetwintproject/twint:2.1.13|**252 MB**|amd64|linux|[`./dockerfiles/2.1.13`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.13/)|
+| docker pull thetwintproject/twint:2.1.13|**247 MB**|amd64|linux|[`./dockerfiles/2.1.13`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.13/)|
 | docker pull thetwintproject/twint:2.1.13-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.13/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.13/alpine/)|
-| docker pull thetwintproject/twint:2.1.13-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.13/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.13/slim/)|
-| docker pull thetwintproject/twint:2.1.14|**252 MB**|amd64|linux|[`./dockerfiles/2.1.14`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.14/)|
+| docker pull thetwintproject/twint:2.1.13-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.13/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.13/slim/)|
+| docker pull thetwintproject/twint:2.1.14|**247 MB**|amd64|linux|[`./dockerfiles/2.1.14`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.14/)|
 | docker pull thetwintproject/twint:2.1.14-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.14/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.14/alpine/)|
-| docker pull thetwintproject/twint:2.1.14-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.14/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.14/slim/)|
-| docker pull thetwintproject/twint:2.1.15|**252 MB**|amd64|linux|[`./dockerfiles/2.1.15`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.15/)|
+| docker pull thetwintproject/twint:2.1.14-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.14/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.14/slim/)|
+| docker pull thetwintproject/twint:2.1.15|**247 MB**|amd64|linux|[`./dockerfiles/2.1.15`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.15/)|
 | docker pull thetwintproject/twint:2.1.15-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.15/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.15/alpine/)|
-| docker pull thetwintproject/twint:2.1.15-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.15/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.15/slim/)|
-| docker pull thetwintproject/twint:2.1.4|**251 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.4/)|
+| docker pull thetwintproject/twint:2.1.15-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.15/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.15/slim/)|
+| docker pull thetwintproject/twint:2.1.16|**247 MB**|amd64|linux|[`./dockerfiles/2.1.16`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.16/)|
+| docker pull thetwintproject/twint:2.1.16-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.16/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.16/alpine/)|
+| docker pull thetwintproject/twint:2.1.16-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.16/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.16/slim/)|
+| docker pull thetwintproject/twint:2.1.4|**246 MB**|amd64|linux|[`./dockerfiles/2.1.4`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.4/)|
 | docker pull thetwintproject/twint:2.1.4-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.4/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.4/alpine/)|
 | docker pull thetwintproject/twint:2.1.4-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.4/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.4/slim/)|
-| docker pull thetwintproject/twint:2.1.6|**251 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.6/)|
+| docker pull thetwintproject/twint:2.1.6|**246 MB**|amd64|linux|[`./dockerfiles/2.1.6`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.6/)|
 | docker pull thetwintproject/twint:2.1.6-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.6/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.6/alpine/)|
 | docker pull thetwintproject/twint:2.1.6-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.6/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.6/slim/)|
-| docker pull thetwintproject/twint:2.1.8|**251 MB**|amd64|linux|[`./dockerfiles/2.1.8`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.8/)|
+| docker pull thetwintproject/twint:2.1.8|**246 MB**|amd64|linux|[`./dockerfiles/2.1.8`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.8/)|
 | docker pull thetwintproject/twint:2.1.8-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.8/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.8/alpine/)|
 | docker pull thetwintproject/twint:2.1.8-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.8/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.8/slim/)|
-| docker pull thetwintproject/twint:2.1.9|**252 MB**|amd64|linux|[`./dockerfiles/2.1.9`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.9/)|
+| docker pull thetwintproject/twint:2.1.9|**247 MB**|amd64|linux|[`./dockerfiles/2.1.9`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.9/)|
 | docker pull thetwintproject/twint:2.1.9-alpine|**75 MB**|amd64|linux|[`./dockerfiles/2.1.9/alpine`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.9/alpine/)|
-| docker pull thetwintproject/twint:2.1.9-slim|**168 MB**|amd64|linux|[`./dockerfiles/2.1.9/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.9/slim/)|
+| docker pull thetwintproject/twint:2.1.9-slim|**167 MB**|amd64|linux|[`./dockerfiles/2.1.9/slim`](https://github.com//twintproject/twint-docker/tree/master/dockerfiles/2.1.9/slim/)|
 
 
 ## Authors
